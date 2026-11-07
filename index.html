@@ -71,13 +71,33 @@ background:linear-gradient(135deg,#3a0a0a,#160606 60%);border:2px solid var(--gd
 @keyframes bg{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}20%{transform:translate(-50%,-50%) scale(1.2);opacity:1}80%{opacity:1}100%{transform:translate(-50%,-90%) scale(1);opacity:0}}
 .cf{position:fixed;top:-30px;z-index:49;font-style:normal;font-size:1.6rem;animation:fl 2.2s ease-in forwards;pointer-events:none}
 @keyframes fl{to{transform:translateY(110vh) rotate(540deg)}}
-.wheelbox{position:relative;width:240px;height:240px;margin:16px auto;border-radius:50%;padding:6px;background:conic-gradient(#fff2b0,#b8860b,#fff2b0,#8a6208,#fff2b0,#b8860b,#fff2b0);box-shadow:0 10px 24px #000c,0 0 24px #ffd23f55,inset 0 0 8px #000}
-.wheel{width:100%;height:100%;border-radius:50%;border:4px solid #2a1a00;box-shadow:inset 0 0 30px #000c;transition:transform 4s cubic-bezier(.17,.67,.12,1)}
-.orb{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#bbb 60%,#666);box-shadow:0 2px 4px #000c;opacity:0;pointer-events:none;z-index:4}
-.orb.run{opacity:1;animation:orb 4.2s cubic-bezier(.2,.6,.3,1) forwards}
-@keyframes orb{0%{transform:rotate(0) translateY(-104px)}100%{transform:rotate(-2160deg) translateY(-72px)}}
-.wheelbox .ball{position:absolute;inset:36%;width:auto;height:auto;margin:0;font-size:1.5rem;border-width:3px;box-shadow:0 4px 10px #000c,inset 0 0 10px #0008}
-.ptr{position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:3;color:var(--gold);font-size:1.5rem;text-shadow:0 0 8px var(--gold);line-height:1}
+/* ===== 3D RULET ÇARKI (saf CSS) ===== */
+.wheelbox{--tilt:56deg;--d:4.2s;position:relative;width:300px;height:230px;margin:6px auto 10px;perspective:720px;perspective-origin:50% 30%}
+.wheelbox::after{content:"";position:absolute;left:50%;bottom:6px;width:230px;height:40px;margin-left:-115px;border-radius:50%;background:radial-gradient(ellipse,#000c,#0000 70%);filter:blur(6px);z-index:0}
+.w3d{position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-118px 0 0 -130px;transform:rotateX(var(--tilt));transform-style:preserve-3d;z-index:1}
+.w3d>*{position:absolute;border-radius:50%}
+.ly{inset:-22px;background:#1a0d04;transform:translateZ(calc(var(--z)*-1px));box-shadow:inset 0 0 0 14px #120903}
+.bowl{inset:-22px;background:radial-gradient(circle,#0000 0 60%,#2a160a 60.5%,#4a2a10 66%,#7a4a1e 74%,#5a3512 86%,#8a5a28 92%,#3a2008 100%),repeating-conic-gradient(#0000 0 4deg,#ffffff06 4deg 5deg);box-shadow:inset 0 0 24px #000c,inset 0 0 0 2px #c9971a66;transform:translateZ(0)}
+.track{inset:-6px;background:radial-gradient(circle,#0000 0 86%,#1c0e05 86.5%,#3b2410 93%,#241406 100%);box-shadow:inset 0 0 14px #000;transform:translateZ(1px)}
+.wheel{inset:0;border:3px solid #d4a52a;box-shadow:inset 0 0 36px #000c,0 0 0 2px #2a1a00;transform:translateZ(2px);transition:transform 4s cubic-bezier(.17,.67,.12,1);transform-style:preserve-3d}
+.wheel::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -4.8649deg,#f1d27a 0 .9deg,#0000 .9deg 9.7297deg);mask:radial-gradient(circle,#0000 0 31%,#000 32% 100%);-webkit-mask:radial-gradient(circle,#0000 0 31%,#000 32% 100%)}
+.wheel::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#2a1808 0 24%,#6b4a1a 25%,#3a2410 30%,#c9a24a 31%,#0000 32.5%),radial-gradient(circle,#0000 0 66%,#0004 100%)}
+.wn{position:absolute;left:50%;top:50%;width:18px;margin:-6px 0 0 -9px;text-align:center;font-size:10px;font-weight:800;color:#fff;line-height:12px;text-shadow:0 1px 2px #000}
+.gloss{inset:0;background:radial-gradient(ellipse at 36% 22%,#ffffff33 0,#ffffff08 35%,#0000 55%);transform:translateZ(3px);pointer-events:none}
+.mark{left:50%;top:-20px;width:10px;height:10px;margin-left:-5px;border-radius:2px;background:linear-gradient(135deg,#fff3b0,#d4a52a);transform:translateZ(4px) rotate(45deg);box-shadow:0 0 8px #ffd23f}
+.hub{left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;background:conic-gradient(#fff2b0,#b8860b 20%,#fff2b0 40%,#8a6208 60%,#fff2b0 80%,#b8860b);box-shadow:0 0 0 2px #2a1a00,inset 0 0 10px #0008;transform:translateZ(20px);transform-style:preserve-3d}
+.hub i{position:absolute;inset:0;border-radius:50%;display:block;background:#0000;box-shadow:0 0 0 1px #0006}
+.wheelbox .ball{position:absolute;inset:7px;width:auto;height:auto;margin:0;font-size:1.3rem;border-width:3px;box-shadow:0 4px 10px #000c,inset 0 0 10px #0008;transform:translateZ(4px) rotateX(calc(var(--tilt)*-1)) translateY(-10px)}
+.orb{left:50%;top:50%;width:0;height:0;opacity:0;pointer-events:none;transform:translateZ(6px) rotate(0);transform-style:preserve-3d}
+.orb.run{opacity:1;animation:orbrot var(--d) cubic-bezier(.2,.6,.3,1) forwards}
+.orbr{position:absolute;left:0;top:0;transform:translateY(-132px);transform-style:preserve-3d}
+.orb.run .orbr{animation:orbrad var(--d) linear forwards}
+.orbr::after{content:"";position:absolute;left:-8px;top:-5px;width:16px;height:12px;border-radius:50%;background:radial-gradient(ellipse,#000a,#0000 70%);transform:translateZ(-5px)}
+.orbr i{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 32%,#fff,#d8d8d8 45%,#777 80%,#333);box-shadow:0 1px 3px #000a;transform:rotate(0) rotateX(calc(var(--tilt)*-1))}
+.orb.run .orbr i{animation:orbspr var(--d) cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes orbrot{0%{transform:translateZ(6px) rotate(0)}100%{transform:translateZ(6px) rotate(-2160deg)}}
+@keyframes orbspr{0%{transform:rotate(0) rotateX(calc(var(--tilt)*-1))}100%{transform:rotate(2160deg) rotateX(calc(var(--tilt)*-1))}}
+@keyframes orbrad{0%,62%{transform:translateY(-134px)}80%{transform:translateY(-116px)}87%{transform:translateY(-108px)}92%{transform:translateY(-114px)}100%{transform:translateY(-112px)}}
 .tbl{display:grid;grid-template-columns:1.1fr .9fr repeat(3,1fr);grid-template-rows:repeat(14,34px);gap:3px;margin:10px 0}
 .tc{position:relative;padding:0;border-radius:6px;border:1px solid #ffd23f55;font-size:.8rem;font-weight:700;color:#fff;box-shadow:inset 0 1px 0 #fff3,0 2px 0 #0008}
 .tc.out{background:#0b4a2a;font-size:.7rem}
@@ -414,7 +434,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 
 <div class="panel hide" id="slot2"></div>
 <div class="panel hide" id="rulet">
-<div class="wheelbox"><div class="ptr">▼</div><div class="wheel" id="wheel"></div><div class="orb" id="orb"></div><div class="ball green" id="ball">0</div></div>
+<div class="wheelbox"><div class="w3d"><div class="ly" style="--z:24"></div><div class="ly" style="--z:18"></div><div class="ly" style="--z:12"></div><div class="ly" style="--z:6"></div><div class="bowl"></div><div class="track"></div><div class="wheel" id="wheel"></div><div class="gloss"></div><div class="mark"></div><div class="orb" id="orb"><div class="orbr"><i></i></div></div><div class="hub"><div class="ball green" id="ball">0</div></div></div></div>
 <div id="rhist"></div>
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
@@ -667,7 +687,7 @@ makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);
 const WO=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26],SG=360/37;
 const colr=n=>n===0?'#0a9d4a':REDS.includes(n)?'#d90429':'#111';
 $('wheel').style.background='conic-gradient('+WO.map((n,i)=>colr(n)+' '+i*SG+'deg '+(i+1)*SG+'deg').join(',')+')';
-WO.forEach((n,i)=>{const s=document.createElement('span');s.className='wn';s.textContent=n;s.style.transform='rotate('+(i+.5)*SG+'deg) translateY(-98px)';$('wheel').appendChild(s)});
+WO.forEach((n,i)=>{const s=document.createElement('span');s.className='wn';s.textContent=n;s.style.transform='rotate('+(i+.5)*SG+'deg) translateY(-104px)';$('wheel').appendChild(s)});
 let RB={},rot=0,hist=[];
 function mk(k,txt,cls,r,c,rs,cs){const d=document.createElement('button');d.className='tc '+cls;d.dataset.k=k;d.innerHTML=txt+'<em></em>';
 d.style.gridRow=r+(rs?' / span '+rs:'');d.style.gridColumn=c+(cs?' / span '+cs:'');d.onclick=()=>pbet(k);$('tbl').appendChild(d)}
@@ -685,7 +705,7 @@ function clearWon(){document.querySelectorAll('.tc.won').forEach(e=>{e.classList
 function clearBets(){Object.keys(RB).forEach(k=>{delete RB[k];mark(k)})}
 $('rspin').onclick=()=>{if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya jeton koy');return}
 busy=true;msg('');const n=rnd(37),i=WO.indexOf(n);$('orb').classList.remove('run');void $('orb').offsetWidth;$('orb').classList.add('run');
-const cur=rot%360,delta=(((-(i+.5)*SG-cur)%360)+360)%360;rot+=1800+delta;$('wheel').style.transform='rotate('+rot+'deg)';
+const cur=rot%360,delta=(((-(i+.5)*SG-cur)%360)+360)%360;rot+=1800+delta;$('wheel').style.transform='translateZ(2px) rotate('+rot+'deg)';
 setTimeout(()=>{show(n);let w=0,ws=[];clearWon();for(const k in RB)if(wins(k,n)){const a=RB[k]*mult(k);w+=a;ws.push([k,a])}
 hist.unshift(n);hist=hist.slice(0,10);$('rhist').innerHTML=hist.map(x=>'<span class="hs '+(x===0?'green':REDS.includes(x)?'red':'black')+'">'+x+'</span>').join('');
 clearBets();busy=false;setChips(chips+w);
