@@ -13,7 +13,7 @@
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <meta name="description" content="Arkadaşlar arası eğlence oyunu. Sanal jeton, gerçek para yoktur.">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@400;600;700;900&family=Lilita+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@400;600;700;900&family=Lilita+One&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#07050a;--card:#15101a;--pink:#ff2b55;--cyan:#19f0ff;--gold:#ffd23f;--gd:#b8860b;--txt:#fff6e0;--mut:#b3a28a;--felt:#0f5a34;--felt2:#083a21;box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -117,9 +117,15 @@ box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px 
 .betrow .bb{width:46px;height:46px;flex:none;border-radius:50%;padding:0;font-size:1.6rem;line-height:1;font-weight:900;color:#2a1a00;background:linear-gradient(180deg,#fff0a8,#ffd23f 45%,#c58e0a);border:1.5px solid #fff3c0;text-shadow:0 1px 0 #fff8;box-shadow:0 4px 0 #6a4a05,0 6px 10px #000a,inset 0 1px 1px #fff}
 .betrow .bb:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #6a4a05,0 2px 6px #000a}
 .betrow .bb:disabled{opacity:.3}
-.betrow .bc{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:88px}
-.betrow .bc small{font-size:.58rem;letter-spacing:2px;color:var(--gl);font-weight:700}
-.betrow .chip{--sz:66px}
+.betrow .disp{position:relative;flex:1;max-width:200px;height:64px;border-radius:10px;background:linear-gradient(180deg,#0a0806,#000 60%,#050403);border:2px solid #3a2a10;box-shadow:inset 0 2px 10px #000,inset 0 0 0 1px #1a1208,0 1px 0 #ffffff14,0 0 14px #ff9a0022;overflow:hidden}
+.betrow .disp::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0 2px,#ffffff05 2px 3px);pointer-events:none}
+.betrow .disp::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#ffffff10,#fff0 45%);pointer-events:none}
+.betrow .disp small{position:absolute;left:10px;top:7px;font-size:.55rem;letter-spacing:2.5px;color:#ff9a00;opacity:.8;font-weight:700;text-shadow:0 0 6px #ff9a00aa}
+.betrow .disp .ghost,.betrow .disp .v{position:absolute;right:12px;bottom:7px;font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:1.7rem;line-height:1;letter-spacing:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.betrow .disp .ghost{color:#ff9a00;opacity:.07}
+.betrow .disp .v{color:#ffb020;text-shadow:0 0 6px #ff9a00,0 0 16px #ff7a0099,0 0 2px #fff6}
+.betrow .disp.flash .v{animation:ledflash .32s ease-out}
+@keyframes ledflash{0%{color:#fff3c0;text-shadow:0 0 10px #ffd23f,0 0 28px #ffb020,0 0 2px #fff}60%{color:#ffd060}100%{color:#ffb020}}
 .cbot .bal{font-size:1rem;letter-spacing:-.3px}
 #ph{gap:12px}
 .hw{position:relative;display:flex;align-items:flex-end;padding:4px 8px 22px;border-radius:12px}
@@ -439,7 +445,6 @@ $('pinok').onclick=chk;$('pin').onkeydown=e=>{if(e.key==='Enter')chk()};$('pin')
 let chips=10000,bet=50,busy=false,live=false;
 try{const s=localStorage.getItem('ge_chips');if(s!==null&&!isNaN(+s))chips=+s}catch(e){}
 function fmt(n){return (Math.round(n*100)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function fmtBet(v){return Number.isInteger(v)?String(v):v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmt(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}
 $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
@@ -569,7 +574,7 @@ p.innerHTML='<div class="cab'+(T.jade?' jade':'')+'">'+
 '<div class="fsbar hide"><span>🎁 FREE SPIN</span><span><b class="fsn">0</b> kaldı · <b>x'+T.fsMult+'</b></span></div>'+
 '<div class="stage">'+LN+'<div class="sgrid">'+Array.from({length:5},()=>'<div class="scol">'+Array.from({length:5},()=>'<div class="cell"></div>').join('')+'</div>').join('')+'<svg class="plsvg"></svg></div>'+LN+'</div>'+
 '<div class="cbot"><div><small>BAKİYE</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ</small><b class="wsum">0,00</b></div></div>'+
-'<div class="betrow"><button class="bb minus" aria-label="Bahsi düşür">−</button><div class="bc"><small>BAHİS</small><div class="chip"><span class="v"></span></div></div><button class="bb plus" aria-label="Bahsi artır">+</button></div>'+
+'<div class="betrow"><button class="bb minus" aria-label="Bahsi düşür">−</button><div class="disp"><small>BAHİS</small><span class="ghost">88,88</span><span class="v"></span></div><button class="bb plus" aria-label="Bahsi artır">+</button></div>'+
 '<div class="sctl"><button class="ic">ℹ️</button><button class="go">ÇEVİR</button><button class="ic auto">⟳</button></div>'+
 '<div class="tiny">20 hat · soldan sağa 3+ aynı · '+ico(T.sym[T.W],'i')+' wild · 3+ '+ico(T.sym[T.S],'i')+' = '+T.fs+' free spin x'+T.fsMult+'</div></div>';
 const svg=p.querySelector('.plsvg'),bal=p.querySelector('.bal'),wsum=p.querySelector('.wsum');
@@ -577,9 +582,9 @@ const svg=p.querySelector('.plsvg'),bal=p.querySelector('.bal'),wsum=p.querySele
 const JP=[1200,6400,41000,776000].map((v,i)=>v+rnd(v/3));const jpEls=[0,1,2,3].map(i=>p.querySelector('.j'+i));
 function jpTick(){JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].textContent=Math.round(JP[i]).toLocaleString('tr-TR')})}jpTick();setInterval(jpTick,900);
 new MutationObserver(()=>bal.textContent=$('chips').textContent).observe($('chips'),{childList:true});bal.textContent=$('chips').textContent;
-const chipEl=p.querySelector('.betrow .chip'),minusB=p.querySelector('.bb.minus'),plusB=p.querySelector('.bb.plus');
-function updBet(){const v=sbet();chipStyle(chipEl,v);chipEl.querySelector('.v').textContent=fmtBet(v);minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1;chipEl.classList.remove('pop');void chipEl.offsetWidth;chipEl.classList.add('pop')}
-BETUPD.push(updBet);updBet();chipEl.classList.remove('pop');
+const dispEl=p.querySelector('.betrow .disp'),minusB=p.querySelector('.bb.minus'),plusB=p.querySelector('.bb.plus');
+function updBet(){dispEl.querySelector('.v').textContent=fmt(sbet());minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1;dispEl.classList.remove('flash');void dispEl.offsetWidth;dispEl.classList.add('flash')}
+BETUPD.push(updBet);updBet();dispEl.classList.remove('flash');
 const stepBet=d=>{if(busy)return;const i=sbi+d;if(i<0||i>=BETS.length)return;S.click();try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}setBet(i)};minusB.onclick=()=>stepBet(-1);plusB.onclick=()=>stepBet(1);
 const cols=[...p.querySelectorAll('.scol')],cells=cols.map(c=>[...c.querySelectorAll('.cell')]),grid=p.querySelector('.sgrid'),wb=p.querySelector('.winbar'),fsbar=p.querySelector('.fsbar'),goBtn=p.querySelector('.go'),autoBtn=p.querySelector('.auto'),infoBtn=p.querySelector('.ic');
 let g=slotSpin(T,Math.random),auto=false,fsLeft=0,cycle=null;
