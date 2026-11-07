@@ -98,14 +98,38 @@ background:linear-gradient(135deg,#3a0a0a,#160606 60%);border:2px solid var(--gd
 @keyframes orbrot{0%{transform:translateZ(6px) rotate(0)}100%{transform:translateZ(6px) rotate(-2160deg)}}
 @keyframes orbspr{0%{transform:rotate(0) rotateX(calc(var(--tilt)*-1))}100%{transform:rotate(2160deg) rotateX(calc(var(--tilt)*-1))}}
 @keyframes orbrad{0%,62%{transform:translateY(-134px)}80%{transform:translateY(-116px)}87%{transform:translateY(-108px)}92%{transform:translateY(-114px)}100%{transform:translateY(-112px)}}
-.tbl{display:grid;grid-template-columns:1.1fr .9fr repeat(3,1fr);grid-template-rows:repeat(14,34px);gap:3px;margin:10px 0}
-.tc{position:relative;padding:0;border-radius:6px;border:1px solid #ffd23f55;font-size:.8rem;font-weight:700;color:#fff;box-shadow:inset 0 1px 0 #fff3,0 2px 0 #0008}
-.tc.out{background:#0b4a2a;font-size:.7rem}
-.tc.red{background:#d90429}.tc.black{background:#111}.tc.green{background:#0a9d4a}
-.tc em{position:absolute;right:2px;top:2px;background:var(--gold);color:#000;font-style:normal;font-size:.6rem;border-radius:8px;padding:0 4px;box-shadow:0 0 6px var(--gold)}
+.tbl{display:grid;grid-template-columns:1.1fr .9fr repeat(3,1fr);grid-template-rows:repeat(14,36px);gap:4px;margin:10px 0;padding:9px;border-radius:16px;border:2px solid #c9971a;background:radial-gradient(ellipse at 50% 15%,#16864c,#0c5a34 55%,#083a22);box-shadow:0 0 0 3px #3a2008,0 0 0 4px #c9971a55,inset 0 0 36px #0009,0 10px 24px #000a}
+.tc{position:relative;padding:0;border-radius:7px;border:1px solid #ffd23f66;font-size:.95rem;font-weight:800;color:#fff;text-shadow:0 1px 2px #000c;box-shadow:inset 0 1px 0 #fff5,inset 0 -3px 0 #0007,0 2px 0 #0009,0 3px 6px #0008;transition:transform .08s,filter .12s;overflow:visible}
+.tc:active:not(:disabled){transform:translateY(2px);box-shadow:inset 0 1px 0 #fff5,inset 0 -1px 0 #0007,0 0 0 #0009;filter:brightness(1.15)}
+.tc.out{background:linear-gradient(180deg,#127a44,#0b4a2a 60%,#073a20);font-family:"Cinzel",Georgia,serif;font-size:.7rem;letter-spacing:.5px;color:#ffe9a8}
+.tc.red{background:linear-gradient(180deg,#ff4d5a,#c3001a 55%,#7e0010)}.tc.black{background:linear-gradient(180deg,#3b3b42,#17171a 55%,#050506)}.tc.green{background:linear-gradient(180deg,#34d072,#0a9d4a 55%,#065c2a)}
+.tc.green[data-k="n:0"]{border-radius:20px 20px 7px 7px;font-size:1.1rem}
+.tc .dia{display:block;width:16px;height:16px;margin:0 auto;border-radius:3px;transform:rotate(45deg);border:1.5px solid #ffd23fcc;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff6}
+.tc .dia.red{background:linear-gradient(135deg,#ff6a6a,#b3001a)}.tc .dia.black{background:linear-gradient(135deg,#444,#000)}
+/* masaya konan çip */
+.tc em{position:absolute;right:-5px;top:-6px;z-index:2;width:27px;height:27px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:.55rem;font-weight:900;color:#2a1a00;letter-spacing:-.3px;
+background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #8a5a08,0 5px 0 #5a3a05,0 7px 8px #000b,inset 0 1px 1px #fff8}
+.tc em::before{content:"";position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#f4c33c 60%,#b8860b 100%);box-shadow:inset 0 0 0 1.5px #fff6c0,inset 0 1px 3px #0006}
+.tc em span{position:relative;z-index:1}
 .tc em:empty{display:none}
-.hs{display:inline-block;min-width:26px;padding:2px 4px;border-radius:50%;margin:2px;font-size:.75rem;border:1px solid #ffd23f88;font-weight:700}
-.wn{position:absolute;left:50%;top:50%;width:16px;margin:-6px 0 0 -8px;text-align:center;font-size:8px;font-weight:800;color:#fff;line-height:12px}
+.tc.won{border-color:#fff3b0;box-shadow:0 0 0 2px var(--gold),0 0 18px var(--gold),inset 0 0 12px #ffd23f55;animation:pl .6s ease-in-out infinite alternate;z-index:1}
+.tc.won em{font-size:.5rem;color:#0a3a1a;background:repeating-conic-gradient(from -11.25deg,#eafff0 0 22.5deg,#2ec46a 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #0b6a32,0 5px 0 #064a20,0 0 12px #4dffa0aa}
+.tc.won em::before{background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#5be88f 60%,#1a9a4a 100%);box-shadow:inset 0 0 0 1.5px #eafff0,inset 0 1px 3px #0006}
+/* bilgi ekranı (tote board) */
+.rboard{position:relative;margin:4px 0 8px;padding:8px 10px 9px;border-radius:12px;text-align:left;background:linear-gradient(180deg,#0a0806,#000 60%,#050403);border:2px solid #3a2a10;box-shadow:inset 0 2px 10px #000,inset 0 0 0 1px #1a1208,0 1px 0 #ffffff14,0 0 14px #ff9a0022;overflow:hidden}
+.rboard::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0 2px,#ffffff05 2px 3px);pointer-events:none}
+.rboard small{font-size:.5rem;letter-spacing:2px;color:#ff9a00;opacity:.85;font-weight:700;white-space:nowrap}
+.rb-hist{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.hsl{display:flex;align-items:center;gap:4px;width:100%;overflow:hidden;min-height:30px}
+.hs{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:.68rem;font-weight:800;color:#fff;text-shadow:0 1px 1px #000;box-shadow:0 0 0 1.5px #c9971a99,inset 0 1px 0 #fff3,0 2px 3px #000a}
+.hs.red{background:radial-gradient(circle at 35% 30%,#ff7a7a,#c3001a 60%,#7a0010)}.hs.black{background:radial-gradient(circle at 35% 30%,#555,#17171a 60%,#000)}.hs.green{background:radial-gradient(circle at 35% 30%,#5ee48f,#0a9d4a 60%,#05552a)}
+.hs:first-child{width:30px;height:30px;font-size:.85rem;box-shadow:0 0 0 2px var(--gold),0 0 12px #ffd23f99,inset 0 1px 0 #fff3}
+.rb-empty{font-size:.7rem;color:#8a6a30;font-style:italic}
+.rb-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 8px;margin-top:8px;padding-top:7px;border-top:1px solid #ff9a0022}
+.rb-stats div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rb-stats b{font-family:"Orbitron",Montserrat,monospace;font-weight:700;font-size:.78rem;color:#ffb020;text-shadow:0 0 6px #ff9a00aa;white-space:nowrap;line-height:1.1;font-variant-numeric:tabular-nums}
+.rb-stats b.r{color:#ff5a6a;text-shadow:0 0 6px #ff2b3baa}.rb-stats b.k{color:#e8e8e8;text-shadow:0 0 6px #fff8}.rb-stats b.g{color:#4de08a;text-shadow:0 0 6px #2ec46aaa}
+.rb-stats b.pos{color:#4de08a;text-shadow:0 0 6px #2ec46aaa}.rb-stats b.neg{color:#ff5a6a;text-shadow:0 0 6px #ff2b3baa}
 .res{min-height:20px;color:var(--gold);font-weight:700;margin:6px 0;font-size:.9rem}
 .res b{color:var(--cyan)}
 .tc.won{border-color:var(--gold);box-shadow:0 0 12px var(--gold);animation:pl .6s ease-in-out infinite alternate}
@@ -435,7 +459,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="panel hide" id="slot2"></div>
 <div class="panel hide" id="rulet">
 <div class="wheelbox"><div class="w3d"><div class="ly" style="--z:24"></div><div class="ly" style="--z:18"></div><div class="ly" style="--z:12"></div><div class="ly" style="--z:6"></div><div class="bowl"></div><div class="track"></div><div class="wheel" id="wheel"></div><div class="gloss"></div><div class="mark"></div><div class="orb" id="orb"><div class="orbr"><i></i></div></div><div class="hub"><div class="ball green" id="ball">0</div></div></div></div>
-<div id="rhist"></div>
+<div class="rboard" id="rhist"></div>
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
 <div class="row"><button class="go" id="rspin">ÇEVİR</button><button id="rclear">Temizle</button></div>
@@ -688,31 +712,42 @@ const WO=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14
 const colr=n=>n===0?'#0a9d4a':REDS.includes(n)?'#d90429':'#111';
 $('wheel').style.background='conic-gradient('+WO.map((n,i)=>colr(n)+' '+i*SG+'deg '+(i+1)*SG+'deg').join(',')+')';
 WO.forEach((n,i)=>{const s=document.createElement('span');s.className='wn';s.textContent=n;s.style.transform='rotate('+(i+.5)*SG+'deg) translateY(-104px)';$('wheel').appendChild(s)});
-let RB={},rot=0,hist=[];
-function mk(k,txt,cls,r,c,rs,cs){const d=document.createElement('button');d.className='tc '+cls;d.dataset.k=k;d.innerHTML=txt+'<em></em>';
+let RB={},rot=0,hist=[],lastNet=null;try{const h=JSON.parse(localStorage.getItem('ge_rh')||'[]');if(Array.isArray(h))hist=h.filter(x=>Number.isInteger(x)&&x>=0&&x<=36).slice(0,100)}catch(e){}
+const rcol=n=>n===0?'green':REDS.includes(n)?'red':'black';
+/* bilgi ekranı: son 10 sayı, renk oranları, sıcak/soğuk sayılar, masadaki bahis, son sonuç, tur sayısı */
+function renderBoard(){const h10=hist.slice(0,10),n=h10.length,pct=c=>n?Math.round(100*h10.filter(x=>rcol(x)===c).length/n)+'%':'–';
+const cnt=new Array(37).fill(0),seen=new Array(37).fill(-1);hist.forEach((x,i)=>{cnt[x]++;if(seen[x]<0)seen[x]=i});const ago=i=>seen[i]<0?1e9:seen[i];
+const hot=hist.length>=3?[...Array(37).keys()].filter(i=>cnt[i]>0).sort((a,b)=>cnt[b]-cnt[a]||seen[a]-seen[b]).slice(0,3):[];
+const cold=hist.length>=10?[...Array(37).keys()].sort((a,b)=>cnt[a]-cnt[b]||ago(b)-ago(a)).slice(0,3):[];
+const tot=Object.values(RB).reduce((a,b)=>a+b,0),tile=(l,v,c)=>'<div><small>'+l+'</small><b class="'+(c||'')+'">'+v+'</b></div>';
+$('rhist').innerHTML='<div class="rb-hist"><small>SON 10</small><div class="hsl">'+(n?h10.map(x=>'<span class="hs '+rcol(x)+'">'+x+'</span>').join(''):'<span class="rb-empty">henüz çevrilmedi</span>')+'</div></div>'+
+'<div class="rb-stats">'+tile('KIRMIZI',pct('red'),'r')+tile('SİYAH',pct('black'),'k')+tile('SIFIR',pct('green'),'g')+tile('SON',lastNet===null?'–':(lastNet>0?'+':'')+fmt(lastNet),lastNet>0?'pos':lastNet<0?'neg':'')+
+tile('SICAK',hot.length?hot.join(' '):'–')+tile('SOĞUK',cold.length?cold.join(' '):'–')+tile('MASA',fmt(tot))+tile('TUR',hist.length)+'</div>'}
+function mk(k,txt,cls,r,c,rs,cs,name){const d=document.createElement('button');d.className='tc '+cls;d.dataset.k=k;d.dataset.n=name||txt;d.innerHTML=txt+'<em></em>';
 d.style.gridRow=r+(rs?' / span '+rs:'');d.style.gridColumn=c+(cs?' / span '+cs:'');d.onclick=()=>pbet(k);$('tbl').appendChild(d)}
 mk('n:0','0','green',1,3,0,3);
 for(let n=1;n<=36;n++)mk('n:'+n,n,REDS.includes(n)?'red':'black',2+Math.floor((n-1)/3),3+(n-1)%3);
-[['low','1-18','out'],['even','Çift','out'],['red','Kırmızı','red'],['black','Siyah','black'],['odd','Tek','out'],['high','19-36','out']].forEach((o,i)=>mk(o[0],o[1],'out '+o[2],2+i*2,1,2));
+[['low','1-18','out'],['even','ÇİFT','out'],['red','<i class="dia red"></i>','out','Kırmızı'],['black','<i class="dia black"></i>','out','Siyah'],['odd','TEK','out'],['high','19-36','out']].forEach((o,i)=>mk(o[0],o[1],'out '+o[2],2+i*2,1,2,0,o[3]));
+renderBoard();
 [['d1','1. 12'],['d2','2. 12'],['d3','3. 12']].forEach((o,i)=>mk(o[0],o[1],'out',2+i*4,2,4));
 [1,2,3].forEach((j,i)=>mk('c'+j,'2:1','out',14,3+i));
-function mark(k){const e=document.querySelector('.tc[data-k="'+k+'"] em');if(e)e.textContent=RB[k]||''}
-function pbet(k){if(busy)return;clearWon();if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('')}
+function mark(k){const e=document.querySelector('.tc[data-k="'+k+'"] em');if(e)e.innerHTML=RB[k]?'<span>'+RB[k]+'</span>':''}
+function pbet(k){if(busy)return;clearWon();if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('');renderBoard()}
 function wins(k,n){if(n===0)return k==='n:0';if(k[0]==='n')return +k.slice(2)===n;
 return {red:REDS.includes(n),black:!REDS.includes(n),odd:n%2===1,even:n%2===0,low:n<=18,high:n>=19,d1:n<=12,d2:n>12&&n<=24,d3:n>24,c1:n%3===1,c2:n%3===2,c3:n%3===0}[k]}
 function mult(k){return k[0]==='n'?36:/^[dc]/.test(k)?3:2}
-function clearWon(){document.querySelectorAll('.tc.won').forEach(e=>{e.classList.remove('won');e.querySelector('em').textContent=''})}
+function clearWon(){document.querySelectorAll('.tc.won').forEach(e=>{e.classList.remove('won');e.querySelector('em').innerHTML=''})}
 function clearBets(){Object.keys(RB).forEach(k=>{delete RB[k];mark(k)})}
 $('rspin').onclick=()=>{if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya jeton koy');return}
 busy=true;msg('');const n=rnd(37),i=WO.indexOf(n);$('orb').classList.remove('run');void $('orb').offsetWidth;$('orb').classList.add('run');
 const cur=rot%360,delta=(((-(i+.5)*SG-cur)%360)+360)%360;rot+=1800+delta;$('wheel').style.transform='translateZ(2px) rotate('+rot+'deg)';
 setTimeout(()=>{show(n);let w=0,ws=[];clearWon();for(const k in RB)if(wins(k,n)){const a=RB[k]*mult(k);w+=a;ws.push([k,a])}
-hist.unshift(n);hist=hist.slice(0,10);$('rhist').innerHTML=hist.map(x=>'<span class="hs '+(x===0?'green':REDS.includes(x)?'red':'black')+'">'+x+'</span>').join('');
-clearBets();busy=false;setChips(chips+w);
-ws.forEach(x=>{const c=document.querySelector('.tc[data-k="'+x[0]+'"]');c.classList.add('won');c.querySelector('em').textContent='+'+x[1]});
-$('rres').innerHTML=ws.length?'Kazanan bahisler: '+ws.map(x=>document.querySelector('.tc[data-k="'+x[0]+'"]').firstChild.textContent+' <b>+'+x[1]+'</b>').join(' · '):'Bu el kazanan bahis yok';
+hist.unshift(n);hist=hist.slice(0,100);try{localStorage.setItem('ge_rh',JSON.stringify(hist))}catch(e){}lastNet=w-tot;
+clearBets();renderBoard();busy=false;setChips(chips+w);
+ws.forEach(x=>{const c=document.querySelector('.tc[data-k="'+x[0]+'"]');c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+x[1]+'</span>'});
+$('rres').innerHTML=ws.length?'Kazanan bahisler: '+ws.map(x=>document.querySelector('.tc[data-k="'+x[0]+'"]').dataset.n+' <b>+'+x[1]+'</b>').join(' · '):'Bu el kazanan bahis yok';
 msg(w>tot?'🎉 Sayı '+n+' · Kazandın +'+(w-tot):w>0?'Sayı '+n+' · Geri aldın +'+w:'Sayı '+n+' · Kaybettin -'+tot);if(w>tot)celebrate(w-tot)},4200)};
-$('rclear').onclick=()=>{if(busy)return;let t=0;for(const k in RB)t+=RB[k];clearBets();setChips(chips+t)};
+$('rclear').onclick=()=>{if(busy)return;let t=0;for(const k in RB)t+=RB[k];clearBets();setChips(chips+t);renderBoard()};
 
 /* BLACKJACK */
 let deck=[],P=[],D=[];
