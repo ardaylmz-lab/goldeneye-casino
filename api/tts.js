@@ -1,5 +1,8 @@
 // Vercel serverless: ElevenLabs TTS proxy. Key never reaches the browser.
 // Env: ELEVENLABS_API_KEY (required), ELEVENLABS_VOICE_ID (optional)
+// Only the fixed phrases below can be synthesised; free text is deliberately not accepted.
+const { post, fail, serve } = require('./_eleven');
+
 const PHRASES = {
   welcome:   'Welcome to Golden Eye.',
   luck:      'Good luck!',
@@ -13,33 +16,44 @@ const PHRASES = {
   bonus:     'Bonus!',
   jackpot:   'Jackpot!'
 };
-const cache = new Map(); // warm-instance cache
+const DEFAULT_VOICE = 'cgSgspJ2msm6clMCkdW9'; // Jessica (premade)
+const cache = new Map();   // phrase -> Promise<Buffer> (warm-instance cache)
+let workingVoice = null;   // voice id that this account is confirmed to be allowed to use
+
+function tts(voice, text, key) {
+  return post(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, key, {
+    text,
+    model_id: 'eleven_multilingual_v2',
+    voice_settings: { stability: 0.4, similarity_boost: 0.8, style: 0.6, use_speaker_boost: true }
+  });
+}
+
+// If the preferred voice is not available on this account/plan, use the first voice the account can use.
+async function fallbackVoice(key, avoid) {
+  const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': key } });
+  if (!r.ok) return null;
+  const list = ((await r.json()).voices || []).filter(v => v.voice_id !== avoid);
+  const v = list.find(x => x.category === 'premade') || list[0];
+  return v ? v.voice_id : null;
+}
+
+async function make(k, key) {
+  const text = PHRASES[k];
+  const preferred = workingVoice || process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE;
+  let r = await tts(preferred, text, key);
+  if (!r.ok && !workingVoice && [400, 402, 403, 404, 422].includes(r.status)) {
+    const alt = await fallbackVoice(key, preferred);
+    if (alt) { const r2 = await tts(alt, text, key); if (r2.ok) { workingVoice = alt; r = r2; } }
+  }
+  if (!r.ok) await fail(r);
+  if (!workingVoice) workingVoice = preferred;
+  return Buffer.from(await r.arrayBuffer());
+}
 
 module.exports = async (req, res) => {
   const k = String(req.query.k || '');
-  const text = PHRASES[k];
-  if (!text) return res.status(400).json({ error: 'unknown phrase' });
+  if (!PHRASES[k]) return res.status(400).json({ error: 'unknown phrase' });
   const key = process.env.ELEVENLABS_API_KEY;
   if (!key) return res.status(500).json({ error: 'ELEVENLABS_API_KEY missing' });
-  const voice = process.env.ELEVENLABS_VOICE_ID || 'cgSgspJ2msm6clMCkdW9'; // Jessica
-
-  let buf = cache.get(k);
-  if (!buf) {
-    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
-      method: 'POST',
-      headers: { 'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-      body: JSON.stringify({
-        text,
-        model_id: 'eleven_multilingual_v2',
-        voice_settings: { stability: 0.4, similarity_boost: 0.8, style: 0.6, use_speaker_boost: true }
-      })
-    });
-    if (!r.ok) return res.status(502).json({ error: 'elevenlabs ' + r.status, detail: await r.text() });
-    buf = Buffer.from(await r.arrayBuffer());
-    cache.set(k, buf);
-  }
-  res.setHeader('Content-Type', 'audio/mpeg');
-  // Vercel edge + browser cache: aynı cümle bir daha ElevenLabs'e gitmez
-  res.setHeader('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable');
-  res.status(200).send(buf);
+  await serve(res, cache, k, () => make(k, key));
 };

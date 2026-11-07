@@ -453,18 +453,30 @@ for(let i=0;i<26;i++){const c=document.createElement('i');c.className='cf';c.tex
 let AC=null,muted=false;try{muted=localStorage.getItem('ge_mute')==='1'}catch(e){}
 $('snd').textContent=muted?'🔇':'🔊';
 $('snd').onclick=()=>{muted=!muted;$('snd').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ge_mute',muted?'1':'0')}catch(e){};if(muted)S.spinStop();else S.click()};
-function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}decodeSfx()}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}decodeAud()}if(AC&&AC.state==='suspended')AC.resume();return AC}
 function tone(f,t,d,type,v,slide){const c=ac();if(!c||muted)return;const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,c.currentTime+t);
 if(slide)o.frequency.exponentialRampToValueAtTime(slide,c.currentTime+t+d);g.gain.setValueAtTime(0,c.currentTime+t);g.gain.linearRampToValueAtTime(v||.2,c.currentTime+t+.01);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t+d);
 o.connect(g);g.connect(c.destination);o.start(c.currentTime+t);o.stop(c.currentTime+t+d+.02)}
 function noise(t,d,v,f){const c=ac();if(!c||muted)return;const b=c.createBuffer(1,c.sampleRate*d,c.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=(Math.random()*2-1)*(1-i/x.length);
 const n=c.createBufferSource();n.buffer=b;const g=c.createGain(),fl=c.createBiquadFilter();fl.type='bandpass';fl.frequency.value=f||1800;g.gain.value=v||.15;n.connect(fl);fl.connect(g);g.connect(c.destination);n.start(c.currentTime+t)}
-/* ElevenLabs ses efektleri (api/sfx). Yüklenemezse aşağıdaki sentez tonlara düşer. */
-const SFX_V=1,SFXRAW={},SFXBUF={};let sfxBus=null,spinSrc=null;
-['click','spin','stop','scatter','antic','win','coin','bigwin','freespins','lose'].forEach(k=>{fetch('api/sfx?k='+k+'&v='+SFX_V).then(r=>r.ok&&/audio/.test(r.headers.get('content-type')||'')?r.arrayBuffer():null).then(b=>{if(b){SFXRAW[k]=b;decodeSfx()}}).catch(()=>{})});
-function decodeSfx(){if(!AC)return;Object.keys(SFXRAW).forEach(k=>{const b=SFXRAW[k];delete SFXRAW[k];try{AC.decodeAudioData(b.slice(0),buf=>{SFXBUF[k]=buf},()=>{})}catch(e){}})}
-function sfx(k,v,o){o=o||{};const c=ac(),b=SFXBUF[k];if(!c||muted||!b)return null;if(!sfxBus){sfxBus=c.createGain();sfxBus.gain.value=.9;sfxBus.connect(c.destination)}
-const src=c.createBufferSource(),g=c.createGain();src.buffer=b;src.loop=!!o.loop;if(o.rate)src.playbackRate.value=o.rate;g.gain.value=v==null?1:v;src.connect(g);g.connect(sfxBus);src.start(c.currentTime+(o.t||0));return{src,g}}
+/* ElevenLabs klipleri (api/sfx efektler, api/tts anonslar). Aynı anda en fazla 2 istek: ElevenLabs
+   ücretsiz planda eşzamanlılık sınırı 2. Hata olursa bekleyip tekrar dener. Efekt yüklenemezse
+   aşağıdaki sentez tonlara düşer; anons yüklenemezse sessiz kalır. */
+const AUD_V=1,AUDRAW={},AUDBUF={},AUDQ=[],AUDFAIL={};let audBusy=0,sfxBus=null,voBus=null,spinSrc=null,pendSay=null;
+function audLoad(k,url){AUDQ.push({k,url,n:0});audNext()}
+function audNext(){while(audBusy<2&&AUDQ.length){const it=AUDQ.shift();audBusy++;
+fetch(it.url).then(r=>r.ok&&/audio/.test(r.headers.get('content-type')||'')?r.arrayBuffer():Promise.reject(r.status)).then(b=>{AUDRAW[it.k]=b;decodeAud()})
+.catch(st=>{if(it.n<3&&st!==400&&st!==404){it.n++;setTimeout(()=>{AUDQ.push(it);audNext()},2000*it.n)}else AUDFAIL[it.k]=1}).then(()=>{audBusy--;audNext()})}}
+/* yükleme sırası: ilk dokunuşta gereken anons, ilk çevirmede gereken efektler, sonra gerisi */
+['welcome','luck','wild','nice','great'].forEach(k=>audLoad('vo-'+k,'api/tts?k='+k+'&v='+AUD_V));
+['click','spin','stop','win','coin','scatter'].forEach(k=>audLoad('fx-'+k,'api/sfx?k='+k+'&v='+AUD_V));
+['bigwin','megawin','epicwin','freespins','bonus','jackpot'].forEach(k=>audLoad('vo-'+k,'api/tts?k='+k+'&v='+AUD_V));
+['antic','bigwin','freespins','lose'].forEach(k=>audLoad('fx-'+k,'api/sfx?k='+k+'&v='+AUD_V));
+function decodeAud(){if(!AC)return;Object.keys(AUDRAW).forEach(k=>{const b=AUDRAW[k];delete AUDRAW[k];try{AC.decodeAudioData(b.slice(0),buf=>{AUDBUF[k]=buf;if(pendSay&&pendSay.k===k){const ps=pendSay;pendSay=null;if(Date.now()<ps.until)say(ps.k.slice(3))}},()=>{})}catch(e){}})}
+function bus(){const c=ac();if(!c)return null;if(!sfxBus){sfxBus=c.createGain();sfxBus.gain.value=.9;sfxBus.connect(c.destination);voBus=c.createGain();voBus.gain.value=1;voBus.connect(c.destination)}return c}
+function playBuf(k,v,o,out){o=o||{};const c=bus(),b=AUDBUF[k];if(!c||muted||!b)return null;
+const src=c.createBufferSource(),g=c.createGain();src.buffer=b;src.loop=!!o.loop;if(o.rate)src.playbackRate.value=o.rate;g.gain.value=v==null?1:v;src.connect(g);g.connect(out==='vo'?voBus:sfxBus);src.start(c.currentTime+(o.t||0));return{src,g,dur:b.duration}}
+function sfx(k,v,o){return playBuf('fx-'+k,v,o,'fx')}
 const S={
 click(){if(!sfx('click',.5))tone(900,0,.05,'square',.06)},
 spinStart(){if(spinSrc)this.spinStop();spinSrc=sfx('spin',.35,{loop:true});if(spinSrc){spinSrc.g.gain.setValueAtTime(0,AC.currentTime);spinSrc.g.gain.linearRampToValueAtTime(.35,AC.currentTime+.15)}},
@@ -480,8 +492,13 @@ fs(){if(sfx('freespins',.9))return;[392,523,659,784,1047,1319].forEach((f,i)=>{t
 lose(){if(!sfx('lose',.4))tone(200,0,.18,'sine',.08,150)}};
 
 /* ===== KONUŞAN SES (ElevenLabs TTS, api/tts) ===== */
-const VOICE={};['welcome','luck','wild','nice','great','bigwin','megawin','epicwin','freespins','bonus','jackpot'].forEach(k=>{const a=new Audio('api/tts?k='+k);a.preload='auto';a.volume=.9;a.onerror=()=>{VOICE[k]=null};VOICE[k]=a});
-function say(k,delay){if(muted)return;const a=VOICE[k];if(!a)return;const go=()=>{try{a.currentTime=0;a.play().catch(()=>{})}catch(e){}};if(delay)setTimeout(go,delay);else go()}
+let voSrc=null;
+function say(k,delay){if(muted)return;const go=()=>{if(muted||!bus())return;const key='vo-'+k;
+if(!AUDBUF[key]){if(!AUDFAIL[key]&&k==='welcome')pendSay={k:key,until:Date.now()+10000};return}
+if(voSrc){try{voSrc.src.stop()}catch(e){}}voSrc=playBuf(key,1,null,'vo');if(!voSrc)return;
+/* anons sırasında efektleri kıs */
+const t=AC.currentTime;sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(.45,t,.05);sfxBus.gain.setTargetAtTime(.9,t+voSrc.dur,.15)};
+if(delay)setTimeout(go,delay);else go()}
 let welcomed=false;
 /* ===== SLOT MOTORU ===== */
 /* Golden Eye slot engine — pure math, no DOM. Works in browser and node. */
