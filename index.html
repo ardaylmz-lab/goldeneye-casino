@@ -140,7 +140,7 @@ background:linear-gradient(180deg,#c89a2a,#7a5410 40%,#b8860b 60%,#5a3a08);box-s
 .sgrid.fsmode{background:linear-gradient(180deg,#ff2bd6,#7a0f6b 40%,#ff2bd6 60%,#4a0a40);box-shadow:0 0 28px var(--pink)}
 .scol{display:grid;gap:0;overflow:hidden;background:linear-gradient(90deg,var(--r2),var(--r1) 50%,var(--r2));border-left:1.5px solid #3a1a00;border-right:1.5px solid #5a3a08}
 .scol:first-child{border-radius:8px 0 0 8px}.scol:last-child{border-radius:0 8px 8px 0}
-.cell{position:relative;aspect-ratio:1;display:grid;place-items:center;font-size:clamp(1.7rem,8.6vw,2.6rem);line-height:1;
+.cell{position:relative;aspect-ratio:1;display:grid;place-items:center;line-height:1;
 background:radial-gradient(circle at 50% 35%,#ffffff14,transparent 60%);transition:opacity .25s;
 text-shadow:0 3px 4px #000c;filter:drop-shadow(0 0 2px #0008)}
 .cell::after{content:"";position:absolute;inset:4px;border-radius:10px;border:2px solid transparent;pointer-events:none;transition:border-color .15s,box-shadow .15s}
@@ -151,8 +151,12 @@ text-shadow:0 3px 4px #000c;filter:drop-shadow(0 0 2px #0008)}
 .cell.scat::after{border-color:var(--gl);box-shadow:0 0 16px var(--gl),inset 0 0 14px #ffd23f66}
 .cell.scat{animation:pl .55s ease-in-out infinite alternate}
 .cell.wild{background:radial-gradient(circle at 50% 40%,#ff6a0055,transparent 70%)}
-.cell.wild::before{content:"WILD";position:absolute;bottom:3px;left:0;right:0;text-align:center;font:900 .5rem Montserrat,sans-serif;letter-spacing:1px;color:var(--gl);text-shadow:0 1px 0 #000,0 0 6px #ff6a00}
 .cell.dim{opacity:.28}
+.sym{position:absolute;inset:7%;width:86%;height:86%;display:block;overflow:visible}
+.sym.i,.sym.pt,.sym.big{position:static;inset:auto}
+.sym.i{width:1.3em;height:1.3em;display:inline-block;vertical-align:-.35em}
+.sym.pt{width:34px;height:34px}
+.sym.big{width:56px;height:56px;display:inline-block;margin:0 2px}
 .plsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
 .plsvg polyline{fill:none;stroke-width:4;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 4px #000)}
 .plsvg .box{fill:none;stroke-width:3}
@@ -199,6 +203,172 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<defs>
+<radialGradient id="hl" cx="35%" cy="28%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".45" stop-color="#fff" stop-opacity=".15"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+<linearGradient id="au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c0"/><stop offset=".45" stop-color="#ffd23f"/><stop offset=".55" stop-color="#e09a00"/><stop offset="1" stop-color="#8a5a00"/></linearGradient>
+<linearGradient id="au2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a0"/><stop offset=".5" stop-color="#d9a92a"/><stop offset="1" stop-color="#7a4e00"/></linearGradient>
+<linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6a6a"/><stop offset=".5" stop-color="#e3001b"/><stop offset="1" stop-color="#7a0010"/></linearGradient>
+<linearGradient id="fire" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff2a00"/><stop offset=".5" stop-color="#ff9a00"/><stop offset="1" stop-color="#fff2a0"/></linearGradient>
+<linearGradient id="grn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9dff6a"/><stop offset=".5" stop-color="#2eb82e"/><stop offset="1" stop-color="#0c5a1a"/></linearGradient>
+<linearGradient id="jade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8ffe0"/><stop offset=".5" stop-color="#19b07a"/><stop offset="1" stop-color="#064a30"/></linearGradient>
+<linearGradient id="ice" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#9ae8ff"/><stop offset=".7" stop-color="#19a0ff"/><stop offset="1" stop-color="#0b3a8a"/></linearGradient>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity=".6"/></filter>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+
+<!-- ===== BURNING FRUITS ===== -->
+<symbol id="s-cherry" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M52 14 Q38 30 30 58" stroke="#4a7a1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M52 14 Q66 30 70 58" stroke="#4a7a1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M52 14 Q70 4 86 16 Q70 26 52 14Z" fill="url(#grn)"/>
+<circle cx="30" cy="66" r="19" fill="url(#red)"/><circle cx="30" cy="66" r="19" fill="url(#hl)"/>
+<circle cx="70" cy="66" r="19" fill="url(#red)"/><circle cx="70" cy="66" r="19" fill="url(#hl)"/>
+</g></symbol>
+
+<symbol id="s-lemon" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M18 52 Q18 22 50 20 Q82 22 86 50 Q82 80 50 80 Q18 78 18 52Z" fill="#ffd800"/>
+<path d="M18 52 Q18 22 50 20 Q82 22 86 50 Q82 80 50 80 Q18 78 18 52Z" fill="url(#hl)"/>
+<ellipse cx="14" cy="52" rx="6" ry="4" fill="#c9a800"/><ellipse cx="88" cy="50" rx="6" ry="4" fill="#c9a800"/>
+<path d="M70 30 Q78 24 90 22 Q82 32 74 34Z" fill="url(#grn)"/>
+</g></symbol>
+
+<symbol id="s-orange" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="54" r="32" fill="#ff8a00"/><circle cx="50" cy="54" r="32" fill="url(#hl)"/>
+<circle cx="50" cy="54" r="32" fill="none" stroke="#ff5a00" stroke-width="1" stroke-dasharray="1 4" opacity=".6"/>
+<path d="M50 22 Q60 8 80 14 Q66 26 50 22Z" fill="url(#grn)"/><rect x="48" y="16" width="4" height="8" rx="2" fill="#4a7a1a"/>
+</g></symbol>
+
+<symbol id="s-plum" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="56" r="31" fill="#6a1bb0"/><circle cx="50" cy="56" r="31" fill="url(#hl)"/>
+<path d="M50 25 Q50 40 50 86" stroke="#3a0a70" stroke-width="2" fill="none" opacity=".5"/>
+<path d="M50 24 Q44 8 30 12 Q40 22 50 24Z" fill="url(#grn)"/><rect x="48" y="16" width="4" height="10" rx="2" fill="#4a3a1a"/>
+</g></symbol>
+
+<symbol id="s-melon" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M10 40 A42 42 0 0 0 90 40Z" fill="#1f8a2a"/>
+<path d="M16 40 A36 36 0 0 0 84 40Z" fill="#dfffd0"/>
+<path d="M21 40 A31 31 0 0 0 79 40Z" fill="url(#red)"/>
+<path d="M21 40 A31 31 0 0 0 79 40Z" fill="url(#hl)" opacity=".7"/>
+<g fill="#111"><ellipse cx="38" cy="50" rx="2.5" ry="4" transform="rotate(-20 38 50)"/><ellipse cx="50" cy="58" rx="2.5" ry="4"/><ellipse cx="62" cy="50" rx="2.5" ry="4" transform="rotate(20 62 50)"/><ellipse cx="44" cy="44" rx="2" ry="3"/><ellipse cx="57" cy="44" rx="2" ry="3"/></g>
+</g></symbol>
+
+<symbol id="s-bell" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M50 14 Q26 18 26 48 L26 66 Q18 72 18 78 L82 78 Q82 72 74 66 L74 48 Q74 18 50 14Z" fill="url(#au)"/>
+<path d="M50 14 Q26 18 26 48 L26 66 Q18 72 18 78 L82 78 Q82 72 74 66 L74 48 Q74 18 50 14Z" fill="url(#hl)" opacity=".6"/>
+<rect x="46" y="8" width="8" height="8" rx="3" fill="#8a5a00"/>
+<circle cx="50" cy="84" r="7" fill="url(#au2)"/>
+<path d="M30 48 Q30 24 48 20" stroke="#fff8d0" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>
+</g></symbol>
+
+<symbol id="s-diamond" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M28 20 L72 20 L90 42 L50 88 L10 42Z" fill="url(#ice)"/>
+<path d="M28 20 L50 42 L72 20Z" fill="#fff" opacity=".7"/>
+<path d="M10 42 L50 42 L50 88Z" fill="#0b3a8a" opacity=".35"/>
+<path d="M50 42 L90 42 L50 88Z" fill="#19a0ff" opacity=".25"/>
+<path d="M28 20 L10 42 L50 42Z" fill="#bff2ff" opacity=".6"/>
+<path d="M72 20 L90 42 L50 42Z" fill="#6ad0ff" opacity=".5"/>
+<circle cx="36" cy="30" r="3" fill="#fff"/>
+</g></symbol>
+
+<symbol id="s-seven" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M18 16 L84 16 L84 30 L52 88 L30 88 L60 32 L18 32Z" fill="url(#fire)" stroke="#7a0010" stroke-width="3" stroke-linejoin="round"/>
+<path d="M22 20 L78 20 L78 28 L46 84 L36 84 L66 28 L22 28Z" fill="url(#red)"/>
+<path d="M24 22 L76 22 L74 26 L26 26Z" fill="#fff" opacity=".6"/>
+</g></symbol>
+
+<symbol id="s-wild" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M50 6 Q62 30 58 40 Q70 34 74 20 Q90 44 84 64 Q80 84 50 94 Q20 84 16 64 Q10 44 26 20 Q30 34 42 40 Q38 30 50 6Z" fill="url(#fire)" filter="url(#glow)"/>
+<path d="M50 34 Q58 50 54 58 Q64 52 66 44 Q74 60 68 72 Q62 84 50 86 Q38 84 32 72 Q26 60 34 44 Q36 52 46 58 Q42 50 50 34Z" fill="#fff6c0" opacity=".9"/>
+<rect x="12" y="52" width="76" height="24" rx="6" fill="#1a0404" stroke="url(#au)" stroke-width="3"/>
+<text x="50" y="70" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="19" fill="url(#au)" letter-spacing="2">WILD</text>
+</g></symbol>
+
+<symbol id="s-star" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M50 6 L61 36 L94 38 L68 58 L77 90 L50 72 L23 90 L32 58 L6 38 L39 36Z" fill="url(#au)" stroke="#8a5a00" stroke-width="2" stroke-linejoin="round" filter="url(#glow)"/>
+<path d="M50 6 L61 36 L94 38 L68 58 L77 90 L50 72 L23 90 L32 58 L6 38 L39 36Z" fill="url(#hl)" opacity=".5"/>
+<path d="M50 24 L55 38 L70 39 L58 48 L62 62 L50 54 L38 62 L42 48 L30 39 L45 38Z" fill="#fff8d0" opacity=".85"/>
+</g></symbol>
+
+<!-- ===== JADE DRAGON ===== -->
+<symbol id="s-clover" viewBox="0 0 100 100"><g filter="url(#sh)">
+<g fill="url(#grn)"><circle cx="50" cy="30" r="17"/><circle cx="70" cy="50" r="17"/><circle cx="50" cy="70" r="17"/><circle cx="30" cy="50" r="17"/></g>
+<g fill="url(#hl)" opacity=".6"><circle cx="50" cy="30" r="17"/><circle cx="70" cy="50" r="17"/><circle cx="50" cy="70" r="17"/><circle cx="30" cy="50" r="17"/></g>
+<path d="M50 50 L58 92" stroke="#1f6a1a" stroke-width="5" stroke-linecap="round"/>
+</g></symbol>
+
+<symbol id="s-lantern" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="38" y="6" width="24" height="8" rx="2" fill="url(#au)"/>
+<ellipse cx="50" cy="50" rx="30" ry="36" fill="url(#red)"/><ellipse cx="50" cy="50" rx="30" ry="36" fill="url(#hl)" opacity=".7"/>
+<g stroke="#7a0010" stroke-width="1.5" fill="none" opacity=".6"><ellipse cx="50" cy="50" rx="14" ry="36"/><ellipse cx="50" cy="50" rx="24" ry="36"/></g>
+<rect x="38" y="84" width="24" height="7" rx="2" fill="url(#au)"/>
+<path d="M46 91 L46 98 M50 91 L50 99 M54 91 L54 98" stroke="#ffd23f" stroke-width="2"/>
+</g></symbol>
+
+<symbol id="s-bamboo" viewBox="0 0 100 100"><g filter="url(#sh)">
+<g fill="url(#grn)"><rect x="40" y="8" width="20" height="26" rx="4"/><rect x="40" y="36" width="20" height="26" rx="4"/><rect x="40" y="64" width="20" height="28" rx="4"/></g>
+<g fill="url(#hl)" opacity=".5"><rect x="40" y="8" width="20" height="26" rx="4"/><rect x="40" y="36" width="20" height="26" rx="4"/><rect x="40" y="64" width="20" height="28" rx="4"/></g>
+<g stroke="#0c5a1a" stroke-width="3"><path d="M38 35 L62 35"/><path d="M38 63 L62 63"/></g>
+<path d="M60 40 Q80 30 90 36 Q78 46 60 44Z" fill="#5ad64a"/><path d="M40 70 Q20 62 10 68 Q22 78 40 74Z" fill="#5ad64a"/>
+</g></symbol>
+
+<symbol id="s-coin" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="50" r="38" fill="url(#au)"/><circle cx="50" cy="50" r="38" fill="url(#hl)" opacity=".5"/>
+<circle cx="50" cy="50" r="30" fill="none" stroke="#8a5a00" stroke-width="2.5"/>
+<rect x="40" y="40" width="20" height="20" fill="#3a1a00" opacity=".85"/>
+<rect x="43" y="43" width="14" height="14" fill="url(#au)"/>
+<g font-family="serif" font-size="11" font-weight="700" fill="#8a5a00"><text x="50" y="30" text-anchor="middle">福</text><text x="50" y="76" text-anchor="middle">財</text></g>
+</g></symbol>
+
+<symbol id="s-lotus" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M10 62 Q30 54 50 62 Q70 54 90 62 Q70 86 50 84 Q30 86 10 62Z" fill="url(#grn)"/>
+<g fill="#ff6aa8"><path d="M50 20 Q62 40 50 66 Q38 40 50 20Z"/><path d="M28 30 Q48 44 50 66 Q30 58 28 30Z"/><path d="M72 30 Q52 44 50 66 Q70 58 72 30Z"/><path d="M14 46 Q36 50 50 66 Q24 66 14 46Z"/><path d="M86 46 Q64 50 50 66 Q76 66 86 46Z"/></g>
+<g fill="#fff" opacity=".5"><path d="M50 26 Q56 40 50 58 Q44 40 50 26Z"/></g>
+<circle cx="50" cy="62" r="6" fill="url(#au)"/>
+</g></symbol>
+
+<symbol id="s-fan" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M50 86 L10 36 A50 50 0 0 1 90 36Z" fill="url(#red)"/>
+<path d="M50 86 L10 36 A50 50 0 0 1 90 36Z" fill="url(#hl)" opacity=".5"/>
+<g stroke="url(#au)" stroke-width="2.5"><path d="M50 86 L10 36"/><path d="M50 86 L24 20"/><path d="M50 86 L50 12"/><path d="M50 86 L76 20"/><path d="M50 86 L90 36"/></g>
+<path d="M22 44 A36 36 0 0 1 78 44" fill="none" stroke="#ffd23f" stroke-width="3" opacity=".8"/>
+<circle cx="50" cy="86" r="6" fill="url(#au)"/>
+</g></symbol>
+
+<symbol id="s-koi" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M18 50 Q30 20 60 24 Q84 30 86 50 Q84 70 60 76 Q30 80 18 50Z" fill="#ff7a1a"/>
+<path d="M18 50 Q30 20 60 24 Q84 30 86 50 Q84 70 60 76 Q30 80 18 50Z" fill="url(#hl)" opacity=".7"/>
+<path d="M86 50 Q96 36 98 24 Q90 46 96 76 Q92 62 86 50Z" fill="#ff9a3a"/>
+<g fill="#fff" opacity=".85"><ellipse cx="44" cy="40" rx="9" ry="6"/><ellipse cx="66" cy="58" rx="8" ry="6"/></g>
+<circle cx="30" cy="46" r="4" fill="#111"/><circle cx="31" cy="45" r="1.4" fill="#fff"/>
+<path d="M50 24 Q56 12 66 16 Q60 24 56 28Z" fill="#ff9a3a"/>
+</g></symbol>
+
+<symbol id="s-dragon" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="50" r="42" fill="url(#jade)"/><circle cx="50" cy="50" r="42" fill="url(#hl)" opacity=".5"/>
+<circle cx="50" cy="50" r="42" fill="none" stroke="url(#au)" stroke-width="5"/>
+<circle cx="50" cy="50" r="33" fill="none" stroke="#ffd23f" stroke-width="1.5" opacity=".7"/>
+<text x="50" y="66" text-anchor="middle" font-family="'Noto Serif CJK SC','Songti SC','Hiragino Mincho ProN','MS Mincho',serif" font-size="46" font-weight="700" fill="url(#au)" filter="url(#glow)">龍</text>
+</g></symbol>
+
+<symbol id="s-mahjong" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="18" y="8" width="64" height="84" rx="10" fill="#1f6a3a"/>
+<rect x="18" y="8" width="64" height="76" rx="10" fill="#fdf6e3"/>
+<rect x="18" y="8" width="64" height="76" rx="10" fill="url(#hl)" opacity=".3"/>
+<text x="50" y="56" text-anchor="middle" font-family="'Noto Serif CJK SC','Songti SC','Hiragino Mincho ProN','MS Mincho',serif" font-size="40" font-weight="700" fill="#d40020">中</text>
+<rect x="24" y="64" width="52" height="14" rx="4" fill="#1a0404"/>
+<text x="50" y="75" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="11" fill="url(#au)" letter-spacing="2">WILD</text>
+</g></symbol>
+
+<symbol id="s-envelope" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="22" y="8" width="56" height="84" rx="8" fill="url(#red)" filter="url(#glow)"/>
+<rect x="22" y="8" width="56" height="84" rx="8" fill="url(#hl)" opacity=".4"/>
+<path d="M22 16 Q50 44 78 16" fill="none" stroke="url(#au)" stroke-width="3"/>
+<circle cx="50" cy="56" r="17" fill="url(#au)"/>
+<text x="50" y="63" text-anchor="middle" font-family="'Noto Serif CJK SC','Songti SC','Hiragino Mincho ProN','MS Mincho',serif" font-size="20" font-weight="700" fill="#8a0010">福</text>
+</g></symbol>
+</svg>
+
 <div id="gate"><div class="box"><h2>GOLDEN EYE</h2><p>Özel oyun · giriş PIN'i</p><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••"><button class="go" id="pinok">GİRİŞ</button></div></div>
 <div class="wrap">
 <div class="sign"><h1>GOLDEN <span>EYE</span></h1></div>
@@ -326,8 +496,9 @@ return{total:Math.round(total),wins,sc,scells,scatWin:Math.round(scatWin),fs:sc>
 const PAY=[[8,25,80],[8,25,80],[12,35,100],[12,40,125],[18,60,200],[35,125,400],[60,250,1000],[125,600,3000]];
 const WGT=[14,14,13,12,11,8,6,4,2,1.7];
 const THEMES={
-slot:slotTheme('BURNING FRUITS',['🍒','🍋','🍊','🍇','🍉','🔔','💎','7️⃣','⭐','🎰'],WGT,PAY),
-slot2:Object.assign(slotTheme('JADE DRAGON',['🍀','🏮','🎋','🪙','🐠','🐼','🐯','🐉','🀄','🧧'],WGT,PAY),{jade:true})};
+slot:slotTheme('BURNING FRUITS',['cherry','lemon','orange','plum','melon','bell','diamond','seven','wild','star'],WGT,PAY),
+slot2:Object.assign(slotTheme('JADE DRAGON',['clover','lantern','bamboo','coin','lotus','fan','koi','dragon','mahjong','envelope'],WGT,PAY),{jade:true})};
+const ico=(id,cls)=>'<svg class="sym'+(cls?' '+cls:'')+'"><use href="#s-'+id+'"/></svg>';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function fmt(n){return Math.round(n).toLocaleString('tr-TR')}
 function overlay(html,ms){return new Promise(res=>{const o=document.createElement('div');o.className='ovl';o.innerHTML='<div class="box">'+html+'</div>';document.body.appendChild(o);
@@ -343,7 +514,7 @@ p.innerHTML='<div class="cab'+(T.jade?' jade':'')+'">'+
 '<div class="stage">'+LN+'<div class="sgrid">'+Array.from({length:5},()=>'<div class="scol">'+Array.from({length:5},()=>'<div class="cell"></div>').join('')+'</div>').join('')+'<svg class="plsvg"></svg></div>'+LN+'</div>'+
 '<div class="cbot"><div><small>BAKİYE</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ</small><b class="wsum">0</b></div></div>'+
 '<div class="sctl"><button class="ic">ℹ️</button><button class="go">ÇEVİR</button><button class="ic auto">⟳</button></div>'+
-'<div class="tiny">20 hat · soldan sağa 3+ aynı · '+T.sym[T.W]+' wild · 3+ '+T.sym[T.S]+' = '+T.fs+' free spin x'+T.fsMult+'</div></div>';
+'<div class="tiny">20 hat · soldan sağa 3+ aynı · '+ico(T.sym[T.W],'i')+' wild · 3+ '+ico(T.sym[T.S],'i')+' = '+T.fs+' free spin x'+T.fsMult+'</div></div>';
 const svg=p.querySelector('.plsvg'),bal=p.querySelector('.bal'),wsum=p.querySelector('.wsum');
 /* jackpot şeridi (gösterim amaçlı sayaçlar) */
 const JP=[1200,6400,41000,776000].map((v,i)=>v+rnd(v/3));const jpEls=[0,1,2,3].map(i=>p.querySelector('.j'+i));
@@ -351,7 +522,7 @@ function jpTick(){JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].text
 new MutationObserver(()=>bal.textContent=$('chips').textContent).observe($('chips'),{childList:true});bal.textContent=$('chips').textContent;
 const cols=[...p.querySelectorAll('.scol')],cells=cols.map(c=>[...c.querySelectorAll('.cell')]),grid=p.querySelector('.sgrid'),wb=p.querySelector('.winbar'),fsbar=p.querySelector('.fsbar'),goBtn=p.querySelector('.go'),autoBtn=p.querySelector('.auto'),infoBtn=p.querySelector('.ic');
 let g=slotSpin(T,Math.random),auto=false,fsLeft=0,cycle=null;
-function paint(c){cells[c].forEach((e,r)=>{const sidx=g[c][r];e.textContent=T.sym[sidx];e.className='cell'+(sidx===T.W?' wild':'')})}
+function paint(c){cells[c].forEach((e,r)=>{const sidx=g[c][r];e.innerHTML=ico(T.sym[sidx]);e.className='cell'+(sidx===T.W?' wild':'')})}
 for(let c=0;c<5;c++)paint(c);
 const LC=['#2ea8d6','#ff4d4d','#5bff7a','#ffd23f','#ff7ae6','#ffa033','#9b7bff','#19f0ff'];
 function drawLines(list){svg.innerHTML='';if(!list.length)return;const gr=grid.getBoundingClientRect();svg.setAttribute('viewBox','0 0 '+gr.width+' '+gr.height);
@@ -360,9 +531,9 @@ if(!scat){const pl=document.createElementNS('http://www.w3.org/2000/svg','polyli
 pts.forEach(q=>{const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('class','box');r.setAttribute('x',q[0]-q[2]/2+4);r.setAttribute('y',q[1]-q[3]/2+4);r.setAttribute('width',q[2]-8);r.setAttribute('height',q[3]-8);r.setAttribute('rx',10);r.setAttribute('stroke',col);svg.appendChild(r)})})}
 function clearFx(){clearInterval(cycle);cycle=null;cells.flat().forEach(e=>e.classList.remove('win','scat','dim'));grid.classList.remove('antic');svg.innerHTML='';wsum.textContent='0'}
 infoBtn.onclick=()=>{if(busy)return;S.click();overlay('<div class="pt"><h2 style="font-size:1.3rem;text-align:center">ÖDEME TABLOSU</h2><div class="sub">Kazançlar toplam bahsin katı olarak (3 · 4 · 5 sembol)</div><table>'+
-T.pay.map((pp,i)=>'<tr><td>'+T.sym[i]+'</td><td>'+pp.map(x=>'<b>'+(x/20).toLocaleString('tr-TR',{maximumFractionDigits:2})+'x</b>').join(' · ')+'</td></tr>').join('')+
-'<tr><td>'+T.sym[T.W]+'</td><td>Wild — scatter hariç tüm sembollerin yerine geçer</td></tr>'+
-'<tr><td>'+T.sym[T.S]+'</td><td>Scatter — her yerde 3/4/5: <b>'+T.scat.join('x · ')+'x</b> + <b>'+T.fs+' free spin</b> (x'+T.fsMult+'), tekrar 3+ scatter: +'+T.retrig+' spin</td></tr></table>'+
+T.pay.map((pp,i)=>'<tr><td>'+ico(T.sym[i],'pt')+'</td><td>'+pp.map(x=>'<b>'+(x/20).toLocaleString('tr-TR',{maximumFractionDigits:2})+'x</b>').join(' · ')+'</td></tr>').join('')+
+'<tr><td>'+ico(T.sym[T.W],'pt')+'</td><td>Wild — scatter hariç tüm sembollerin yerine geçer</td></tr>'+
+'<tr><td>'+ico(T.sym[T.S],'pt')+'</td><td>Scatter — her yerde 3/4/5: <b>'+T.scat.join('x · ')+'x</b> + <b>'+T.fs+' free spin</b> (x'+T.fsMult+'), tekrar 3+ scatter: +'+T.retrig+' spin</td></tr></table>'+
 '<div class="sub">20 sabit hat, kazançlar soldan sağa ilk makaradan başlar. Her hat için en yüksek kombinasyon ödenir. Teorik RTP ≈ %96.</div><button class="cl">Kapat</button></div>')};
 autoBtn.onclick=()=>{S.click();auto=!auto;autoBtn.classList.toggle('on',auto);if(auto&&!busy)spin()};
 
@@ -373,7 +544,7 @@ busy=true;btnsLock();msg('');clearFx();wb.textContent='';
 g=slotSpin(T,Math.random);
 cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});
 let t=0,stopped=0,scSoFar=0,extra=0;const base=[700,950,1200,1450,1700];
-const iv=setInterval(()=>{t+=70;if(t%140<70)S.tick();for(let c=stopped;c<5;c++)cells[c].forEach(e=>e.textContent=T.sym[rnd(T.sym.length)]);
+const iv=setInterval(()=>{t+=70;if(t%140<70)S.tick();for(let c=stopped;c<5;c++)cells[c].forEach(e=>e.innerHTML=ico(T.sym[rnd(T.sym.length)]));
 if(stopped<5&&t>=base[stopped]+extra){const c=stopped;cols[c].classList.remove('spin');cols[c].classList.add('land');paint(c);S.stop();
 const sc=g[c].filter(x=>x===T.S).length;if(sc){scSoFar+=sc;cells[c].forEach((e,r)=>{if(g[c][r]===T.S)e.classList.add('scat')});S.scat()}
 stopped++;
@@ -393,7 +564,7 @@ else if(r.total>0&&!free)celebrateSmall(r.total);
 startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose()}
 setChips(chips+r.total);
 if(r.fs){S.fs();if(free){fsLeft+=T.retrig;await overlay('<div class="ic">🎁</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
-else{fsLeft=T.fs;fsTotal=0;await overlay('<div class="ic">'+T.sym[T.S].repeat(Math.min(r.sc,5))+'</div><h2>FREE SPINS</h2><div class="n">'+T.fs+'</div><p>Tüm kazançlar <b style="color:var(--gold)">x'+T.fsMult+'</b></p><p class="tiny">Başlamak için dokun</p>',4000)}
+else{fsLeft=T.fs;fsTotal=0;await overlay('<div class="ic">'+ico(T.sym[T.S],'big').repeat(Math.min(r.sc,5))+'</div><h2>FREE SPINS</h2><div class="n">'+T.fs+'</div><p>Tüm kazançlar <b style="color:var(--gold)">x'+T.fsMult+'</b></p><p class="tiny">Başlamak için dokun</p>',4000)}
 grid.classList.add('fsmode');fsbar.classList.remove('hide');fsbar.querySelector('.fsn').textContent=fsLeft;if(!free){await wait(400);spin();return}}
 if(free){fsTotal+=r.total;fsLeft--;fsbar.querySelector('.fsn').textContent=fsLeft;
 if(fsLeft>0){await wait(900);spin();return}
@@ -403,8 +574,8 @@ busy=false;btnsLock();setChips(chips);
 if(auto&&chips>=bet){await wait(500);if(auto&&!busy)spin()}else if(auto){auto=false;autoBtn.classList.remove('on')}}
 let fsTotal=0;
 function countUp(total,dur){return new Promise(res=>{const t0=performance.now(),st=setInterval(()=>{const k=Math.min(1,(performance.now()-t0)/dur);wb.innerHTML='<b>+'+fmt(total*k)+'</b>';wsum.textContent=fmt(total*k);if(k%.12<.04)S.coin();if(k>=1){clearInterval(st);res()}},40)})}
-function startCycle(r){const items=r.wins.map(w=>({cells:w.cells,line:w.line,txt:'<em>Hat '+(w.line+1)+'</em> '+T.sym[w.sym]+'×'+w.n+' <b>+'+fmt(w.amt)+'</b>',scat:false}));
-if(r.scatWin)items.push({cells:r.scells,txt:T.sym[T.S]+'×'+r.sc+' scatter · <b>+'+fmt(r.scatWin)+'</b>',scat:true});
+function startCycle(r){const items=r.wins.map(w=>({cells:w.cells,line:w.line,txt:'<em>Hat '+(w.line+1)+'</em> '+ico(T.sym[w.sym],'i')+'×'+w.n+' <b>+'+fmt(w.amt)+'</b>',scat:false}));
+if(r.scatWin)items.push({cells:r.scells,txt:ico(T.sym[T.S],'i')+'×'+r.sc+' scatter · <b>+'+fmt(r.scatWin)+'</b>',scat:true});
 if(items.length<2){return}let i=0;const show=()=>{const it=items[i%items.length];cells.forEach((col,c)=>col.forEach((e,rr)=>{const on=it.cells.some(([a,b])=>a===c&&b===rr);e.classList.toggle('win',on&&!it.scat);e.classList.toggle('scat',on&&it.scat);e.classList.toggle('dim',!on)}));
 drawLines([it.scat?{cells:it.cells,scat:true}:{cells:it.cells,line:it.line}]);wb.innerHTML=it.txt;i++};
 setTimeout(()=>{show();cycle=setInterval(show,1100)},1200)}
