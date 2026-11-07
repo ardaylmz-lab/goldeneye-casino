@@ -471,6 +471,10 @@ big(){[523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>{tone(f,i*.12,.3,'tri
 fs(){[392,523,659,784,1047,1319].forEach((f,i)=>{tone(f,i*.1,.5,'triangle',.25);tone(f*1.5,i*.1+.05,.4,'sine',.1)});noise(.6,.5,.12,3000)},
 lose(){tone(200,0,.18,'sine',.08,150)}};
 
+/* ===== KONUŞAN SES (ElevenLabs klipleri, voice/*.mp3) ===== */
+const VOICE={};['welcome','luck','wild','nice','great','bigwin','megawin','epicwin','freespins','bonus','jackpot'].forEach(k=>{const a=new Audio('api/tts?k='+k);a.preload='auto';a.volume=.9;a.onerror=()=>{VOICE[k]=null};VOICE[k]=a});
+let lastSay=0;function say(k,delay){if(muted)return;const a=VOICE[k];if(!a)return;const go=()=>{try{a.currentTime=0;a.play().catch(()=>{})}catch(e){}};if(delay)setTimeout(go,delay);else go()}
+let welcomed=false;
 /* ===== SLOT MOTORU ===== */
 /* Golden Eye slot engine — pure math, no DOM. Works in browser and node. */
 const SLOT_LINES=[
@@ -540,12 +544,13 @@ autoBtn.onclick=()=>{S.click();auto=!auto;autoBtn.classList.toggle('on',auto);if
 async function spin(){
 if(busy&&!fsLeft)return;const free=fsLeft>0;
 if(!free){if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-bet)}
-busy=true;btnsLock();msg('');clearFx();wb.textContent='';
+busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');
 g=slotSpin(T,Math.random);
 cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});
 let t=0,stopped=0,scSoFar=0,extra=0;const base=[700,950,1200,1450,1700];
 const iv=setInterval(()=>{t+=70;if(t%140<70)S.tick();for(let c=stopped;c<5;c++)cells[c].forEach(e=>e.innerHTML=ico(T.sym[rnd(T.sym.length)]));
 if(stopped<5&&t>=base[stopped]+extra){const c=stopped;cols[c].classList.remove('spin');cols[c].classList.add('land');paint(c);S.stop();
+if(g[c].includes(T.W)&&c<3&&Math.random()<.5)say('wild');
 const sc=g[c].filter(x=>x===T.S).length;if(sc){scSoFar+=sc;cells[c].forEach((e,r)=>{if(g[c][r]===T.S)e.classList.add('scat')});S.scat()}
 stopped++;
 if(stopped<5&&scSoFar>=2&&scSoFar<3&&!grid.classList.contains('antic')){grid.classList.add('antic');extra+=900;S.antic();const an=setInterval(()=>{if(stopped>=5||scSoFar>=3)clearInterval(an);else S.antic()},300)}
@@ -558,17 +563,19 @@ const all=new Set();r.wins.forEach(w=>w.cells.forEach(([c,rr])=>all.add(c+'-'+rr
 cells.forEach((col,c)=>col.forEach((e,rr)=>{if(all.has(c+'-'+rr)){e.classList.add(g[c][rr]===T.S?'scat':'win')}else e.classList.add('dim')}));
 drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:r.scells,scat:true}]:[]));S.win(Math.min(6,2+Math.floor(r.total/bet)));
 const x=r.total/bet;if(x>=15)S.big();
+if(x>=100)say('epicwin',300);else if(x>=40)say('megawin',300);else if(x>=15)say('bigwin',300);else if(x>=5)say('great',200);else if(x>=2&&Math.random()<.6)say('nice',200);
 await countUp(r.total,x>=15?1800:700);
 if(x>=15)await overlay('<div class="ic">'+(x>=100?'👑':x>=40?'💥':'🎉')+'</div><h2>'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmt(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',2600);
 else if(r.total>0&&!free)celebrateSmall(r.total);
 startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose()}
 setChips(chips+r.total);
-if(r.fs){S.fs();if(free){fsLeft+=T.retrig;await overlay('<div class="ic">🎁</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
+if(r.fs){S.fs();say(free?'bonus':'freespins',400);if(free){fsLeft+=T.retrig;await overlay('<div class="ic">🎁</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
 else{fsLeft=T.fs;fsTotal=0;await overlay('<div class="ic">'+ico(T.sym[T.S],'big').repeat(Math.min(r.sc,5))+'</div><h2>FREE SPINS</h2><div class="n">'+T.fs+'</div><p>Tüm kazançlar <b style="color:var(--gold)">x'+T.fsMult+'</b></p><p class="tiny">Başlamak için dokun</p>',4000)}
 grid.classList.add('fsmode');fsbar.classList.remove('hide');fsbar.querySelector('.fsn').textContent=fsLeft;if(!free){await wait(400);spin();return}}
 if(free){fsTotal+=r.total;fsLeft--;fsbar.querySelector('.fsn').textContent=fsLeft;
 if(fsLeft>0){await wait(900);spin();return}
 await wait(600);grid.classList.remove('fsmode');fsbar.classList.add('hide');
+if(fsTotal/bet>=150)say('jackpot',200);
 await overlay('<div class="ic">🏁</div><h2>FREE SPIN BİTTİ</h2><div class="n">+'+fmt(fsTotal)+'</div><p>'+(fsTotal/bet).toFixed(1)+'x bahis</p>',3000);if(fsTotal>0)celebrate(fsTotal)}
 busy=false;btnsLock();setChips(chips);
 if(auto&&chips>=bet){await wait(500);if(auto&&!busy)spin()}else if(auto){auto=false;autoBtn.classList.remove('on')}}
@@ -581,7 +588,8 @@ drawLines([it.scat?{cells:it.cells,scat:true}:{cells:it.cells,line:it.line}]);wb
 setTimeout(()=>{show();cycle=setInterval(show,1100)},1200)}
 function celebrateSmall(a){const b=document.createElement('div');b.className='big';b.style.fontSize='1.6rem';b.textContent='+'+fmt(a);document.body.appendChild(b);setTimeout(()=>b.remove(),2000)}
 function btnsLock(){goBtn.disabled=busy;infoBtn.disabled=busy;autoBtn.disabled=busy&&fsLeft>0}
-goBtn.onclick=()=>{ac();S.click();spin()}}
+goBtn.onclick=()=>{ac();S.click();spin()}
+p.addEventListener('click',()=>{if(!welcomed){welcomed=true;say('welcome')}},{once:true})}
 makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);
 
 /* RULET MASASI */
