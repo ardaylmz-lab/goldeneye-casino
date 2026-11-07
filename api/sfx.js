@@ -14,7 +14,11 @@ const EFFECTS = {
   coin:      { text: 'Single gold coin dropping onto a pile of coins, short metallic clink', d: 0.5 },
   bigwin:    { text: 'Triumphant casino big win fanfare with brass, bells and coins pouring out, celebratory', d: 4 },
   freespins: { text: 'Exciting slot machine bonus trigger fanfare, magical chimes and a rising orchestral hit', d: 3 },
-  lose:      { text: 'Soft low descending two note tone, subtle quiet slot machine near miss sound', d: 0.7 }
+  lose:      { text: 'Soft low descending two note tone, subtle quiet slot machine near miss sound', d: 0.7 },
+  // rulet
+  chip:      { text: 'Single casino chip placed firmly on a felt table, short clay clack, close mic', d: 0.5 },
+  rwheel:    { text: 'Roulette wheel spinning with a small ball rolling around the wooden track, steady rattle, seamless loop', d: 3, loop: true },
+  rdrop:     { text: 'Roulette ball bouncing between metal frets and settling into a pocket, quick clicks then silence', d: 1.3 }
 };
 const cache = new Map(); // effect -> Promise<Buffer>
 
