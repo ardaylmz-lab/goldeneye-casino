@@ -98,11 +98,29 @@ background:linear-gradient(135deg,#3a0a0a,#160606 60%);border:2px solid var(--gd
 @keyframes dl{0%{transform:translate(40px,-90px) rotate(25deg) scale(.5);opacity:0}100%{transform:none;opacity:1}}
 .c.flip{animation:fp .5s ease-out}
 @keyframes fp{0%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
-#bets{gap:14px;align-items:center}
-#bets button{width:60px;height:60px;padding:0;border-radius:50%;font-weight:800;font-size:1.05rem;color:#fff;background:radial-gradient(circle at 40% 35%,#ffffff44,transparent 50%),var(--c);border:4px dashed #fff;box-shadow:0 0 0 3px var(--c),0 6px 0 #0008,0 9px 10px #000a;text-shadow:0 1px 2px #000;transition:transform .15s}
-#bets [data-b="10"]{--c:#1e88e5}#bets [data-b="25"]{--c:#2e9e4f}#bets [data-b="50"]{--c:#d90429}#bets [data-b="100"]{--c:#222;color:var(--gold)}
-#bets button.on{transform:translateY(-6px) scale(1.14);border-color:var(--gold);color:#fff;box-shadow:0 0 0 3px var(--gold),0 6px 0 #5a4005,0 0 20px var(--gold)}
-#bets [data-b="100"].on{color:var(--gold)}
+#bets{gap:16px;align-items:center}
+/* ===== PREMIUM ÇİP ===== --c ana renk, --c2 koyu kenar, --e kenar dilimleri, --t yazı */
+.chip{--c:#e0202c;--c2:#8a0d14;--e:#f7f3e8;--t:#fff;--sz:64px;position:relative;width:var(--sz);height:var(--sz);padding:0;border-radius:50%;border:0;display:grid;place-items:center;color:var(--t);flex:none;
+background:repeating-conic-gradient(from -11.25deg,var(--e) 0 22.5deg,var(--c) 22.5deg 45deg);
+box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px #fff8;transition:transform .15s,box-shadow .15s}
+.chip::before{content:"";position:absolute;inset:15%;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff6 0,#fff0 45%),radial-gradient(circle,var(--c) 58%,var(--c2) 100%);box-shadow:inset 0 0 0 2px var(--e),inset 0 2px 5px #0007,0 0 0 1.5px #0005}
+.chip::after{content:"";position:absolute;inset:6%;border-radius:50%;border:1.5px solid #ffffff55;pointer-events:none}
+.chip .v{position:relative;z-index:1;font-weight:900;font-size:calc(var(--sz)*.3);letter-spacing:-.5px;text-shadow:0 1px 2px #000b,0 0 6px #0006;font-variant-numeric:tabular-nums;line-height:1}
+.chip .v small{display:block;font-size:.42em;letter-spacing:1.5px;opacity:.85;margin-top:2px}
+.chip.pop{animation:cpop .32s cubic-bezier(.2,1.6,.4,1)}
+@keyframes cpop{0%{transform:scale(.72) rotate(-14deg)}100%{transform:scale(1) rotate(0)}}
+#bets .chip{--sz:58px}
+#bets .chip:active{transform:translateY(3px);box-shadow:0 0 0 1.5px #0009,0 2px 0 var(--c2),0 4px 8px #000c}
+#bets .chip.on{transform:translateY(-7px) scale(1.12);box-shadow:0 0 0 3px var(--gold),0 5px 0 var(--c2),0 12px 16px #000c,0 0 22px #ffd23f99}
+/* slot bahis seçici */
+.betrow{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:10px;padding:8px 10px;border-radius:12px;background:linear-gradient(180deg,#1a1a1a,#000);border:1.5px solid var(--gd);box-shadow:inset 0 0 10px #000}
+.betrow .bb{width:46px;height:46px;flex:none;border-radius:50%;padding:0;font-size:1.6rem;line-height:1;font-weight:900;color:#2a1a00;background:linear-gradient(180deg,#fff0a8,#ffd23f 45%,#c58e0a);border:1.5px solid #fff3c0;text-shadow:0 1px 0 #fff8;box-shadow:0 4px 0 #6a4a05,0 6px 10px #000a,inset 0 1px 1px #fff}
+.betrow .bb:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #6a4a05,0 2px 6px #000a}
+.betrow .bb:disabled{opacity:.3}
+.betrow .bc{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:88px}
+.betrow .bc small{font-size:.58rem;letter-spacing:2px;color:var(--gl);font-weight:700}
+.betrow .chip{--sz:66px}
+.cbot .bal{font-size:1rem;letter-spacing:-.3px}
 #ph{gap:12px}
 .hw{position:relative;display:flex;align-items:flex-end;padding:4px 8px 22px;border-radius:12px}
 .hw small{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);color:var(--gold);font-weight:700}
@@ -372,7 +390,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div id="gate"><div class="box"><h2>GOLDEN EYE</h2><p>Özel oyun · giriş PIN'i</p><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••"><button class="go" id="pinok">GİRİŞ</button></div></div>
 <div class="wrap">
 <div class="sign"><h1>GOLDEN <span>EYE</span></h1></div>
-<div class="bar"><span>🪙 Jeton</span><b id="chips">10.000</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
+<div class="bar"><span>🪙 Jeton</span><b id="chips">10.000,00</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
 <button id="back" class="hide">← Ana sayfa</button>
 <div id="home">
 <div class="cards">
@@ -382,7 +400,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 </div>
 <div class="bets hide" id="bets">
-<button data-b="10">10</button><button data-b="25">25</button><button data-b="50" class="on">50</button><button data-b="100">100</button>
+<button class="chip" data-b="10"><span class="v">10</span></button><button class="chip" data-b="25"><span class="v">25</span></button><button class="chip on" data-b="50"><span class="v">50</span></button><button class="chip" data-b="100"><span class="v">100</span></button>
 </div>
 
 <div class="stabs hide" id="stabs"><button data-go="slot" class="on">🔥 Burning Fruits</button><button data-go="slot2">🐉 Jade Dragon</button></div>
@@ -420,8 +438,10 @@ const chk=()=>{if($('pin').value===PIN){try{localStorage.setItem('ge_pin',PIN)}c
 $('pinok').onclick=chk;$('pin').onkeydown=e=>{if(e.key==='Enter')chk()};$('pin').focus()})();
 let chips=10000,bet=50,busy=false,live=false;
 try{const s=localStorage.getItem('ge_chips');if(s!==null&&!isNaN(+s))chips=+s}catch(e){}
-function setChips(n){const ch=n!==chips;chips=n;const e=$('chips');e.textContent=n.toLocaleString('tr-TR');if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}
-$('reset').classList.toggle('hide',n>=10||busy||live)}
+function fmt(n){return (Math.round(n*100)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtBet(v){return Number.isInteger(v)?String(v):v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmt(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}
+$('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
 function take(){if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');return false}setChips(chips-bet);return true}
 const rnd=n=>Math.floor(Math.random()*n);
@@ -429,22 +449,30 @@ setChips(chips);
 
 function route(x){let h=typeof x==='string'?x:location.hash.slice(1);if(!['slot','slot2','rulet','bj'].includes(h))h='home';
 ['home','slot','slot2','rulet','bj'].forEach(t=>$(t).classList.toggle('hide',t!==h));
-$('bets').classList.toggle('hide',h==='home');$('stabs').classList.toggle('hide',h!=='slot'&&h!=='slot2');
+$('bets').classList.toggle('hide',h==='home'||h==='slot'||h==='slot2');$('stabs').classList.toggle('hide',h!=='slot'&&h!=='slot2');
 document.querySelectorAll('#stabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===h));$('back').classList.toggle('hide',h==='home');msg('');window.scrollTo(0,0)}
 window.addEventListener('hashchange',()=>{if(busy||live)return;route()});
 function go(h){if(busy||live)return;if(location.protocol!=='file:'){try{location.hash=h}catch(e){}}route(h)}
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 $('back').onclick=()=>go('home');
 route();
-document.querySelectorAll('#bets button').forEach(b=>b.onclick=()=>{if(busy||live)return;bet=+b.dataset.b;
-document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',x===b))});
+/* çip renkleri (kumarhane geleneği): değer -> [ana, koyu, kenar dilimi, yazı] */
+const CHIPCOL={.5:['#9aa0ad','#5c6270','#eef1f6','#15171c'],1:['#efe9d8','#b5ab90','#2255a4','#1e1a12'],1.5:['#12a3a8','#0a5f63','#e6fbfc','#fff'],2:['#1f9d4e','#0f5a2a','#eafbe9','#fff'],2.5:['#7b3fe4','#45208c','#f1e8ff','#fff'],
+5:['#e0202c','#8a0d14','#fff1e8','#fff'],10:['#1e63d6','#0e3a86','#e8f0ff','#fff'],25:['#2e9e4f','#145a2c','#eafbe9','#fff'],50:['#1b1b1f','#000','#ffd23f','#ffd23f'],100:['#c9971a','#7a5500','#fff6d0','#1a1000']};
+function chipStyle(el,v){const c=CHIPCOL[v]||CHIPCOL[5];el.style.setProperty('--c',c[0]);el.style.setProperty('--c2',c[1]);el.style.setProperty('--e',c[2]);el.style.setProperty('--t',c[3])}
+document.querySelectorAll('#bets button').forEach(b=>{chipStyle(b,+b.dataset.b);b.onclick=()=>{if(busy||live)return;bet=+b.dataset.b;
+document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',x===b))}});
+/* slot bahis basamakları (+/- ile), iki slot makinesi ortak */
+const BETS=[.5,1,1.5,2,2.5,5,10,50];let sbi=1;try{const v=localStorage.getItem('ge_sbi');if(v!==null&&BETS[+v]!==undefined)sbi=+v}catch(e){}
+const sbet=()=>BETS[sbi],BETUPD=[];
+function setBet(i){sbi=Math.max(0,Math.min(BETS.length-1,i));try{localStorage.setItem('ge_sbi',sbi)}catch(e){}BETUPD.forEach(f=>f())}
 $('reset').onclick=()=>{setChips(10000);msg('Jetonlar yenilendi!')};
 
 /* RULET */
 const REDS=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 function show(n){const e=$('ball');e.textContent=n;e.className='ball '+(n===0?'green':REDS.includes(n)?'red':'black')}
 
-function celebrate(a){const b=document.createElement('div');b.className='big';b.textContent='🎉 +'+a.toLocaleString('tr-TR')+' 🎉';document.body.appendChild(b);setTimeout(()=>b.remove(),2000);
+function celebrate(a){const b=document.createElement('div');b.className='big';b.textContent='🎉 +'+fmt(a)+' 🎉';document.body.appendChild(b);setTimeout(()=>b.remove(),2000);
 for(let i=0;i<26;i++){const c=document.createElement('i');c.className='cf';c.textContent=['🪙','✨','💎','⭐'][rnd(4)];c.style.left=rnd(96)+'vw';c.style.animationDelay=(Math.random()*.7)+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),2900)}}
 
 
@@ -519,7 +547,7 @@ if(n>=3){if(sym<0)sym=T.W-1; /* all wilds pay as top symbol */
 const a=lb*T.pay[sym][n-3]*mult;if(a>0){total+=a;wins.push({line:li,sym,n,amt:a,cells:L.slice(0,n).map((r,c)=>[c,r])})}}});
 let sc=0;const scells=[];g.forEach((col,c)=>col.forEach((s,r)=>{if(s===T.S){sc++;scells.push([c,r])}}));
 let scatWin=0;if(sc>=3){scatWin=bet*T.scat[Math.min(sc,5)-3];total+=scatWin}
-return{total:Math.round(total),wins,sc,scells,scatWin:Math.round(scatWin),fs:sc>=3}}
+return{total:Math.round(total*100)/100,wins,sc,scells,scatWin:Math.round(scatWin*100)/100,fs:sc>=3}}
 
 /* ===== SLOT ARAYÜZÜ ===== */
 const PAY=[[8,25,80],[8,25,80],[12,35,100],[12,40,125],[18,60,200],[35,125,400],[60,250,1000],[125,600,3000]];
@@ -529,7 +557,6 @@ slot:slotTheme('BURNING FRUITS',['cherry','lemon','orange','plum','melon','bell'
 slot2:Object.assign(slotTheme('JADE DRAGON',['clover','lantern','bamboo','coin','lotus','fan','koi','dragon','mahjong','envelope'],WGT,PAY),{jade:true})};
 const ico=(id,cls)=>'<svg class="sym'+(cls?' '+cls:'')+'"><use href="#s-'+id+'"/></svg>';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function fmt(n){return Math.round(n).toLocaleString('tr-TR')}
 function overlay(html,ms){return new Promise(res=>{const o=document.createElement('div');o.className='ovl';o.innerHTML='<div class="box">'+html+'</div>';document.body.appendChild(o);
 const done=()=>{o.remove();res()};o.onclick=done;if(ms)setTimeout(done,ms)})}
 
@@ -541,14 +568,19 @@ p.innerHTML='<div class="cab'+(T.jade?' jade':'')+'">'+
 '<div class="ctitle">'+T.name+'</div>'+
 '<div class="fsbar hide"><span>🎁 FREE SPIN</span><span><b class="fsn">0</b> kaldı · <b>x'+T.fsMult+'</b></span></div>'+
 '<div class="stage">'+LN+'<div class="sgrid">'+Array.from({length:5},()=>'<div class="scol">'+Array.from({length:5},()=>'<div class="cell"></div>').join('')+'</div>').join('')+'<svg class="plsvg"></svg></div>'+LN+'</div>'+
-'<div class="cbot"><div><small>BAKİYE</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ</small><b class="wsum">0</b></div></div>'+
+'<div class="cbot"><div><small>BAKİYE</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ</small><b class="wsum">0,00</b></div></div>'+
+'<div class="betrow"><button class="bb minus" aria-label="Bahsi düşür">−</button><div class="bc"><small>BAHİS</small><div class="chip"><span class="v"></span></div></div><button class="bb plus" aria-label="Bahsi artır">+</button></div>'+
 '<div class="sctl"><button class="ic">ℹ️</button><button class="go">ÇEVİR</button><button class="ic auto">⟳</button></div>'+
 '<div class="tiny">20 hat · soldan sağa 3+ aynı · '+ico(T.sym[T.W],'i')+' wild · 3+ '+ico(T.sym[T.S],'i')+' = '+T.fs+' free spin x'+T.fsMult+'</div></div>';
 const svg=p.querySelector('.plsvg'),bal=p.querySelector('.bal'),wsum=p.querySelector('.wsum');
 /* jackpot şeridi (gösterim amaçlı sayaçlar) */
 const JP=[1200,6400,41000,776000].map((v,i)=>v+rnd(v/3));const jpEls=[0,1,2,3].map(i=>p.querySelector('.j'+i));
-function jpTick(){JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].textContent=fmt(JP[i])})}jpTick();setInterval(jpTick,900);
+function jpTick(){JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].textContent=Math.round(JP[i]).toLocaleString('tr-TR')})}jpTick();setInterval(jpTick,900);
 new MutationObserver(()=>bal.textContent=$('chips').textContent).observe($('chips'),{childList:true});bal.textContent=$('chips').textContent;
+const chipEl=p.querySelector('.betrow .chip'),minusB=p.querySelector('.bb.minus'),plusB=p.querySelector('.bb.plus');
+function updBet(){const v=sbet();chipStyle(chipEl,v);chipEl.querySelector('.v').textContent=fmtBet(v);minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1;chipEl.classList.remove('pop');void chipEl.offsetWidth;chipEl.classList.add('pop')}
+BETUPD.push(updBet);updBet();chipEl.classList.remove('pop');
+const stepBet=d=>{if(busy)return;const i=sbi+d;if(i<0||i>=BETS.length)return;S.click();try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}setBet(i)};minusB.onclick=()=>stepBet(-1);plusB.onclick=()=>stepBet(1);
 const cols=[...p.querySelectorAll('.scol')],cells=cols.map(c=>[...c.querySelectorAll('.cell')]),grid=p.querySelector('.sgrid'),wb=p.querySelector('.winbar'),fsbar=p.querySelector('.fsbar'),goBtn=p.querySelector('.go'),autoBtn=p.querySelector('.auto'),infoBtn=p.querySelector('.ic');
 let g=slotSpin(T,Math.random),auto=false,fsLeft=0,cycle=null;
 function paint(c){cells[c].forEach((e,r)=>{const sidx=g[c][r];e.innerHTML=ico(T.sym[sidx]);e.className='cell'+(sidx===T.W?' wild':'')})}
@@ -558,7 +590,7 @@ function drawLines(list){svg.innerHTML='';if(!list.length)return;const gr=grid.g
 list.forEach(({cells:cs,line,scat})=>{const col=scat?'#ffd23f':LC[line%LC.length];const pts=cs.map(([c,r])=>{const b=cells[c][r].getBoundingClientRect();return[b.left-gr.left+b.width/2,b.top-gr.top+b.height/2,b.width,b.height]});
 if(!scat){const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');pl.setAttribute('points',pts.map(q=>q[0]+','+q[1]).join(' '));pl.setAttribute('stroke',col);svg.appendChild(pl)}
 pts.forEach(q=>{const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('class','box');r.setAttribute('x',q[0]-q[2]/2+4);r.setAttribute('y',q[1]-q[3]/2+4);r.setAttribute('width',q[2]-8);r.setAttribute('height',q[3]-8);r.setAttribute('rx',10);r.setAttribute('stroke',col);svg.appendChild(r)})})}
-function clearFx(){clearInterval(cycle);cycle=null;cells.flat().forEach(e=>e.classList.remove('win','scat','dim'));grid.classList.remove('antic');svg.innerHTML='';wsum.textContent='0'}
+function clearFx(){clearInterval(cycle);cycle=null;cells.flat().forEach(e=>e.classList.remove('win','scat','dim'));grid.classList.remove('antic');svg.innerHTML='';wsum.textContent='0,00'}
 infoBtn.onclick=()=>{if(busy)return;S.click();overlay('<div class="pt"><h2 style="font-size:1.3rem;text-align:center">ÖDEME TABLOSU</h2><div class="sub">Kazançlar toplam bahsin katı olarak (3 · 4 · 5 sembol)</div><table>'+
 T.pay.map((pp,i)=>'<tr><td>'+ico(T.sym[i],'pt')+'</td><td>'+pp.map(x=>'<b>'+(x/20).toLocaleString('tr-TR',{maximumFractionDigits:2})+'x</b>').join(' · ')+'</td></tr>').join('')+
 '<tr><td>'+ico(T.sym[T.W],'pt')+'</td><td>Wild — scatter hariç tüm sembollerin yerine geçer</td></tr>'+
@@ -568,7 +600,7 @@ autoBtn.onclick=()=>{S.click();auto=!auto;autoBtn.classList.toggle('on',auto);if
 
 async function spin(){
 if(busy&&!fsLeft)return;const free=fsLeft>0;
-if(!free){if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-bet)}
+if(!free){if(chips<sbet()){msg('Yetersiz jeton, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-sbet())}
 busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');
 g=slotSpin(T,Math.random);
 cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});S.spinStart();
@@ -582,12 +614,12 @@ if(stopped<5&&scSoFar>=2&&scSoFar<3&&!grid.classList.contains('antic')){grid.cla
 if(stopped===5){clearInterval(iv);grid.classList.remove('antic');setTimeout(()=>finish(free),250)}}},70)}
 
 async function finish(free){
-const r=slotEval(T,g,bet,free?T.fsMult:1);
+const r=slotEval(T,g,sbet(),free?T.fsMult:1);
 if(r.wins.length||r.scatWin){
 const all=new Set();r.wins.forEach(w=>w.cells.forEach(([c,rr])=>all.add(c+'-'+rr)));r.scells.forEach(([c,rr])=>all.add(c+'-'+rr));
 cells.forEach((col,c)=>col.forEach((e,rr)=>{if(all.has(c+'-'+rr)){e.classList.add(g[c][rr]===T.S?'scat':'win')}else e.classList.add('dim')}));
 drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:r.scells,scat:true}]:[]));
-const x=r.total/bet;if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));
+const x=r.total/sbet();if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));
 if(x>=100)say('epicwin',300);else if(x>=40)say('megawin',300);else if(x>=15)say('bigwin',300);else if(x>=5)say('great',200);else if(x>=2&&Math.random()<.6)say('nice',200);
 await countUp(r.total,x>=15?1800:700);
 if(x>=15)await overlay('<div class="ic">'+(x>=100?'👑':x>=40?'💥':'🎉')+'</div><h2>'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmt(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',2600);
@@ -600,10 +632,10 @@ grid.classList.add('fsmode');fsbar.classList.remove('hide');fsbar.querySelector(
 if(free){fsTotal+=r.total;fsLeft--;fsbar.querySelector('.fsn').textContent=fsLeft;
 if(fsLeft>0){await wait(900);spin();return}
 await wait(600);grid.classList.remove('fsmode');fsbar.classList.add('hide');
-if(fsTotal/bet>=150)say('jackpot',200);
-await overlay('<div class="ic">🏁</div><h2>FREE SPIN BİTTİ</h2><div class="n">+'+fmt(fsTotal)+'</div><p>'+(fsTotal/bet).toFixed(1)+'x bahis</p>',3000);if(fsTotal>0)celebrate(fsTotal)}
+if(fsTotal/sbet()>=150)say('jackpot',200);
+await overlay('<div class="ic">🏁</div><h2>FREE SPIN BİTTİ</h2><div class="n">+'+fmt(fsTotal)+'</div><p>'+(fsTotal/sbet()).toFixed(1)+'x bahis</p>',3000);if(fsTotal>0)celebrate(fsTotal)}
 busy=false;btnsLock();setChips(chips);
-if(auto&&chips>=bet){await wait(500);if(auto&&!busy)spin()}else if(auto){auto=false;autoBtn.classList.remove('on')}}
+if(auto&&chips>=sbet()){await wait(500);if(auto&&!busy)spin()}else if(auto){auto=false;autoBtn.classList.remove('on')}}
 let fsTotal=0;
 function countUp(total,dur){return new Promise(res=>{const t0=performance.now(),st=setInterval(()=>{const k=Math.min(1,(performance.now()-t0)/dur);wb.innerHTML='<b>+'+fmt(total*k)+'</b>';wsum.textContent=fmt(total*k);if(k%.12<.04)S.coin();if(k>=1){clearInterval(st);res()}},40)})}
 function startCycle(r){const items=r.wins.map(w=>({cells:w.cells,line:w.line,txt:'<em>Hat '+(w.line+1)+'</em> '+ico(T.sym[w.sym],'i')+'×'+w.n+' <b>+'+fmt(w.amt)+'</b>',scat:false}));
@@ -612,7 +644,7 @@ if(items.length<2){return}let i=0;const show=()=>{const it=items[i%items.length]
 drawLines([it.scat?{cells:it.cells,scat:true}:{cells:it.cells,line:it.line}]);wb.innerHTML=it.txt;i++};
 setTimeout(()=>{show();cycle=setInterval(show,1100)},1200)}
 function celebrateSmall(a){const b=document.createElement('div');b.className='big';b.style.fontSize='1.6rem';b.textContent='+'+fmt(a);document.body.appendChild(b);setTimeout(()=>b.remove(),2000)}
-function btnsLock(){goBtn.disabled=busy;infoBtn.disabled=busy;autoBtn.disabled=busy&&fsLeft>0}
+function btnsLock(){goBtn.disabled=busy;infoBtn.disabled=busy;autoBtn.disabled=busy&&fsLeft>0;minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1}
 goBtn.onclick=()=>{ac();S.click();spin()}
 p.addEventListener('click',()=>{if(!welcomed){welcomed=true;say('welcome')}},{once:true})}
 makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);
