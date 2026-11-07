@@ -452,28 +452,36 @@ for(let i=0;i<26;i++){const c=document.createElement('i');c.className='cf';c.tex
 /* ===== SES ===== */
 let AC=null,muted=false;try{muted=localStorage.getItem('ge_mute')==='1'}catch(e){}
 $('snd').textContent=muted?'🔇':'🔊';
-$('snd').onclick=()=>{muted=!muted;$('snd').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ge_mute',muted?'1':'0')}catch(e){};if(!muted)S.click()};
-function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+$('snd').onclick=()=>{muted=!muted;$('snd').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ge_mute',muted?'1':'0')}catch(e){};if(muted)S.spinStop();else S.click()};
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}decodeSfx()}if(AC&&AC.state==='suspended')AC.resume();return AC}
 function tone(f,t,d,type,v,slide){const c=ac();if(!c||muted)return;const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,c.currentTime+t);
 if(slide)o.frequency.exponentialRampToValueAtTime(slide,c.currentTime+t+d);g.gain.setValueAtTime(0,c.currentTime+t);g.gain.linearRampToValueAtTime(v||.2,c.currentTime+t+.01);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t+d);
 o.connect(g);g.connect(c.destination);o.start(c.currentTime+t);o.stop(c.currentTime+t+d+.02)}
 function noise(t,d,v,f){const c=ac();if(!c||muted)return;const b=c.createBuffer(1,c.sampleRate*d,c.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=(Math.random()*2-1)*(1-i/x.length);
 const n=c.createBufferSource();n.buffer=b;const g=c.createGain(),fl=c.createBiquadFilter();fl.type='bandpass';fl.frequency.value=f||1800;g.gain.value=v||.15;n.connect(fl);fl.connect(g);g.connect(c.destination);n.start(c.currentTime+t)}
+/* ElevenLabs ses efektleri (api/sfx). Yüklenemezse aşağıdaki sentez tonlara düşer. */
+const SFX_V=1,SFXRAW={},SFXBUF={};let sfxBus=null,spinSrc=null;
+['click','spin','stop','scatter','antic','win','coin','bigwin','freespins','lose'].forEach(k=>{fetch('api/sfx?k='+k+'&v='+SFX_V).then(r=>r.ok&&/audio/.test(r.headers.get('content-type')||'')?r.arrayBuffer():null).then(b=>{if(b){SFXRAW[k]=b;decodeSfx()}}).catch(()=>{})});
+function decodeSfx(){if(!AC)return;Object.keys(SFXRAW).forEach(k=>{const b=SFXRAW[k];delete SFXRAW[k];try{AC.decodeAudioData(b.slice(0),buf=>{SFXBUF[k]=buf},()=>{})}catch(e){}})}
+function sfx(k,v,o){o=o||{};const c=ac(),b=SFXBUF[k];if(!c||muted||!b)return null;if(!sfxBus){sfxBus=c.createGain();sfxBus.gain.value=.9;sfxBus.connect(c.destination)}
+const src=c.createBufferSource(),g=c.createGain();src.buffer=b;src.loop=!!o.loop;if(o.rate)src.playbackRate.value=o.rate;g.gain.value=v==null?1:v;src.connect(g);g.connect(sfxBus);src.start(c.currentTime+(o.t||0));return{src,g}}
 const S={
-click(){tone(900,0,.05,'square',.06)},
-tick(){noise(0,.03,.05,2500)},
-stop(){tone(110,0,.14,'sine',.35,60);noise(0,.06,.12,900)},
-scat(){tone(1200,0,.12,'sine',.18,1800);tone(1800,.1,.25,'sine',.18,2400)},
-antic(){tone(220,0,.18,'sawtooth',.06,330)},
-win(n){const b=[523,659,784,1047,1319,1568];for(let i=0;i<Math.min(n,6);i++)tone(b[i],i*.09,.22,'triangle',.18)},
-coin(){tone(1400+rnd(600),0,.05,'square',.05)},
-big(){[523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>{tone(f,i*.12,.3,'triangle',.22);tone(f/2,i*.12,.3,'sine',.12)})},
-fs(){[392,523,659,784,1047,1319].forEach((f,i)=>{tone(f,i*.1,.5,'triangle',.25);tone(f*1.5,i*.1+.05,.4,'sine',.1)});noise(.6,.5,.12,3000)},
-lose(){tone(200,0,.18,'sine',.08,150)}};
+click(){if(!sfx('click',.5))tone(900,0,.05,'square',.06)},
+spinStart(){if(spinSrc)this.spinStop();spinSrc=sfx('spin',.35,{loop:true});if(spinSrc){spinSrc.g.gain.setValueAtTime(0,AC.currentTime);spinSrc.g.gain.linearRampToValueAtTime(.35,AC.currentTime+.15)}},
+spinStop(){if(!spinSrc)return;const {src,g}=spinSrc;spinSrc=null;try{g.gain.setTargetAtTime(0,AC.currentTime,.06);src.stop(AC.currentTime+.35)}catch(e){}},
+tick(){if(spinSrc)return;noise(0,.03,.05,2500)},
+stop(){if(!sfx('stop',.8,{rate:.95+Math.random()*.1})){tone(110,0,.14,'sine',.35,60);noise(0,.06,.12,900)}},
+scat(){if(!sfx('scatter',.7)){tone(1200,0,.12,'sine',.18,1800);tone(1800,.1,.25,'sine',.18,2400)}},
+antic(){if(sfx('antic',.6))return true;tone(220,0,.18,'sawtooth',.06,330);return false},
+win(n){if(sfx('win',.45+Math.min(n,6)*.08))return;const b=[523,659,784,1047,1319,1568];for(let i=0;i<Math.min(n,6);i++)tone(b[i],i*.09,.22,'triangle',.18)},
+coin(){if(!sfx('coin',.35,{rate:.85+Math.random()*.4}))tone(1400+rnd(600),0,.05,'square',.05)},
+big(){if(sfx('bigwin',.9))return;[523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>{tone(f,i*.12,.3,'triangle',.22);tone(f/2,i*.12,.3,'sine',.12)})},
+fs(){if(sfx('freespins',.9))return;[392,523,659,784,1047,1319].forEach((f,i)=>{tone(f,i*.1,.5,'triangle',.25);tone(f*1.5,i*.1+.05,.4,'sine',.1)});noise(.6,.5,.12,3000)},
+lose(){if(!sfx('lose',.4))tone(200,0,.18,'sine',.08,150)}};
 
-/* ===== KONUŞAN SES (ElevenLabs klipleri, voice/*.mp3) ===== */
+/* ===== KONUŞAN SES (ElevenLabs TTS, api/tts) ===== */
 const VOICE={};['welcome','luck','wild','nice','great','bigwin','megawin','epicwin','freespins','bonus','jackpot'].forEach(k=>{const a=new Audio('api/tts?k='+k);a.preload='auto';a.volume=.9;a.onerror=()=>{VOICE[k]=null};VOICE[k]=a});
-let lastSay=0;function say(k,delay){if(muted)return;const a=VOICE[k];if(!a)return;const go=()=>{try{a.currentTime=0;a.play().catch(()=>{})}catch(e){}};if(delay)setTimeout(go,delay);else go()}
+function say(k,delay){if(muted)return;const a=VOICE[k];if(!a)return;const go=()=>{try{a.currentTime=0;a.play().catch(()=>{})}catch(e){}};if(delay)setTimeout(go,delay);else go()}
 let welcomed=false;
 /* ===== SLOT MOTORU ===== */
 /* Golden Eye slot engine — pure math, no DOM. Works in browser and node. */
@@ -546,14 +554,14 @@ if(busy&&!fsLeft)return;const free=fsLeft>0;
 if(!free){if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-bet)}
 busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');
 g=slotSpin(T,Math.random);
-cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});
+cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});S.spinStart();
 let t=0,stopped=0,scSoFar=0,extra=0;const base=[700,950,1200,1450,1700];
 const iv=setInterval(()=>{t+=70;if(t%140<70)S.tick();for(let c=stopped;c<5;c++)cells[c].forEach(e=>e.innerHTML=ico(T.sym[rnd(T.sym.length)]));
-if(stopped<5&&t>=base[stopped]+extra){const c=stopped;cols[c].classList.remove('spin');cols[c].classList.add('land');paint(c);S.stop();
+if(stopped<5&&t>=base[stopped]+extra){const c=stopped;cols[c].classList.remove('spin');cols[c].classList.add('land');paint(c);if(c===4)S.spinStop();S.stop();
 if(g[c].includes(T.W)&&c<3&&Math.random()<.5)say('wild');
 const sc=g[c].filter(x=>x===T.S).length;if(sc){scSoFar+=sc;cells[c].forEach((e,r)=>{if(g[c][r]===T.S)e.classList.add('scat')});S.scat()}
 stopped++;
-if(stopped<5&&scSoFar>=2&&scSoFar<3&&!grid.classList.contains('antic')){grid.classList.add('antic');extra+=900;S.antic();const an=setInterval(()=>{if(stopped>=5||scSoFar>=3)clearInterval(an);else S.antic()},300)}
+if(stopped<5&&scSoFar>=2&&scSoFar<3&&!grid.classList.contains('antic')){grid.classList.add('antic');extra+=900;const once=S.antic();const an=setInterval(()=>{if(once||stopped>=5||scSoFar>=3)clearInterval(an);else S.antic()},300)}
 if(stopped===5){clearInterval(iv);grid.classList.remove('antic');setTimeout(()=>finish(free),250)}}},70)}
 
 async function finish(free){
@@ -561,8 +569,8 @@ const r=slotEval(T,g,bet,free?T.fsMult:1);
 if(r.wins.length||r.scatWin){
 const all=new Set();r.wins.forEach(w=>w.cells.forEach(([c,rr])=>all.add(c+'-'+rr)));r.scells.forEach(([c,rr])=>all.add(c+'-'+rr));
 cells.forEach((col,c)=>col.forEach((e,rr)=>{if(all.has(c+'-'+rr)){e.classList.add(g[c][rr]===T.S?'scat':'win')}else e.classList.add('dim')}));
-drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:r.scells,scat:true}]:[]));S.win(Math.min(6,2+Math.floor(r.total/bet)));
-const x=r.total/bet;if(x>=15)S.big();
+drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:r.scells,scat:true}]:[]));
+const x=r.total/bet;if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));
 if(x>=100)say('epicwin',300);else if(x>=40)say('megawin',300);else if(x>=15)say('bigwin',300);else if(x>=5)say('great',200);else if(x>=2&&Math.random()<.6)say('nice',200);
 await countUp(r.total,x>=15?1800:700);
 if(x>=15)await overlay('<div class="ic">'+(x>=100?'👑':x>=40?'💥':'🎉')+'</div><h2>'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmt(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',2600);
