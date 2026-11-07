@@ -2,8 +2,9 @@
 
 Arkadaşlar arası eğlence oyunu. **Sanal jeton kullanılır, gerçek para yoktur.**
 
-**Canlı:** https://goldeneye-casino.vercel.app (sesli sürüm; API fonksiyonları burada çalışır)
-GitHub Pages kopyasında API olmadığı için ses yoktur.
+**Canlı:** https://ardaylmz-lab-goldeneye-casino.vercel.app (alias: https://goldeneye-casino-fvni.vercel.app)
+Vercel projesi: `arda-5509s-projects/ardaylmz-lab-goldeneye-casino`. Sesli sürüm budur; API fonksiyonları burada çalışır.
+GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.vercel.app` ayrı ve eski bir projedir, key tanımlı değildir.
 
 - Slot (5x5, 20 hat, wild/scatter, free spin), Rulet, Blackjack
 - `index.html` — oyunun tamamı (tek dosya)
