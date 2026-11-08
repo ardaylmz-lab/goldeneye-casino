@@ -183,8 +183,16 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc.won{border-color:var(--gold);box-shadow:0 0 12px var(--gold);animation:pl .6s ease-in-out infinite alternate}
 .tc.won em{font-size:.72rem}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
-.bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/458}
-.stools{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(38px);pointer-events:none}
+.bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/458;--top:38px}
+/* 3D krupiye aktifken üstte 100px yer açılır; tuval masa kenarının üstüne taşar (eller çuhaya uzanabilir) */
+.bjwrap.av{aspect-ratio:440/520;--top:100px}
+.dlr{position:absolute;left:0;top:0;width:440px;height:200px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
+.dlr canvas{position:absolute;left:90px;top:0;width:260px;height:196px;display:none}
+.bjwrap.av .dlr canvas{display:block}.bjwrap.av .stool.dc .dname{display:none}
+.bjwrap.av .dlr::before{content:"";position:absolute;left:95px;top:-14px;width:250px;height:150px;border-radius:50%;background:radial-gradient(ellipse at 50% 55%,#c9971a2a,#c9971a08 45%,#0000 70%)}
+.dplate{display:none;position:absolute;left:50%;top:1px;transform:translateX(-50%);padding:2px 10px 1px;border-radius:0 0 7px 7px;background:linear-gradient(180deg,#f3d27a,#b8860b);color:#2a1a00;font-family:"Cinzel",Georgia,serif;font-size:.5rem;font-weight:800;letter-spacing:2.5px;box-shadow:0 2px 4px #0009,inset 0 1px 0 #fff8;z-index:3}
+.bjwrap.av .dplate{display:block}
+.stools{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));pointer-events:none}
 /* krupiye koltuğu: siyah deri, altın şerit, sırtlığı masaya ters */
 .stool.dc{width:62px;height:62px;margin:-31px;background:radial-gradient(circle at 42% 36%,#3d3d48,#17171c 55%,#050506);box-shadow:0 0 0 2.5px #c9971a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
 .stool.dc::before{inset:10px;border-color:#c9971a55}
@@ -193,7 +201,7 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .stool{position:absolute;width:50px;height:50px;margin:-25px;border-radius:50%;background:radial-gradient(circle at 42% 36%,#a0402f,#5e1c14 55%,#2e0b08);box-shadow:0 0 0 3px #3a2a1a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
 .stool::before{content:"";position:absolute;inset:9px;border-radius:50%;border:1.5px solid #ffffff22;box-shadow:inset 0 0 8px #0006}
 .stool i{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px;border-radius:50%;border:8px solid #0000;border-bottom-color:#4a2a10;transform:rotate(var(--a));filter:drop-shadow(0 3px 3px #0009)}
-.bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(38px);border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:9px;background:linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
+.bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:9px;background:linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
 .bjtable{position:relative;width:100%;height:100%;border-radius:18px 18px 180px 180px/18px 18px 155px 155px;background:radial-gradient(ellipse at 50% 20%,#1b9a5a,#0f6b3d 50%,#0a4a2a 100%);box-shadow:inset 0 0 40px #0009,inset 0 0 0 1.5px #c9971a66}
 .bjsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .bjsvg text{font-family:"Cinzel",Georgia,serif;font-weight:800;fill:#ffd23fcc;letter-spacing:2px}
@@ -649,7 +657,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="bj">
-<div class="bjwrap" id="bjwrap"><div class="stools" id="stools"></div><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 422 312"><defs><path id="bja1" d="M138.3,160.0 A84,84 0 0 0 283.7,160.0"/><path id="bja2" d="M167.7,143.0 A50,50 0 0 0 254.3,143.0"/></defs><text font-size="9.5"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="5.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="211" y="140" font-size="5" text-anchor="middle">DEALER STANDS ON 17</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div class="rack" id="rack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#7b3fe4"></b><b style="--c:#c9971a"></b></div><div id="seats"></div></div></div></div>
+<div class="bjwrap" id="bjwrap"><div class="stools" id="stools"></div><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 422 312"><defs><path id="bja1" d="M138.3,160.0 A84,84 0 0 0 283.7,160.0"/><path id="bja2" d="M167.7,143.0 A50,50 0 0 0 254.3,143.0"/></defs><text font-size="9.5"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="5.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="211" y="140" font-size="5" text-anchor="middle">DEALER STANDS ON 17</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div class="rack" id="rack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#7b3fe4"></b><b style="--c:#c9971a"></b></div><div id="seats"></div></div><b class="dplate">KRUPİYE</b></div><div class="dlr" id="dlr"><canvas id="dlr3d" width="260" height="196"></canvas></div></div>
 <div class="res" id="bjres"></div>
 <div class="insbar hide" id="insbar"><span>Krupiyede As. Sigorta? Bahsin yarısı, blackjack çıkarsa 2:1 öder.</span><button id="insyes" class="on">Sigorta al</button><button id="insno">Hayır</button></div>
 <div class="row" id="bjbtns"><button class="go" id="deal">🃏 DAĞIT</button><button id="hit">Çek</button><button id="stand">Dur</button><button id="dbl">2x</button><button id="spl">Böl</button><button id="bjrebet">Tekrarla</button><button id="bjclear">Bahisleri temizle</button></div>
@@ -809,7 +817,7 @@ const AUDREQ={};function voEnsure(k){const key='vo-'+k;if(AUDBUF[key]||AUDFAIL[k
 function voPrefetch(list){list.forEach(voEnsure)}
 function say(k,delay){if(muted)return;const go=()=>{if(muted||!bus())return;const key='vo-'+k;
 if(!AUDBUF[key]){if(!AUDFAIL[key]){voEnsure(k);pendSay={k:key,until:Date.now()+(k==='welcome'?10000:4000)}}return}
-if(voSrc){try{voSrc.src.stop()}catch(e){}}voSrc=playBuf(key,1,null,'vo');if(!voSrc)return;
+if(voSrc){try{voSrc.src.stop()}catch(e){}}voSrc=playBuf(key,1,null,'vo');if(!voSrc)return;if(window.DLR&&!$('bj').classList.contains('hide'))DLR.talk(voSrc.dur*1000);
 /* anons sırasında efektleri kıs */
 const t=AC.currentTime;sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(.45,t,.05);sfxBus.gain.setTargetAtTime(.9,t+voSrc.dur,.15);if(musBus){musBus.gain.cancelScheduledValues(t);musBus.gain.setTargetAtTime(.45,t,.05);musBus.gain.setTargetAtTime(1,t+voSrc.dur,.2)}};
 if(delay)setTimeout(go,delay);else go()}
@@ -1028,6 +1036,7 @@ function val(h){let t=0,a=0;for(const c of h){const r=c.slice(0,-1);if(r==='A'){
 const sum=h=>val(h).t,rk=c=>c.slice(0,-1);
 /* 6 bahis yeri (geniş yay), 3 sandalye; masa tasarım alanı 440x330 */
 const SPOTS=[[366,200],[304,250],[242,274],[180,274],[118,250],[56,200]].map(([x,y])=>({x,y})),CHAIRS=[{x:356,y:300,a:36},{x:211,y:352,a:0},{x:66,y:300,a:-36}],RACK={x:211,y:108};
+window.DLR={deal(){},look(){},talk(){},pay(){},take(){}}; /* 3D krupiye jestleri (modül yüklenince dolar) */
 const seats=SPOTS.map(()=>({bet:0,ins:0,hands:[],badge:null,owner:null}));let dealerH=[],hole=true,phase='bet',cur=null,lastBets=null,dshown=0,dflip=false;
 /* sanal oyuncu: Mira, 3. koltuk, kendi kasası (sizin bakiyenizden bağımsız) */
 const BOT=-1,BOTNAME='';let botBank=0;const saveBot=()=>{}; /* sanal oyuncu kaldırıldı; krupiye: Mira */
@@ -1056,20 +1065,22 @@ d.innerHTML='<div class="hands" style="transform:translateY(-47px)"></div><div c
 d.querySelector('.spot').onclick=()=>placeBet(k);$('seats').appendChild(d)});
 const spotPos=k=>SPOTS[k];
 /* çip uçuşu: raftan koltuğa (ödeme) veya koltuktan rafa (kayıp) */
-function flyChips(from,to,n,delay,label){for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
+function flyChips(from,to,n,delay,label){if(from===RACK)DLR.pay((to.x-211)/211);else DLR.take((from.x-211)/211);for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
 requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{if(!$('bj').classList.contains('hide'))S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
 function card(c,hid,nw,fl){const cls='c'+(hid?' h':/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':'');if(hid)return '<div class="'+cls+'"></div>';const r=c.slice(0,-1),su=c.slice(-1);return '<div class="'+cls+'"><b>'+r+'</b><i>'+su+'</i><span>'+su+'</span></div>'}
-function bjRender(){seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
+function bjRender(){let dealt=-1;seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
 el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip'+(s.bot?' bot':'')+'"><span>'+fmtA(s.bet)+'</span></div>':'<small>'+(s.bot?BOTNAME:(k+1))+'</small>';
 
 /* her el kendi bahsinin üstünde, kartlar sağa-yukarı yelpaze (14px/-6px), bölünmüş eller yan yana (60px), toplam etiketi yelpazenin altında */
 el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,vc=h.vis==null?h.cards:h.cards.slice(0,h.vis),m=vc.length,v=val(vc),on=cur&&cur.s===k&&cur.h===j,st=m>=4?10:14,fw=34+st*(m-1),x0=-fw/2;
 /* bölünmüş ikinci el birincinin üstünde (hafif sağda), etiketi üstte */
 return '<div class="hand" style="transform:translate('+(j*(k<3?-14:14))+'px,'+(-j*58)+'px)">'+vc.map((c,i)=>'<div class="cs" style="transform:translate('+(x0+i*st)+'px,'+(-48-i*6)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(m>=2?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="left:-20px;top:'+(j?(-48-6*(m-1)-18):3)+'px">'+(h.bj?'BJ':v.t)+(h.dbl?'·2x':'')+'</div>':'')+'</div>'}).join('');
-s.hands.forEach(h=>h.shown=h.vis==null?h.cards.length:Math.min(h.vis,h.cards.length));
+s.hands.forEach(h=>{const m=h.vis==null?h.cards.length:Math.min(h.vis,h.cards.length);if(m>(h.shown||0))dealt=k;h.shown=m});
 el.querySelector('.bd').innerHTML=s.badge?'<div class="badge '+s.badge.c+'">'+s.badge.t+'</div>':(s.ins>0?'<div class="badge ins">SİGORTA '+fmtA(s.ins)+'</div>':'')});
-$('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&dflip)).join('');dshown=dealerH.length;dflip=false;
-$('dsum').textContent=dealerH.length&&!hole?sum(dealerH):''}
+$('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&dflip)).join('');if(dealerH.length>dshown||dflip)dealt='d';dshown=dealerH.length;dflip=false;
+$('dsum').textContent=dealerH.length&&!hole?sum(dealerH):'';
+/* 3D krupiye: yeni kart -> dağıtma jesti; sıradaki oyuncuya bakış */
+if(dealt!==-1)DLR.deal(dealt==='d'?'d':(SPOTS[dealt].x-211)/211);DLR.look(phase==='play'&&cur?(SPOTS[cur.s].x-211)/211:null)}
 function curHand(){return phase==='play'&&cur?seats[cur.s].hands[cur.h]:null}
 function canSplit(h,bank){if(bank===undefined)bank=chips;return !!h&&h.cards.length===2&&!h.split&&rk(h.cards[0])===rk(h.cards[1])&&bank>=h.bet&&seats[cur.s].hands.length<2}
 const BJO=()=>!!(window.cloud&&cloud.me&&cloud.me()&&cloud.bj); /* ortak masa (sunucu motoru) aktif mi */
@@ -1423,6 +1434,105 @@ frame++;if(!st&&(frame&1))return;renderer.render(scene,cam)}
 fit();loop();box.classList.add('gl');
 window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:wrapA(phi),target:wrapA(ang(pocket)+ry),ry,wr,spinning:!!st,hops:st&&st.hops?st.hops.map(h=>+h.d.toFixed(3)):null,settle:st?+(st.settleT).toFixed(2):null,camD:+camD.toFixed(3)}),_cam:cam,_ball:ball,_camSet:(d,t)=>{camD=d;camT.copy(t)}};
 })();
+/* ===== 3D KRUPİYE (prosedürel, three.js). Blackjack masasının arkasında oturur: nefes alır, göz kırpar, bakar;
+   kart dağıtırken kolunu uzatır, ödeme yaparken çipleri iter, anons yaparken konuşur. Dış model/dosya yok. ===== */
+(()=>{try{
+const cv=document.getElementById('dlr3d'),wrap=document.getElementById('bjwrap');if(!cv||!wrap)return;
+let R;try{R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true})}catch(e){return}
+const W=260,H=196,RAIL=100; /* tasarım px: tuval 260x196, masa kenarı (kesme çizgisi) 100. satırda */
+R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H,false);R.localClippingEnabled=true;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.0;
+const sc=new THREE.Scene();{const pm=new THREE.PMREMGenerator(R);sc.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose()}
+const cam=new THREE.PerspectiveCamera(26,W/H,.1,10);const CAM={y:.8,z:2.0,look:.47};
+const clip=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+function setCam(){cam.position.set(0,CAM.y,CAM.z);cam.lookAt(0,CAM.look,0);cam.updateMatrixWorld();
+/* kesme düzlemi: kameradan geçer ve ekranda tam masa kenarı satırına düşer (derinlikten bağımsız yatay çizgi) */
+const P=new THREE.Vector3(0,1-2*RAIL/H,.5).unproject(cam),D=P.sub(cam.position);const n=new THREE.Vector3(0,-D.z,D.y).normalize();clip.set(n,-n.dot(cam.position))}
+setCam();
+/* ışık: sıcak ana ışık sol üstten, soğuk dolgu, arkadan altın kontur */
+sc.add(new THREE.HemisphereLight(0xfff1dc,0x2a1a10,.55));
+const key=new THREE.DirectionalLight(0xffe4c0,1.7);key.position.set(-1.4,2.6,2.2);sc.add(key);
+const fill=new THREE.DirectionalLight(0x9fb8ff,.35);fill.position.set(2,1.2,1.6);sc.add(fill);
+const rim=new THREE.DirectionalLight(0xffd27a,1.5);rim.position.set(.4,2,-2.2);sc.add(rim);
+const M=(c,r,m,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m||0},o||{}));
+const CL={clippingPlanes:[clip]};
+const skin=M(0xe6b58f,.58),vest=M(0x141418,.52,.04,CL),shirt=M(0xf4f1ea,.7,0,CL),sleeveF=M(0xf4f1ea,.7),sleeveU=M(0xf4f1ea,.7),satin=M(0x0a0a0e,.32,.08,CL),gold=M(0xd9ab2f,.3,.9),goldC=M(0xd9ab2f,.3,.9,CL),hair=M(0x1b1310,.78),dark=M(0x1a120e,.5),white=M(0xffffff,.35),iris=M(0x3b2a1c,.45),lip=M(0x9c5a52,.6),mouthIn=M(0x3a1012,.7);
+const V=(x,y,z)=>new THREE.Vector3(x,y,z),Y=V(0,1,0);
+const body=new THREE.Group();body.rotation.x=.08;sc.add(body);
+/* gövde: yelek (döner profil, göğüs yassı) */
+const prof=[[0,0],[.165,0],[.17,.12],[.178,.26],[.195,.4],[.206,.49],[.19,.555],[.125,.585],[.062,.6],[0,.6]].map(([r,y])=>new THREE.Vector2(r,y));
+const torso=new THREE.Mesh(new THREE.LatheGeometry(prof,56),vest);torso.scale.z=.72;body.add(torso);
+/* gömlek V'si (göğüs eğimini izler) */
+{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([-.058,.59,.086, .058,.59,.086, -.034,.47,.124, .034,.47,.124, 0,.35,.146],3));g.setIndex([0,2,1,1,2,3,2,4,3]);g.computeVertexNormals();body.add(new THREE.Mesh(g,shirt))}
+/* yaka uçları */
+[-1,1].forEach(s=>{const c=new THREE.Mesh(new THREE.BoxGeometry(.052,.017,.012),shirt);c.position.set(s*.036,.592,.082);c.rotation.z=-s*.62;body.add(c)});
+/* papyon: iki kanat + düğüm */
+[-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.ConeGeometry(.022,.056,14),satin);w.position.set(s*.033,.583,.092);w.rotation.z=-s*Math.PI/2;w.scale.z=.5;body.add(w)});
+{const k=new THREE.Mesh(new THREE.SphereGeometry(.0135,14,10),satin);k.position.set(0,.583,.096);k.scale.z=.6;body.add(k)}
+/* yelek düğmeleri ve altın isimlik */
+[.30,.37,.44].forEach(y=>{const b=new THREE.Mesh(new THREE.SphereGeometry(.0075,10,8),goldC);b.position.set(0,y,.149-(y-.3)*.12);body.add(b)});
+{const p=new THREE.Mesh(new THREE.BoxGeometry(.07,.02,.004),goldC);p.position.set(-.095,.47,.126);p.rotation.y=-.35;body.add(p)}
+/* boyun */
+{const n=new THREE.Mesh(new THREE.CylinderGeometry(.049,.056,.1,24),skin);n.position.set(0,.64,0);body.add(n)}
+/* baş grubu (boyun kökünden döner) */
+const head=new THREE.Group();head.position.set(0,.645,0);body.add(head);const hc=.125;
+{const h=new THREE.Mesh(new THREE.SphereGeometry(.115,40,28),skin);h.position.y=hc;h.scale.set(.93,1.07,.96);head.add(h)}
+/* saç: arkaya taranmış koyu başlık */
+{const s=new THREE.Mesh(new THREE.SphereGeometry(.1215,40,22,0,Math.PI*2,0,1.5),hair);s.position.set(0,hc+.012,-.014);s.rotation.x=-.24;s.scale.set(.95,1,.98);head.add(s);const q=new THREE.Mesh(new THREE.SphereGeometry(.1,24,16),hair);q.position.set(0,hc+.098,.004);q.scale.set(.92,.3,.9);q.rotation.x=-.25;head.add(q)}
+/* kulaklar */
+[-1,1].forEach(s=>{const e=new THREE.Mesh(new THREE.SphereGeometry(.024,16,12),skin);e.position.set(s*.107,hc-.002,-.004);e.scale.set(.5,1,.8);head.add(e)});
+/* gözler (kırpma için grup) */
+const eyes=[];[-1,1].forEach(s=>{const g=new THREE.Group();g.position.set(s*.042,hc+.016,.1);const w=new THREE.Mesh(new THREE.SphereGeometry(.0185,18,14),white);w.scale.z=.6;g.add(w);const p=new THREE.Mesh(new THREE.SphereGeometry(.0095,14,10),iris);p.position.z=.011;g.add(p);const pu=new THREE.Mesh(new THREE.SphereGeometry(.0045,10,8),dark);pu.position.z=.019;g.add(pu);const hl=new THREE.Mesh(new THREE.SphereGeometry(.0028,8,6),white);hl.position.set(.0035,.0035,.022);g.add(hl);head.add(g);eyes.push(g)});
+/* kaşlar, burun, ağız */
+[-1,1].forEach(s=>{const b=new THREE.Mesh(new THREE.BoxGeometry(.046,.0075,.012),hair);b.position.set(s*.044,hc+.06,.1);b.rotation.z=s*.1;head.add(b)});
+{const n=new THREE.Mesh(new THREE.SphereGeometry(.017,16,12),skin);n.position.set(0,hc-.012,.113);n.scale.set(.85,1.15,1);head.add(n)}
+const mouthArc=Math.PI*.62,mouth=new THREE.Mesh(new THREE.TorusGeometry(.024,.0035,8,24,mouthArc),lip);mouth.position.set(0,hc-.044,.1);mouth.rotation.z=Math.PI*1.5-mouthArc/2;head.add(mouth);
+const mo=new THREE.Mesh(new THREE.SphereGeometry(.011,14,10),mouthIn);mo.position.set(0,hc-.066,.1);mo.scale.set(1.5,.06,.4);head.add(mo);
+/* omuzlar ve kollar */
+const SH=[V(-.19,.54,0),V(.19,.54,0)],L1=.25,L2=.23,arms=[];
+SH.forEach((S,i)=>{const sh=new THREE.Mesh(new THREE.SphereGeometry(.056,24,18),sleeveU);sh.position.copy(S);body.add(sh);
+const up=new THREE.Group();up.add(new THREE.Mesh(new THREE.CapsuleGeometry(.05,L1-.05,6,18),sleeveU));const gt=new THREE.Mesh(new THREE.TorusGeometry(.055,.007,8,28),goldC);gt.rotation.x=Math.PI/2;gt.position.y=-.06;up.add(gt);body.add(up);
+const fo=new THREE.Group();fo.add(new THREE.Mesh(new THREE.CapsuleGeometry(.042,L2-.045,6,18),sleeveF));const cf=new THREE.Mesh(new THREE.CylinderGeometry(.047,.047,.03,20),sleeveF);cf.position.y=L2/2-.03;fo.add(cf);body.add(fo);
+const hand=new THREE.Mesh(new THREE.SphereGeometry(.05,20,14),skin);hand.scale.set(1,.45,1.3);body.add(hand);
+const s=i?1:-1;arms.push({S,up,fo,hand,hint:V(s*.8,-1,-.3),rest:V(s*.2,.5,.22),tgt:V(s*.2,.5,.22),cur:V(s*.2,.5,.22)})});
+function ik(a){const d=a.cur.clone().sub(a.S);let len=d.length();const mx=(L1+L2)*.995,mn=Math.abs(L1-L2)+.03;if(len>mx){d.multiplyScalar(mx/len);len=mx}else if(len<mn){d.multiplyScalar(mn/len);len=mn}
+const u=d.clone().normalize(),q=(L1*L1-L2*L2+len*len)/(2*len),h=Math.sqrt(Math.max(0,L1*L1-q*q)),v=a.hint.clone().addScaledVector(u,-a.hint.dot(u)).normalize();
+const E=a.S.clone().addScaledVector(u,q).addScaledVector(v,h),Hh=a.S.clone().add(d);
+a.up.position.lerpVectors(a.S,E,.5);a.up.quaternion.setFromUnitVectors(Y,E.clone().sub(a.S).normalize());
+a.fo.position.lerpVectors(E,Hh,.5);a.fo.quaternion.setFromUnitVectors(Y,Hh.clone().sub(E).normalize());a.hand.position.copy(Hh).add(V(0,-.005,.03))}
+/* durum ve jestler */
+const now=()=>performance.now();let gestUntil=0,talkUntil=0,blinkAt=now()+1800,blinkT=0,lookTgt=null,lookUntil=0,glancing=false,glanceAt=now()+4000,glanceEnd=0,glanceY=0,headY=0,headX=0,lean=0,leanT=0,active=0;
+const seatX=nx=>Math.max(-1,Math.min(1,+nx||0));
+function gesture(ms){gestUntil=now()+ms;active=now()+ms+600}
+const api={
+ deal(k){if(k==='d'){arms[0].tgt.set(-.02,.4,.44);arms[1].tgt.set(.3,.42,.26)}else{const nx=seatX(k);arms[0].tgt.set(nx*.42-.03,.34,.48);arms[1].tgt.set(.3,.37,.26);lookTgt=nx;lookUntil=now()+700;leanT=nx*.06}gesture(330)},
+ pay(nx){nx=seatX(nx);arms[0].tgt.set(nx*.33-.1,.35,.52);arms[1].tgt.set(nx*.33+.1,.35,.52);lookTgt=nx;lookUntil=now()+900;leanT=nx*.05;gesture(560)},
+ take(nx){nx=seatX(nx);arms[0].tgt.set(nx*.4,.35,.5);gesture(300);setTimeout(()=>{if(now()>gestUntil-20){arms[0].tgt.set(-.02,.42,.27);gesture(260)}},280)},
+ talk(ms){talkUntil=now()+Math.min(6000,Math.max(300,ms||800));active=talkUntil+400},
+ look(nx){lookTgt=nx==null?null:seatX(nx);lookUntil=nx==null?0:now()+6e4;leanT=0},
+ _cam:(o)=>{Object.assign(CAM,o);setCam();active=now()+300},_rest:(x,y,z)=>{arms.forEach((a,i)=>a.rest.set((i?1:-1)*x,y,z));active=now()+300},_hint:(x,y,z)=>{arms.forEach((a,i)=>a.hint.set((i?1:-1)*x,y,z));active=now()+300}
+};
+let last=now(),frame=0;
+function loop(){requestAnimationFrame(loop);const t=now(),dt=Math.min(.05,(t-last)/1000);last=t;
+const vis=!document.hidden&&!document.getElementById('bj').classList.contains('hide');if(!vis)return;
+const T=t/1000;
+/* nefes + hafif salınım */
+torso.scale.y=1+.012*Math.sin(T*1.5);body.rotation.z=.018*Math.sin(T*.6)+lean;body.position.x=.004*Math.sin(T*.45);
+/* kollar: hedefe yumuşak gidiş; jest bitince dinlenme */
+if(t>gestUntil){arms.forEach(a=>a.tgt.copy(a.rest));leanT=0}
+const ka=1-Math.exp(-dt*13);arms.forEach(a=>{a.cur.lerp(a.tgt,ka);ik(a)});lean+=(leanT-lean)*(1-Math.exp(-dt*5));
+/* baş: bakış hedefi / kameraya bakış / boşta göz gezdirme */
+if(lookTgt==null||t>=lookUntil){if(!glancing&&t>glanceAt){glancing=true;glanceEnd=t+1100+Math.random()*900;glanceY=(Math.random()*2-1)*.35}if(glancing&&t>glanceEnd){glancing=false;glanceAt=t+3500+Math.random()*5000}}
+let wy=0,wx=0;if(lookTgt!=null&&t<lookUntil){wy=lookTgt*.5;wx=.14}else if(glancing){wy=glanceY;wx=.05}
+if(t<talkUntil){wx+=.03*Math.sin(T*7);wy+=.02*Math.sin(T*3.1)}
+const kh=1-Math.exp(-dt*6);headY+=(wy-headY)*kh;headX+=(wx-headX)*kh;head.rotation.y=headY+.02*Math.sin(T*.8);head.rotation.x=headX+.012*Math.sin(T*1.1);head.rotation.z=.015*Math.sin(T*.5);
+/* göz kırpma */
+if(t>blinkAt){blinkT=t+140;blinkAt=t+2600+Math.random()*3400}const bl=t<blinkT?.08:1;eyes.forEach(e=>{e.scale.y+=(bl-e.scale.y)*Math.min(1,dt*40)});
+/* konuşma: ağız açılıp kapanır */
+const open=t<talkUntil?.35+.65*Math.abs(Math.sin(T*11.3)*Math.sin(T*4.7)):.06;mo.scale.y+=(open-mo.scale.y)*Math.min(1,dt*30);
+frame++;if(t>active&&(frame&1))return;R.render(sc,cam)}
+arms.forEach(ik);loop();
+Object.assign(window.DLR,api);wrap.classList.add('av');
+}catch(e){console.warn('krupiye yok',e)}})();
 </script>
 </body>
 </html>
