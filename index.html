@@ -744,15 +744,17 @@ const n=c.createBufferSource();n.buffer=b;const g=c.createGain(),fl=c.createBiqu
    ücretsiz planda eşzamanlılık sınırı 2. Hata olursa bekleyip tekrar dener. Efekt yüklenemezse
    aşağıdaki sentez tonlara düşer; anons yüklenemezse sessiz kalır. */
 const AUD_V=1,AUDRAW={},AUDBUF={},AUDQ=[],AUDFAIL={};let audBusy=0,sfxBus=null,voBus=null,spinSrc=null,pendSay=null;
-function audLoad(k,url){AUDQ.push({k,url,n:0});audNext()}
+/* klipler önce repodaki sabit dosyadan (audio/…), yoksa API'den (api/…) yüklenir */
+const AUD_STATIC=(kind,k)=>'audio/'+kind+'/'+k+'.mp3?v='+AUD_V,AUD_API=(kind,k)=>'api/'+kind+'?k='+k+'&v='+AUD_V;
+function audLoad(k,url,alt){AUDQ.push({k,url,alt,n:0});audNext()}
 function audNext(){while(audBusy<2&&AUDQ.length){const it=AUDQ.shift();audBusy++;
-fetch(it.url).then(r=>r.ok&&/audio/.test(r.headers.get('content-type')||'')?r.arrayBuffer():Promise.reject(r.status)).then(b=>{AUDRAW[it.k]=b;decodeAud()})
-.catch(st=>{if(it.n<3&&st!==400&&st!==404){it.n++;setTimeout(()=>{AUDQ.push(it);audNext()},2000*it.n)}else AUDFAIL[it.k]=1}).then(()=>{audBusy--;audNext()})}}
+fetch(it.url).then(r=>r.ok&&(/audio/.test(r.headers.get('content-type')||'')||/\.mp3(\?|$)/.test(r.url))?r.arrayBuffer():Promise.reject(r.status)).then(b=>{AUDRAW[it.k]=b;decodeAud()})
+.catch(st=>{if(it.alt){it.url=it.alt;it.alt=null;it.n=0;AUDQ.unshift(it)}else if(it.n<3&&st!==400&&st!==404){it.n++;setTimeout(()=>{AUDQ.push(it);audNext()},2000*it.n)}else AUDFAIL[it.k]=1}).then(()=>{audBusy--;audNext()})}}
 /* yükleme sırası: ilk dokunuşta gereken anons, ilk çevirmede gereken efektler, sonra gerisi */
-['welcome','luck','wild','nice','great'].forEach(k=>audLoad('vo-'+k,'api/tts?k='+k+'&v='+AUD_V));
-['click','spin','stop','win','coin','scatter'].forEach(k=>audLoad('fx-'+k,'api/sfx?k='+k+'&v='+AUD_V));
-['bigwin','megawin','epicwin','freespins','bonus','jackpot'].forEach(k=>audLoad('vo-'+k,'api/tts?k='+k+'&v='+AUD_V));
-['antic','bigwin','freespins','lose','chip','rwheel','rdrop','card'].forEach(k=>audLoad('fx-'+k,'api/sfx?k='+k+'&v='+AUD_V));
+['welcome','luck','wild','nice','great'].forEach(k=>audLoad('vo-'+k,AUD_STATIC('tts',k),AUD_API('tts',k)));
+['click','spin','stop','win','coin','scatter'].forEach(k=>audLoad('fx-'+k,AUD_STATIC('sfx',k),AUD_API('sfx',k)));
+['bigwin','megawin','epicwin','freespins','bonus','jackpot'].forEach(k=>audLoad('vo-'+k,AUD_STATIC('tts',k),AUD_API('tts',k)));
+['antic','bigwin','freespins','lose','chip','rwheel','rdrop','card'].forEach(k=>audLoad('fx-'+k,AUD_STATIC('sfx',k),AUD_API('sfx',k)));
 function decodeAud(){if(!AC)return;Object.keys(AUDRAW).forEach(k=>{const b=AUDRAW[k];delete AUDRAW[k];try{AC.decodeAudioData(b.slice(0),buf=>{AUDBUF[k]=buf;if(pendSay&&pendSay.k===k){const ps=pendSay;pendSay=null;if(Date.now()<ps.until)say(ps.k.slice(3))}},()=>{})}catch(e){}})}
 function bus(){const c=ac();if(!c)return null;if(!sfxBus){sfxBus=c.createGain();sfxBus.gain.value=.9;sfxBus.connect(c.destination);voBus=c.createGain();voBus.gain.value=1;voBus.connect(c.destination)}return c}
 function playBuf(k,v,o,out){o=o||{};const c=bus(),b=AUDBUF[k];if(!c||muted||!b)return null;
@@ -785,7 +787,7 @@ let wheelSrc=null,wheelTick=null;
 /* ===== KONUŞAN SES (ElevenLabs TTS, api/tts) ===== */
 let voSrc=null;
 /* krupiye cümleleri gerektiğinde yüklenir: masaya girince veya sonuç belli olunca önceden */
-const AUDREQ={};function voEnsure(k){const key='vo-'+k;if(AUDBUF[key]||AUDFAIL[key]||AUDREQ[key])return;AUDREQ[key]=1;audLoad(key,'api/tts?k='+k+'&v='+AUD_V)}
+const AUDREQ={};function voEnsure(k){const key='vo-'+k;if(AUDBUF[key]||AUDFAIL[key]||AUDREQ[key])return;AUDREQ[key]=1;audLoad(key,AUD_STATIC('tts',k),AUD_API('tts',k))}
 function voPrefetch(list){list.forEach(voEnsure)}
 function say(k,delay){if(muted)return;const go=()=>{if(muted||!bus())return;const key='vo-'+k;
 if(!AUDBUF[key]){if(!AUDFAIL[key]){voEnsure(k);pendSay={k:key,until:Date.now()+(k==='welcome'?10000:4000)}}return}
