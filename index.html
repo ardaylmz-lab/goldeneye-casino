@@ -75,7 +75,7 @@ background:linear-gradient(135deg,#3a0a0a,#160606 60%);border:2px solid var(--gd
 .wheelbox{--tilt:56deg;--d:4.2s;position:relative;z-index:2;width:300px;height:222px;margin:6px auto 12px;perspective:720px;perspective-origin:50% 8%}
 /* WebGL çark aktifken (.gl) CSS çark gizlenir */
 .wheelbox canvas{position:absolute;inset:0;width:100%;height:100%;display:none;z-index:1}
-.wheelbox.gl{height:240px}.wheelbox.gl canvas{display:block}.wheelbox.gl .w3d{display:none}
+.wheelbox.gl{width:100%;max-width:340px;height:auto;aspect-ratio:5/4}.wheelbox.gl canvas{display:block}.wheelbox.gl .w3d{display:none}
 .rres3d{position:absolute;right:6px;top:6px;z-index:3;width:44px;height:44px;border-radius:50%;display:none;place-items:center;font-size:1.15rem;font-weight:900;color:#fff;border:3px solid var(--gold);box-shadow:0 0 14px var(--gold),0 4px 10px #000c;text-shadow:0 1px 2px #000;animation:rpop .35s cubic-bezier(.2,1.6,.4,1)}
 .wheelbox.gl .rres3d.show{display:grid}
 @keyframes rpop{from{transform:scale(.4);opacity:0}}
@@ -810,13 +810,14 @@ import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 (async()=>{
 const box=document.querySelector('.wheelbox'),cv=document.getElementById('rw3d');if(!box||!cv)return;
 let renderer;try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true})}catch(e){return}
-const W=300,H=240;renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(W,H,false);
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();
 const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose();
-const cam=new THREE.PerspectiveCamera(32,W/H,.1,12);cam.position.set(0,1.5,2.1);cam.lookAt(0,-.1,0);
-const key=new THREE.DirectionalLight(0xfff1d6,2.3);key.position.set(1.2,2.6,1.7);key.castShadow=true;key.shadow.mapSize.set(1024,1024);
-{const c=key.shadow.camera;c.left=c.bottom=-1.3;c.right=c.top=1.3;c.near=.5;c.far=7;key.shadow.bias=-.0006;key.shadow.normalBias=.01}scene.add(key);
+const cam=new THREE.PerspectiveCamera(34,5/4,.1,12);cam.position.set(0,2.1,1.92);cam.lookAt(0,-.09,0);
+let CW=0,CH=0;function fit(){const w=box.clientWidth,h=box.clientHeight;if(!w||!h||(w===CW&&h===CH))return;CW=w;CH=h;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+const key=new THREE.DirectionalLight(0xfff1d6,2.3);key.position.set(1.2,2.8,1.6);key.castShadow=true;key.shadow.mapSize.set(1024,1024);
+{const c=key.shadow.camera;c.left=c.bottom=-1.2;c.right=c.top=1.2;c.near=.5;c.far=7;key.shadow.bias=-.0006;key.shadow.normalBias=.01}scene.add(key);
 scene.add(new THREE.HemisphereLight(0xfff6e6,0x10361f,.6));
 const rimL=new THREE.DirectionalLight(0xffe2a8,.7);rimL.position.set(-2,1.4,-1.6);scene.add(rimL);
 /* --- dokular --- */
@@ -826,11 +827,12 @@ for(let i=0;i<160;i++){x.strokeStyle='rgba('+(18+Math.random()*30|0)+','+(6+Math
 for(let i=0;i<70;i++){x.strokeStyle='rgba(255,205,150,'+(.04+Math.random()*.09)+')';x.lineWidth=.5+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);for(let px=0;px<=1024;px+=48)x.lineTo(px,y+Math.sin(px/70+i)*2.5);x.stroke()}
 const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,1);t.anisotropy=4;return t}
 async function pocketTex(){try{await document.fonts.ready}catch(e){}
-const N=37,cw=84,HH=384,c=document.createElement('canvas');c.width=cw*N;c.height=HH;const x=c.getContext('2d');
-for(let i=0;i<N;i++){const j=36-i,n=WO[i],col=n===0?'#0e8a44':REDS.includes(n)?'#cc1230':'#1a1a1e',dark=n===0?'#064a23':REDS.includes(n)?'#6e0616':'#060607',X=j*cw;
-const g=x.createLinearGradient(0,0,0,HH);g.addColorStop(0,col);g.addColorStop(.46,col);g.addColorStop(.52,dark);g.addColorStop(.66,col);g.addColorStop(1,dark);x.fillStyle=g;x.fillRect(X,0,cw,HH);
-x.fillStyle='rgba(255,255,255,.07)';x.fillRect(X,0,cw,HH*.46);
-x.save();x.translate(X+cw/2,HH*.235);x.rotate(Math.PI);x.scale(-1,1);x.fillStyle='#fff';x.font='900 72px Montserrat, Arial, Helvetica, sans-serif';x.textAlign='center';x.textBaseline='middle';x.shadowColor='#000';x.shadowBlur=4;x.fillText(String(n),0,0);x.restore();
+const N=37,cw=96,HH=384,c=document.createElement('canvas');c.width=cw*N;c.height=HH;const x=c.getContext('2d');
+for(let i=0;i<N;i++){const j=36-i,n=WO[i],col=n===0?'#0e8a44':REDS.includes(n)?'#d0132f':'#1c1c20',dark=n===0?'#064a23':REDS.includes(n)?'#6e0616':'#060607',X=j*cw;
+const g=x.createLinearGradient(0,0,0,HH);g.addColorStop(0,col);g.addColorStop(.55,col);g.addColorStop(.60,dark);g.addColorStop(.72,col);g.addColorStop(1,dark);x.fillStyle=g;x.fillRect(X,0,cw,HH);
+x.fillStyle='rgba(255,255,255,.06)';x.fillRect(X,0,cw,HH*.55);
+/* iç yüzeyden bakıldığı için yatay aynalı; rakamın tepesi merkeze bakar */
+x.save();x.translate(X+cw/2,HH*.27);x.rotate(Math.PI);x.scale(-1,1);x.font='900 108px Montserrat, Arial, Helvetica, sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=10;x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.55)';x.strokeText(String(n),0,0);x.fillStyle='#fff';x.fillText(String(n),0,0);x.restore();
 x.fillStyle='rgba(0,0,0,.45)';x.fillRect(X,0,2,HH);x.fillRect(X+cw-2,0,2,HH)}
 const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
 /* --- malzemeler --- */
@@ -838,23 +840,22 @@ const wood=new THREE.MeshStandardMaterial({map:woodTex(),roughness:.36,metalness
 const brass=new THREE.MeshStandardMaterial({color:0xd8ad45,metalness:.95,roughness:.22,envMapIntensity:1.3});
 const lacq=new THREE.MeshStandardMaterial({color:0x150c06,roughness:.28,metalness:.12,envMapIntensity:1});
 const ivory=new THREE.MeshStandardMaterial({color:0xf6f1e6,roughness:.28,metalness:0,envMapIntensity:1});
-/* --- kase (torna) --- */
-const prof=[[.655,-.22],[.655,-.10],[.675,-.065],[.70,-.058],[.86,.02],[.885,.034],[.985,.05],[1.0,.062],[1.035,.072],[1.075,.062],[1.1,.035],[1.1,-.16],[1.0,-.2],[.655,-.22]].map(p=>new THREE.Vector2(p[0],p[1]));
+/* --- ölçüler: rotor R2..R1, kase 1.0 --- */
+const R1=.74,R2=.50,Y1=-.07,Y2=-.16,TRK=.91,PR=.60,BR=.034;
+const prof=[[.735,-.22],[.735,-.10],[.755,-.065],[.78,-.058],[.87,.012],[.89,.03],[.94,.045],[.955,.06],[.98,.07],[1.0,.055],[1.0,-.16],[.92,-.2],[.735,-.22]].map(p=>new THREE.Vector2(p[0],p[1]));
 const bowl=new THREE.Mesh(new THREE.LatheGeometry(prof,128),wood);bowl.receiveShadow=true;scene.add(bowl);
 const ring=(r,tube,y,mat)=>{const m=new THREE.Mesh(new THREE.TorusGeometry(r,tube,12,128),mat||brass);m.rotation.x=Math.PI/2;m.position.y=y;return m};
-scene.add(ring(1.035,.009,.074));scene.add(ring(.68,.008,-.06));{const g=ring(.905,.016,.03,new THREE.MeshStandardMaterial({color:0x2a1206,roughness:.25,metalness:.05}));g.scale.set(1,1,.35);scene.add(g)}
-/* saptırıcı elmaslar */
-for(let k=0;k<8;k++){const d=new THREE.Mesh(new THREE.OctahedronGeometry(.026),brass);const th=k*Math.PI/4+Math.PI/8,r=.78;d.position.set(r*Math.sin(th),-.012,r*Math.cos(th));d.rotation.y=th;d.scale.set(k%2?1.7:1,.55,k%2?1:1.7);d.castShadow=true;scene.add(d)}
+scene.add(ring(.975,.009,.072));scene.add(ring(.76,.008,-.06));{const g=ring(TRK,.016,.028,new THREE.MeshStandardMaterial({color:0x2a1206,roughness:.25,metalness:.05}));g.scale.set(1,1,.35);scene.add(g)}
+for(let k=0;k<8;k++){const d=new THREE.Mesh(new THREE.OctahedronGeometry(.024),brass);const th=k*Math.PI/4+Math.PI/8,r=.825;d.position.set(r*Math.sin(th),-.012,r*Math.cos(th));d.rotation.y=th;d.scale.set(k%2?1.7:1,.55,k%2?1:1.7);d.castShadow=true;scene.add(d)}
 /* --- rotor --- */
-const R1=.66,R2=.42,Y1=-.07,Y2=-.16,rotor=new THREE.Group();scene.add(rotor);
+const rotor=new THREE.Group();scene.add(rotor);
 const pockets=new THREE.Mesh(new THREE.CylinderGeometry(R1,R2,Y1-Y2,148,1,true),new THREE.MeshStandardMaterial({map:await pocketTex(),roughness:.5,metalness:.06,envMapIntensity:.7,side:THREE.DoubleSide}));pockets.position.y=(Y1+Y2)/2;pockets.receiveShadow=true;rotor.add(pockets);
 const cone=new THREE.Mesh(new THREE.CylinderGeometry(.15,R2,.13,96),lacq);cone.position.y=Y2+.065;cone.receiveShadow=true;rotor.add(cone);
 rotor.add(ring(R2,.007,Y2+.002));rotor.add(ring(R1,.009,Y1));
-const slopeA=Math.atan2(Y1-Y2,R1-R2),frets=new THREE.InstancedMesh(new THREE.BoxGeometry(.012,.026,.255),brass,37);
+const slopeA=Math.atan2(Y1-Y2,R1-R2),frets=new THREE.InstancedMesh(new THREE.BoxGeometry(.012,.028,.258),brass,37);
 {const m=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),v=new THREE.Vector3(),one=new THREE.Vector3(1,1,1),rm=(R1+R2)/2,ym=(Y1+Y2)/2+.009;
 for(let k=0;k<37;k++){const th=k*2*Math.PI/37;e.set(-slopeA,th,0,'YXZ');q.setFromEuler(e);v.set(rm*Math.sin(th),ym,rm*Math.cos(th));m.compose(v,q,one);frets.setMatrixAt(k,m)}}
 frets.castShadow=true;frets.receiveShadow=true;rotor.add(frets);
-/* turet ve kulp */
 const tur=new THREE.Group();tur.position.y=-.03;rotor.add(tur);
 const cyl=(r1,r2,h,y,mat)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,48),mat||brass);m.position.y=y;m.castShadow=true;return m};
 tur.add(cyl(.105,.125,.11,.055));tur.add(ring(.11,.012,.11));tur.add(cyl(.02,.095,.06,.14));tur.add(cyl(.028,.028,.05,.19));
@@ -862,31 +863,44 @@ const sph=(r,x,y,z)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),b
 for(let k=0;k<2;k++){const a=new THREE.Mesh(new THREE.CylinderGeometry(.011,.011,.36,16),brass);a.rotation.z=Math.PI/2;a.rotation.y=k*Math.PI/2;a.position.y=.215;a.castShadow=true;tur.add(a)}
 tur.add(sph(.028,.18,.215,0));tur.add(sph(.028,-.18,.215,0));tur.add(sph(.028,0,.215,.18));tur.add(sph(.028,0,.215,-.18));tur.add(sph(.03,0,.235,0));
 /* --- top --- */
-const ball=new THREE.Mesh(new THREE.SphereGeometry(.034,32,24),ivory);ball.castShadow=true;scene.add(ball);
-const TWO=Math.PI*2,ang=i=>((36-i)+.5)*TWO/37,BR=.034,PR=.52;
-function surfY(r){if(r>=.885)return .05;if(r>=.70)return -.058+(r-.70)/.16*.078;if(r>=.675)return -.062;return Y2+(r-R2)/(R1-R2)*(Y1-Y2)}
-const clampA=a=>Math.atan2(Math.sin(a),Math.cos(a));const smooth=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
+const ball=new THREE.Mesh(new THREE.SphereGeometry(BR,32,24),ivory);ball.castShadow=true;scene.add(ball);
+const TWO=Math.PI*2,ang=i=>((36-i)+.5)*TWO/37;
+function surfY(r){if(r>=.89)return .045;if(r>=.78)return -.058+(r-.78)/.11*.088;if(r>=.755)return -.062;return Y2+(r-R2)/(R1-R2)*(Y1-Y2)}
+const wrapA=a=>Math.atan2(Math.sin(a),Math.cos(a)),smooth=x=>x<=0?0:x>=1?1:x*x*(3-2*x),E=x=>1-Math.pow(1-Math.min(1,x),3);
 let ry=0,wr=.25,pocket=0,st=null,phi=ang(0),hitPlayed=false;
-const DUR=6.4;
-function spin(i){return new Promise(res=>{const now=performance.now()/1000,w0=1.5,w1=.55;const ryc=ry+(w0+w1)/2*DUR;const target=ang(i)+ryc,base=TWO*8.5;
-const Phi=(((phi-target-base)%TWO)+TWO)%TWO+base;st={t0:now,w0,w1,phi0:phi,Phi,i,res,T1:2.9,T2:4.85,Th:4.1,done:false};hitPlayed=false})}
+const DUR=6.4,T1=2.8,T2=4.55,Th=3.95,W0=1.5,W1=.55;
+const ryAt=u=>st.ry0+W0*u-(W0-W1)*u*u/(2*DUR);
+/* sekme planı: rotora göre açı adımları (toplamı -D), azalan yükseklik ve süre; biri hafif geri teper */
+function planHops(D){const pat=[[.42,.034,.30],[.27,.027,.26],[-.07,.018,.19],[.23,.012,.17],[.15,.007,.14]];const k=3+Math.floor(Math.random()*3);const use=pat.slice(0,k);
+const sum=use.reduce((a,h)=>a+h[0],0);return use.map(h=>({d:-D*h[0]/sum,h:h[1]*(0.85+Math.random()*.3),t:h[2]}))}
+function spin(i){return new Promise(res=>{const now=performance.now()/1000;st={t0:now,ry0:ry,phi0:phi,i,res,done:false,hops:null,entry:0,relAt:0,settleT:0,hopIdx:-1};
+const D0=.55+Math.random()*.45; /* rotora girişte hedefin ne kadar ilerisinde (rad) */
+const need=(((phi-ang(i)-D0-ryAt(T2))%TWO)+TWO)%TWO,E2=E(T2/DUR),base=TWO*8.5,k=Math.ceil((base*E2-need)/TWO);st.Phi=(need+TWO*k)/E2;hitPlayed=false})}
 let last=performance.now()/1000,frame=0;
-function loop(){requestAnimationFrame(loop);const now=performance.now()/1000,dt=Math.min(.05,now-last);last=now;
-if(st){const u=now-st.t0;wr=u<DUR?st.w0-(st.w0-st.w1)*u/DUR:wr+(.25-wr)*Math.min(1,dt*1.1)}
-ry+=wr*dt;rotor.rotation.y=ry;
-let r=PR,y,hop=0;
-if(st){const s=st,u=now-s.t0,x=Math.min(1,u/DUR),E=1-Math.pow(1-x,3);let pf=s.phi0-s.Phi*E;
-if(u<s.T1)r=.90;else if(u<s.T2){const k=smooth((u-s.T1)/(s.T2-s.T1));r=.90-(.90-.70)*k}else{const k=1-Math.pow(1-Math.min(1,(u-s.T2)/.9),2);r=.70-(.70-PR)*k}
-if(u>=s.Th&&u<s.Th+.22){hop=.03*Math.sin(Math.PI*(u-s.Th)/.22);if(!hitPlayed){hitPlayed=true;try{S.hit()}catch(e){}}}
-const b1=s.T2+.12,b2=b1+.26,b3=b2+.19;if(u>=b1&&u<b2)hop=.028*Math.sin(Math.PI*(u-b1)/.26);else if(u>=b2&&u<b3)hop=.012*Math.sin(Math.PI*(u-b2)/.19);
-if(u>=s.T2){const k=smooth((u-s.T2)/(DUR-s.T2));pf=pf+clampA(ang(s.i)+ry-pf)*k}
-if(u>=DUR){pf=ang(s.i)+ry;r=PR;hop=0;if(!s.done){s.done=true;pocket=s.i;s.res()}}
-if(u>=DUR+3)st=null;phi=pf}else phi=ang(pocket)+ry;
-y=surfY(r)+BR+hop;ball.position.set(r*Math.sin(phi),y,r*Math.cos(phi));
+function loop(){requestAnimationFrame(loop);fit();const now=performance.now()/1000,dt=Math.min(.05,now-last);last=now;
+/* dönüş sırasında rotor açısı zamana bağlı analitik: kare takılması hizalamayı bozmaz */
+if(st&&now-st.t0<=DUR){const u=now-st.t0;wr=W0-(W0-W1)*u/DUR;ry=ryAt(u)}else{if(st)wr+=(.25-wr)*Math.min(1,dt*1.1);ry+=wr*dt}rotor.rotation.y=ry;
+let r=PR,hop=0;
+if(st){const s=st,u=now-s.t0;
+if(u<T2){ /* pist + eğim: serbest hareket */
+phi=s.phi0-s.Phi*E(u/DUR);
+if(u<T1)r=TRK;else{const k=smooth((u-T1)/(T2-T1));r=TRK-(TRK-.76)*k}
+if(u>=Th&&u<Th+.22){hop=.03*Math.sin(Math.PI*(u-Th)/.22);if(!hitPlayed){hitPlayed=true;try{S.hit()}catch(e){}}}
+}else{ /* rotorda: ayırıcılara çarpa çarpa sekerek kazanan cebe */
+if(!s.hops){s.entry=wrapA((s.phi0-s.Phi*E(T2/DUR))-ryAt(T2));let D=wrapA(s.entry-ang(s.i));if(D<0)D+=TWO;s.hops=planHops(D);s.relAt=s.entry;let tt=T2;s.hops.forEach(h=>{h.t0=tt;tt+=h.t;h.r0=.74;});s.settleT=tt;
+let rr=.74;s.hops.forEach((h,q)=>{h.r0=rr;rr=q===s.hops.length-1?PR:rr-(rr-PR)*.45;h.r1=rr})}
+let rel=ang(s.i),done=true;
+for(let q=0;q<s.hops.length;q++){const h=s.hops[q];if(u<h.t0+h.t){const k=(u-h.t0)/h.t;rel=s.relAt+h.d*k;hop=h.h*Math.sin(Math.PI*k);r=h.r0+(h.r1-h.r0)*k;done=false;
+if(s.hopIdx!==q){s.hopIdx=q;if(q>0)try{S.hit()}catch(e){}}break}else{s.relAt+=0;}}
+if(done){rel=ang(s.i);r=PR;hop=0;if(!s.done){s.done=true;pocket=s.i;try{S.hit()}catch(e){};s.res()}}
+else{let acc=s.entry;for(let q=0;q<s.hopIdx;q++)acc+=s.hops[q].d;const h=s.hops[s.hopIdx];rel=acc+h.d*Math.min(1,(u-h.t0)/h.t)}
+phi=rel+ry}
+if(u>=DUR+3)st=null}else phi=ang(pocket)+ry;
+ball.position.set(r*Math.sin(phi),surfY(r)+BR+hop,r*Math.cos(phi));
 const vis=!document.hidden&&!document.getElementById('rulet').classList.contains('hide');if(!vis)return;
 frame++;if(!st&&(frame&1))return;renderer.render(scene,cam)}
-loop();box.classList.add('gl');
-window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:clampA(phi),target:clampA(ang(pocket)+ry),ry,wr,spinning:!!st})};
+fit();loop();box.classList.add('gl');
+window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:wrapA(phi),target:wrapA(ang(pocket)+ry),ry,wr,spinning:!!st,hops:st&&st.hops?st.hops.map(h=>+h.d.toFixed(3)):null,settle:st?+(st.settleT).toFixed(2):null})};
 })();
 </script>
 </body>
