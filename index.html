@@ -277,24 +277,17 @@ box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px 
 .dtot:empty{display:none}
 .dbj{position:absolute;right:6px;bottom:7px;padding:2px 7px;border-radius:8px;background:#ffd23f;color:#1a1000;font-size:.5rem;font-weight:900;letter-spacing:1.5px;box-shadow:0 0 10px #ffd23faa;opacity:0;transform:scale(.6);transition:opacity .3s,transform .3s}
 .deck.bj .dbj{opacity:1;transform:scale(1)}
-.dice{animation-delay:.48s}
-.zfelt{position:relative;width:124px;height:116px;margin:0 auto;border-radius:8px;background:radial-gradient(ellipse at 50% 25%,#1b9a5a,#0f6b3d 55%,#0a4a2a);border:2px solid #c9971a;box-shadow:inset 0 0 18px #000a,0 2px 6px #0008;perspective:320px}
-.zline{position:absolute;left:0;right:0;top:9px;text-align:center;font-family:"Cinzel",Georgia,serif;font-size:.45rem;letter-spacing:2.5px;color:#ffd23f99}
-.dwrap{position:absolute;top:44px;width:30px;height:30px;transform-style:preserve-3d}
-#d1{left:28px}#d2{left:66px}
-.die{position:relative;width:30px;height:30px;transform-style:preserve-3d;transition:transform 1.4s cubic-bezier(.2,.8,.3,1)}
-.die i{position:absolute;inset:0;border-radius:5px;background-color:#f6f1e6;box-shadow:inset 0 0 0 1px #0002,inset 0 0 4px #0003;backface-visibility:hidden}
-.die .f1{transform:translateZ(15px);background-image:radial-gradient(circle at 50% 50%,#1a1a1a 0 3px,#0000 3.6px)}
-.die .f6{transform:rotateY(180deg) translateZ(15px);background-image:radial-gradient(circle at 28% 22%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 28% 50%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 28% 78%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 72% 22%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 72% 50%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 72% 78%,#1a1a1a 0 2.6px,#0000 3.2px)}
-.die .f2{transform:rotateY(90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 74%,#1a1a1a 0 3px,#0000 3.6px)}
-.die .f5{transform:rotateY(-90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 74% 26%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 50% 50%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 26% 74%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 74% 74%,#1a1a1a 0 2.8px,#0000 3.4px)}
-.die .f3{transform:rotateX(90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 50% 50%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 74%,#1a1a1a 0 3px,#0000 3.6px)}
-.die .f4{transform:rotateX(-90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 26% 74%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 74%,#1a1a1a 0 3px,#0000 3.6px)}
-.dwrap.roll{animation:dbounce 1.4s cubic-bezier(.3,.7,.4,1)}
-@keyframes dbounce{0%{transform:translateY(0)}30%{transform:translateY(-24px)}55%{transform:translateY(0)}72%{transform:translateY(-8px)}85%{transform:translateY(0)}100%{transform:translateY(0)}}
-.dsh{position:absolute;left:-5px;right:-5px;bottom:-11px;height:9px;border-radius:50%;background:radial-gradient(ellipse,#000a,#0000 70%);transform:translateZ(-16px)}
-.zsum{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);min-width:14px;padding:1px 8px;border-radius:8px;background:#000a;color:#fff;font-size:.62rem;font-weight:800;transition:background .3s}
-.zsum:empty{display:none}.zsum.nat{background:#ffd23f;color:#1a1000;box-shadow:0 0 10px #ffd23faa}
+.poker{animation-delay:.48s}
+.pfelt{position:relative;width:124px;height:116px;margin:0 auto;border-radius:8px;background:radial-gradient(ellipse at 50% 25%,#1a7f5c,#0f5a3f 55%,#0a3a2a);border:2px solid #c9971a;box-shadow:inset 0 0 18px #000a,0 2px 6px #0008;overflow:hidden}
+.ppot{position:absolute;right:7px;top:6px;width:22px;height:26px}
+.ppot i{position:absolute;left:0;width:20px;height:20px;border-radius:50%;background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.5deg 45deg);box-shadow:0 0 0 1px #0009,inset 0 0 0 4px #f4c33c,0 1px 2px #000a}
+.ppot i:nth-child(1){top:6px}.ppot i:nth-child(2){top:3px}.ppot i:nth-child(3){top:0}
+.pboard{position:absolute;left:6px;top:34px;display:flex;gap:3px;min-height:28px}
+.pboard .c{zoom:.625}
+.phole{position:absolute;left:8px;bottom:7px;display:flex}
+.phole .c{zoom:.78}.phole .c+.c{margin-left:-9px}
+.prank{position:absolute;right:6px;bottom:8px;padding:2px 7px;border-radius:8px;background:#000a;color:#fff;font-size:.48rem;font-weight:900;letter-spacing:1px;white-space:nowrap;animation:rpop .35s cubic-bezier(.2,1.6,.4,1)}
+.prank:empty{display:none}.prank.hi{background:#ffd23f;color:#1a1000;box-shadow:0 0 10px #ffd23faa}
 /* minik rulet */
 .rmini{animation-delay:.4s}
 .rwrap{position:relative;width:116px;height:116px;margin:0 auto 8px;border-radius:50%;padding:5px;box-sizing:border-box;background:conic-gradient(#fff2b0,#b8860b,#fff2b0,#8a6208,#fff2b0,#b8860b,#fff2b0);box-shadow:0 6px 12px #000a,0 0 14px #ffd23f44}
@@ -585,7 +578,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <button class="mini" id="mini" data-go="slot"><div class="mt">SLOT</div><div class="mreels" id="mreels"><div class="mline"></div></div><div class="mb">Dokun, oyna</div></button>
 <button class="mini deck" id="deck" data-go="bj"><div class="mt">BLACKJACK</div><div class="dfelt"><div class="dstack"><i></i><i></i><i></i></div><div class="dh"><div class="dc d1"></div><div class="dc d2"></div></div><div class="dtot"></div><div class="dbj">BLACKJACK</div></div><div class="mb">Dokun, oyna</div></button>
 <button class="mini rmini" id="rmini" data-go="rulet"><div class="mt">RULET</div><div class="rwrap"><div class="rw" id="rwmini"></div><div class="rball"></div><div class="rhub"></div></div><div class="mb">Dokun, oyna</div></button>
-<div class="mini dice" id="dice"><div class="mt">CRAPS</div><div class="zfelt"><div class="zline">PASS LINE</div><div class="dwrap" id="d1"><div class="die"><i class="f1"></i><i class="f6"></i><i class="f2"></i><i class="f5"></i><i class="f3"></i><i class="f4"></i></div><b class="dsh"></b></div><div class="dwrap" id="d2"><div class="die"><i class="f1"></i><i class="f6"></i><i class="f2"></i><i class="f5"></i><i class="f3"></i><i class="f4"></i></div><b class="dsh"></b></div><div class="zsum" id="zsum"></div></div><div class="mb">Yakında</div></div></div>
+<div class="mini poker" id="poker"><div class="mt">POKER</div><div class="pfelt"><div class="ppot"><i></i><i></i><i></i></div><div class="pboard" id="pboard"></div><div class="phole" id="phole"></div><div class="prank" id="prank"></div></div><div class="mb">Yakında</div></div></div>
 </div>
 </div>
 <div class="bets hide" id="bets">
@@ -1021,12 +1014,23 @@ $('deal').onclick=bjDeal;$('hit').onclick=bjHit;$('stand').onclick=bjStand;$('db
 let deckN=0;function deckDeal(){deckN++;const bj=deckN%4===0,RK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SU='♠♥♦♣';const rc=()=>RK[rnd(13)]+SU[rnd(4)];const h=bj?['A♠','K♥']:[rc(),rc()];const box=$('deck');box.classList.remove('bj');box.querySelector('.dtot').textContent='';
 h.forEach((c,i)=>setTimeout(()=>{const el=box.querySelector('.d'+(i+1));el.innerHTML=card(c,false,true);if(i===1){box.querySelector('.dtot').textContent=sum(h);if(bj)box.classList.add('bj')}},i*260))}
 deckDeal();setInterval(deckDeal,3600);
-/* ana ekran zar masası önizlemesi: iki 3D zar her 4,2 sn takla atıp rastgele düşer */
-const DF={1:[0,0],6:[0,180],2:[0,-90],5:[0,90],3:[-90,0],4:[90,0]};let diceTurns=[0,0],diceVals=[1,1];
-function diceRoll(){const ws=[$('d1'),$('d2')];diceVals=ws.map((w,i)=>{const n=1+rnd(6),[rx,ry]=DF[n];diceTurns[i]++;const k=diceTurns[i];
-w.querySelector('.die').style.transform='rotateX('+(rx+360*k+(rnd(2)?360:0))+'deg) rotateY('+(ry+360*k)+'deg)';w.classList.remove('roll');void w.offsetWidth;w.classList.add('roll');return n});
-const sm=diceVals[0]+diceVals[1],z=$('zsum');z.textContent='';setTimeout(()=>{z.textContent=sm;z.classList.toggle('nat',sm===7||sm===11)},1250)}
-diceRoll();setInterval(diceRoll,4200);
+/* ana ekran poker önizlemesi: her 7 sn yeni el; flop, turn, river; el kartları açılır; derece rozeti */
+const PRK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+function pokerRank(cards){const rs=cards.map(c=>PRK.indexOf(c.slice(0,-1))),ss=cards.map(c=>c.slice(-1));const cnt={};rs.forEach(r=>cnt[r]=(cnt[r]||0)+1);const g=Object.values(cnt).sort((a,b)=>b-a);
+const sc={};ss.forEach(x=>sc[x]=(sc[x]||0)+1);const fs=Object.keys(sc).find(x=>sc[x]>=5);
+const sh=arr=>{const u=[...new Set(arr)].sort((a,b)=>a-b);if(u.includes(12))u.unshift(-1);let run=1,best=-1;for(let i=1;i<u.length;i++){run=u[i]===u[i-1]+1?run+1:1;if(run>=5)best=u[i]}return best};
+const st=sh(rs),sf=fs?sh(cards.filter(c=>c.slice(-1)===fs).map(c=>PRK.indexOf(c.slice(0,-1)))):-1;
+if(sf===12)return[9,'ROYAL FLUSH'];if(sf>=0)return[8,'STRAIGHT FLUSH'];if(g[0]===4)return[7,'KARE'];if(g[0]===3&&g[1]>=2)return[6,'FULL HOUSE'];if(fs)return[5,'FLUSH'];if(st>=0)return[4,'KENT'];if(g[0]===3)return[3,'ÜÇLÜ'];if(g[0]===2&&g[1]===2)return[2,'İKİ ÇİFT'];if(g[0]===2)return[1,'ÇİFT'];return[0,'YÜKSEK KART']}
+let pokerN=0,pokerT=[];
+function pokerHand(forced){pokerT.forEach(clearTimeout);pokerT=[];pokerN++;let hand;
+if(forced)hand=forced;else{for(let t=0;t<300;t++){const d=[];for(const su of '♠♥♦♣')for(const r of PRK)d.push(r+su);for(let i=d.length-1;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}hand=d.slice(0,7);if(pokerN%3!==0||pokerRank(hand)[0]>=3)break}}
+const hole=hand.slice(0,2),board=hand.slice(2),pb=$('pboard'),ph=$('phole'),pr=$('prank');pb.innerHTML='';ph.innerHTML='';pr.textContent='';pr.className='prank';
+const at=(ms,f)=>pokerT.push(setTimeout(f,ms));
+hole.forEach((c,i)=>at(i*250,()=>{ph.insertAdjacentHTML('beforeend',card(c,true,true))}));
+board.forEach((c,i)=>at(i<3?900+i*220:i===3?2300:3300,()=>{pb.insertAdjacentHTML('beforeend',card(c,false,true))}));
+hole.forEach((c,i)=>at(4200+i*260,()=>{ph.children[i].outerHTML=card(c,false,false,true)}));
+at(4900,()=>{const [lv,name]=pokerRank(hand);pr.textContent=name;pr.className='prank'+(lv>=6?' hi':'')})}
+pokerHand();setInterval(()=>pokerHand(),7000);
 </script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module">
