@@ -1026,15 +1026,16 @@ $('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&
 $('dsum').textContent=dealerH.length&&!hole?sum(dealerH):''}
 function curHand(){return phase==='play'&&cur?seats[cur.s].hands[cur.h]:null}
 function canSplit(h,bank){if(bank===undefined)bank=chips;return !!h&&h.cards.length===2&&!h.split&&rk(h.cards[0])===rk(h.cards[1])&&bank>=h.bet&&seats[cur.s].hands.length<2}
-function bjBtns(){const h=curHand(),mine=h&&cur.s!==BOT,anyBet=seats.some((s,k)=>k!==BOT&&s.bet>0);$('deal').disabled=phase!=='bet'||!anyBet;$('insyes').disabled=$('insyes').disabled&&phase==='insure';$('hit').disabled=!mine;$('stand').disabled=!mine;$('dbl').disabled=!mine||h.cards.length!==2||chips<h.bet;$('spl').disabled=!mine||!canSplit(h);
+const BJO=()=>!!(window.cloud&&cloud.me&&cloud.me()&&cloud.bj); /* ortak masa (sunucu motoru) aktif mi */
+function bjBtns(){if(BJO())return cloud.bj.btns();const h=curHand(),mine=h&&cur.s!==BOT,anyBet=seats.some((s,k)=>k!==BOT&&s.bet>0);$('deal').disabled=phase!=='bet'||!anyBet;$('insyes').disabled=$('insyes').disabled&&phase==='insure';$('hit').disabled=!mine;$('stand').disabled=!mine;$('dbl').disabled=!mine||h.cards.length!==2||chips<h.bet;$('spl').disabled=!mine||!canSplit(h);
 $('bjclear').disabled=phase!=='bet'||!anyBet;$('bjrebet').disabled=!(phase==='bet'||phase==='settle')||!lastBets||anyBet}
 function bjClearTable(){seats.forEach(s=>{s.hands=[];s.badge=null;s.ins=0});dealerH=[];hole=true;dshown=0;$('bjres').textContent='';if(phase==='settle')phase='bet'}
-function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(!seatAllowed(k))return;if(phase==='settle')bjClearTable();
+function placeBet(k){if(BJO()){if(seatAllowed(k))cloud.bj.bet(k,bet);return}if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(!seatAllowed(k))return;if(phase==='settle')bjClearTable();
 if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;if(CLOUD&&window.cloud&&cloud.me())seats[k].owner='me';S.chip();msg('');bjRender();bjBtns()}
-$('bjclear').onclick=()=>{if(phase!=='bet')return;let t=0;seats.forEach((s,k)=>{if(k===BOT)return;t+=s.bet;s.bet=0;if(s.owner==='me')s.owner=null});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
-$('bjrebet').onclick=()=>{if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(k!==BOT&&b>0&&chips>=b&&seats[k].bet===0&&!seats[k].owner){setChips(chips-b);seats[k].bet=b;if(CLOUD&&window.cloud&&cloud.me())seats[k].owner='me';put=true}});if(put)S.chip();bjRender();bjBtns()};
+$('bjclear').onclick=()=>{if(BJO())return cloud.bj.unbet();if(phase!=='bet')return;let t=0;seats.forEach((s,k)=>{if(k===BOT)return;t+=s.bet;s.bet=0;if(s.owner==='me')s.owner=null});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
+$('bjrebet').onclick=()=>{if(BJO())return cloud.bj.rebet();if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(k!==BOT&&b>0&&chips>=b&&seats[k].bet===0&&!seats[k].owner){setChips(chips-b);seats[k].bet=b;if(CLOUD&&window.cloud&&cloud.me())seats[k].owner='me';put=true}});if(put)S.chip();bjRender();bjBtns()};
 function nextHand(){for(let k=0;k<seats.length;k++){const s=seats[k];for(let j=0;j<s.hands.length;j++)if(!s.hands[j].done)return{s:k,h:j}}return null}
-async function bjDeal(){if(phase!=='bet'||busy)return;const act=seats.map((s,k)=>k!==BOT&&s.bet>0?k:-1).filter(k=>k>=0);if(!act.length)return;
+async function bjDeal(){if(BJO())return cloud.bj.deal();if(phase!=='bet'||busy)return;const act=seats.map((s,k)=>k!==BOT&&s.bet>0?k:-1).filter(k=>k>=0);if(!act.length)return;
 phase='deal';live=true;msg('');lastBets=seats.map((s,k)=>k===BOT?0:s.bet);S.click();
 
 seats.forEach(s=>{s.hands=[];s.badge=null});act.forEach(k=>seats[k].hands=[{cards:[],bet:seats[k].bet,shown:0,done:false,dbl:false,split:false,bj:false}]);dealerH=[];hole=true;dshown=0;$('bjres').textContent='';bjBtns();bjRender();
@@ -1064,10 +1065,10 @@ else if(a==='hit'){h.cards.push(draw());S.card();bjRender();sayHand(h,250);if(su
 else{h.done=true;await wait(400)}
 if(h.done){cur=nextHand();if(!cur||cur.s!==BOT)break;bjRender()}}
 advance()}
-async function bjHit(){const h=curHand();if(!h)return;h.cards.push(draw());S.card();bjRender();bjBtns();sayHand(h,250);if(sum(h.cards)>=21){h.done=true;await wait(900);advance()}}
-function bjStand(){const h=curHand();if(!h)return;S.click();h.done=true;advance()}
-async function bjDbl(){const h=curHand();if(!h||h.cards.length!==2||chips<h.bet)return;setChips(chips-h.bet);S.chip();h.bet*=2;h.dbl=true;h.cards.push(draw());S.card();h.done=true;bjRender();bjBtns();sayHand(h,250);await wait(900);advance()}
-async function bjSplit(){const h=curHand();if(!canSplit(h))return;setChips(chips-h.bet);S.chip();const s=seats[cur.s],b=h.cards.pop();const h2={cards:[b],bet:h.bet,shown:1,done:false,dbl:false,split:true,bj:false};h.split=true;s.hands.push(h2);bjRender();bjBtns();
+async function bjHit(){if(BJO())return cloud.bj.act('hit');const h=curHand();if(!h)return;h.cards.push(draw());S.card();bjRender();bjBtns();sayHand(h,250);if(sum(h.cards)>=21){h.done=true;await wait(900);advance()}}
+function bjStand(){if(BJO())return cloud.bj.act('stand');const h=curHand();if(!h)return;S.click();h.done=true;advance()}
+async function bjDbl(){if(BJO())return cloud.bj.act('double');const h=curHand();if(!h||h.cards.length!==2||chips<h.bet)return;setChips(chips-h.bet);S.chip();h.bet*=2;h.dbl=true;h.cards.push(draw());S.card();h.done=true;bjRender();bjBtns();sayHand(h,250);await wait(900);advance()}
+async function bjSplit(){if(BJO())return cloud.bj.act('split');const h=curHand();if(!canSplit(h))return;setChips(chips-h.bet);S.chip();const s=seats[cur.s],b=h.cards.pop();const h2={cards:[b],bet:h.bet,shown:1,done:false,dbl:false,split:true,bj:false};h.split=true;s.hands.push(h2);bjRender();bjBtns();
 await wait(260);h.cards.push(draw());S.card();bjRender();await wait(260);h2.cards.push(draw());S.card();bjRender();
 if(rk(b)==='A'){h.done=true;h2.done=true;await wait(500);return advance()}
 if(sum(h.cards)===21){h.done=true;await wait(400);return advance()}bjBtns()}
@@ -1091,6 +1092,7 @@ $('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'
 msg(net>0?'Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));
 if(net===0&&seats.some((s,k)=>k!==BOT&&s.hands.length))say('push',200);
 if(net>0){if(net/Math.max(1,maxBet)>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}
+$('insyes').addEventListener('click',()=>{if(BJO())cloud.bj.insure(true)});$('insno').addEventListener('click',()=>{if(BJO())cloud.bj.insure(false)});
 $('deal').onclick=bjDeal;$('hit').onclick=bjHit;$('stand').onclick=bjStand;$('dbl').onclick=bjDbl;$('spl').onclick=bjSplit;bjBtns();bjRender();
 /* ana ekran kart destesi önizlemesi: her 3,6 sn iki kart, dördüncüde blackjack */
 let deckN=0;function deckDeal(){deckN++;const bj=deckN%4===0,RK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SU='♠♥♦♣';const rc=()=>RK[rnd(13)]+SU[rnd(4)];const h=bj?['A♠','K♥']:[rc(),rc()];const box=$('deck');box.classList.remove('bj');box.querySelector('.dtot').textContent='';
@@ -1153,7 +1155,65 @@ sb.channel('seats').on('postgres_changes',{event:'*',schema:'public',table:'seat
 const takeSeat=async(game,k)=>{const {data,error}=await sb.rpc('take_seat',{p_game:game,p_seat:k});if(error){msg(/schema cache|seats|take_seat/.test(error.message)?'Koltuk tablosu kurulmamış: schema.sql çalıştırın':error.message);return}if(data===false)msg('Koltuk az önce alındı');else S.click();loadSeats()};
 const leaveSeat=async game=>{await sb.rpc('leave_seat',{p_game:game});S.click();loadSeats()};
 addEventListener('pagehide',()=>{try{sb.auth.getSession().then(({data})=>{const tk=data.session&&data.session.access_token;if(!tk)return;fetch(SUPA.url+'/rest/v1/rpc/leave_seat',{method:'POST',keepalive:true,headers:{'apikey':SUPA.key,'Authorization':'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({p_game:'bj'})})})}catch(e){}});
-window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};entering=false}
+window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};
+/* ===== ORTAK BLACKJACK (sunucu motoru: supabase/bj_engine.sql) ===== */
+{const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|bj_/.test(error.message)&&/find|exist/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
+let ST=null,myLast=null,revealing=false,lastCurKey='',lastPhase='',shownDealer=0,tickT=null,cdT=null;
+const isMe=o=>!!o&&me&&o===me.id;
+function applyState(st){if(!st||!st.phase)return;const prev=ST;ST=st;
+/* yerel görünüm nesnelerini doldur (bjRender bunları çizer) */
+phase=st.phase;cur=st.cur||null;
+st.spots.forEach((sp,k)=>{const s=seats[k];const old=s.hands;s.bet=+sp.bet||0;s.ins=+sp.ins||0;s.owner=sp.owner?(isMe(sp.owner)?'me':sp.name):null;
+s.hands=(sp.hands||[]).map((h,j)=>({cards:h.cards.slice(),bet:+h.bet,done:!!h.done,dbl:!!h.dbl,split:!!h.split,bj:!!h.bj,shown:(old[j]&&old[j].cards.length<=h.cards.length)?old[j].shown:0}));
+if(st.phase==='bet')s.badge=null});
+/* yeni kart sesi */
+let newCards=0;seats.forEach(s=>s.hands.forEach(h=>{newCards+=Math.max(0,h.cards.length-(h.shown||0))}));if(newCards)S.card();
+/* krupiye: açılış ve ardışık kartlar animasyonlu */
+const d=st.dealer||[];
+if(!prev||prev.round!==st.round||st.phase==='bet'){dealerH=d.slice(0,2).map(c=>c==='??'?'??':c);hole=d[1]==='??';dshown=0;shownDealer=Math.min(2,d.length)}
+if(st.phase==='settle'&&!revealing&&(hole||shownDealer<d.length))revealDealer(d);
+bjRender();renderSeats();cloud.bj.btns();
+/* anonslar: sıradaki elin toplamı */
+const ck=cur?cur.s+'-'+cur.h+'-'+(seats[cur.s].hands[cur.h]||{cards:[]}).cards.length:'';
+if(st.phase==='play'&&ck!==lastCurKey){const h=cur&&seats[cur.s].hands[cur.h];if(h)sayHand(h,350)}lastCurKey=ck;
+if(st.phase==='insure'&&lastPhase!=='insure')say('ins',300);
+if(st.phase==='play'&&lastPhase!=='play'&&lastPhase!==''&&seats.some(s=>s.hands.some(h=>h.bj)))say('bj',100);
+if(st.phase==='insure'&&(st.ins_pending||[]).some(isMe))$('insbar').classList.remove('hide');else $('insbar').classList.add('hide');
+if(st.phase==='bet'&&lastPhase==='settle'){$('bjres').textContent=''}
+lastPhase=st.phase;countdown()}
+async function revealDealer(d){revealing=true;await wait(500);if(hole){hole=false;dealerH=[d[0],d[1]];dflip=true;S.card();bjRender();shownDealer=2;const t=sum(dealerH);say(t===21&&d.length===2?'dbj':'n'+Math.min(21,t),250);await wait(900)}
+while(shownDealer<d.length){dealerH=d.slice(0,shownDealer+1);shownDealer++;S.card();bjRender();const t=sum(dealerH);say(t>21?'dbust':'n'+t,250);await wait(900)}
+revealing=false;showResults()}
+function showResults(){const st=ST;if(!st||st.phase!=='settle'||!st.results)return;const d=sum(dealerH),dbj=!!st.dealer_bj;let net=0,maxBet=0;const anim=[];
+st.results.forEach(r=>{const s=seats[r.spot];const n=+r.net,ins=+r.ins;const base=n-ins;const insx=ins?(' · Sig '+(ins>0?'+':'-')+fmtA(Math.abs(ins))):'';
+s.badge=r.bj&&n>0?{c:'bj',t:'BJ +'+fmtA(n)+insx}:n>0?{c:'win',t:'+'+fmtA(n)+insx}:n<0?{c:'lose',t:'-'+fmtA(-n)+insx}:{c:'push',t:'PUSH'+insx};
+if(isMe(r.owner)){net+=n;s.hands.forEach(h=>maxBet=Math.max(maxBet,h.bet));anim.push({k:r.spot,win:Math.max(0,n),lose:n<0})}});
+bjRender();anim.forEach((a,i)=>{const sp=spotPos(a.k);if(a.win>0)flyChips(RACK,sp,Math.min(4,1+Math.floor(a.win/Math.max(1,maxBet))),i*150,fmtA(a.win));else if(a.lose)flyChips(sp,RACK,1,i*150,'')});
+$('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'Krupiye '+d;
+if(anim.length){msg(net>0?'Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));if(net===0)say('push',200);if(net>0){if(net/Math.max(1,maxBet)>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}}
+/* geri sayım ve zaman aşımı tetikleyici */
+function countdown(){clearInterval(cdT);cdT=setInterval(()=>{if(!ST||$('bj').classList.contains('hide'))return;const dl=ST.deadline?new Date(ST.deadline).getTime():0;const left=dl?Math.max(0,Math.ceil((dl-Date.now())/1000)):0;
+if(ST.phase==='bet'&&dl)$('bjres').textContent='Bahisler kapanıyor: '+left+' sn';
+else if(ST.phase==='play'&&cur){const o=seats[cur.s].owner;$('bjres').textContent=(o==='me'?'Sıra sende':'Sıra: '+o)+' · '+left+' sn'}
+else if(ST.phase==='insure')$('bjres').textContent='Sigorta kararı: '+left+' sn';
+else if(ST.phase==='settle'&&!revealing&&dl)$('bjres').textContent=($('bjres').textContent.split(' · ')[0]||'')+' · Yeni el: '+left+' sn';
+if(dl&&Date.now()>dl+400&&!tickT){tickT=setTimeout(()=>{tickT=null},2500);rpc('bj_tick').catch(()=>{})}},500)}
+function btns(){const st=ST;const h=curHand();const mine=h&&st&&st.phase==='play'&&seats[cur.s].owner==='me';const myBets=seats.some(s=>s.owner==='me'&&s.bet>0);
+$('deal').disabled=!st||st.phase!=='bet'||!myBets;$('hit').disabled=!mine;$('stand').disabled=!mine;$('dbl').disabled=!mine||h.cards.length!==2||chips<h.bet;
+$('spl').disabled=!mine||h.cards.length!==2||h.split||rk(h.cards[0])!==rk(h.cards[1])||seats[cur.s].hands.length>=2||chips<h.bet;
+$('bjclear').disabled=!st||st.phase!=='bet'||!myBets;$('bjrebet').disabled=!st||!(st.phase==='bet'||st.phase==='settle')||!myLast||myBets}
+cloud.bj={btns,
+bet:(k,amt)=>rpc('bj_bet',{p_spot:k,p_amount:amt}).then(st=>{S.chip();applyState(st)}).catch(()=>{}),
+unbet:()=>rpc('bj_unbet').then(st=>{S.chip();applyState(st)}).catch(()=>{}),
+deal:()=>{myLast=seats.map(s=>s.owner==='me'?s.bet:0);rpc('bj_deal').then(st=>{S.click();applyState(st)}).catch(()=>{})},
+rebet:async()=>{if(!myLast)return;for(let k=0;k<6;k++)if(myLast[k]>0){try{applyState(await rpc('bj_bet',{p_spot:k,p_amount:myLast[k]}))}catch(e){break}}S.chip()},
+act:a=>rpc('bj_action',{p_act:a}).then(st=>{if(a==='stand')S.click();else S.chip();applyState(st)}).catch(()=>{}),
+insure:t=>{$('insbar').classList.add('hide');rpc('bj_insure',{p_take:t}).then(st=>{if(t)S.chip();applyState(st)}).catch(()=>{})}};
+/* masa durumunu al ve dinle */
+sb.from('bj_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');return}if(data&&data.state&&data.state.phase)applyState(data.state);else rpc('bj_tick').then(applyState).catch(()=>{})});
+sb.channel('bj_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'bj_table'},p=>applyState(p.new.state)).subscribe();
+countdown()}
+entering=false}
 async function leave(){try{await sb.rpc('leave_seat',{p_game:'bj'})}catch(e){}if(pushT){clearTimeout(pushT);pushT=null;await push(chips)}try{if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}}catch(e){}await sb.auth.signOut();me=null;prof=null;try{localStorage.removeItem('ge_chips')}catch(e){}location.reload()}
 $('logout').onclick=()=>{leave()};
 $('reset').addEventListener('click',()=>{if(me)push(10000)});

@@ -16,7 +16,8 @@ GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.ver
 
 ## Supabase (hesaplar, ortak bakiye, çok oyunculu)
 1. supabase.com → New project. Authentication → Providers → Email açık; "Confirm email" kapatılırsa kayıt tek adımda olur.
-2. SQL Editor → `supabase/schema.sql` dosyasının içeriğini yapıştır → Run (profiller, otomatik profil, bakiye RPC'si, Realtime).
+2. SQL Editor → `supabase/schema.sql` dosyasının içeriğini yapıştır → Run (profiller, otomatik profil, bakiye RPC'si, koltuklar, Realtime).
+   Ardından `supabase/bj_engine.sql` → Run (ortak blackjack masası: dağıtım, hamleler, krupiye, ödeme sunucuda; herkes aynı eli izler).
 3. Project Settings → API → **Project URL** ve **anon public** anahtarını `index.html` içindeki `SUPA` sabitine yaz. anon anahtarı tarayıcıda durmak için tasarlanmıştır; **service_role** anahtarını asla koyma.
 4. `SUPA.key` boşsa oyun eski PIN girişiyle ve yerel bakiyeyle çalışmaya devam eder.
 
