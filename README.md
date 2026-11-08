@@ -13,6 +13,12 @@ GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.ver
 - `api/_eleven.js` — ortak yardımcılar: 429 (eşzamanlılık sınırı) olursa bekleyip tekrar dener, aynı klip için eşzamanlı istekleri tekilleştirir. Oyun tarafı klipleri aynı anda en fazla 2 istekle yükler (ElevenLabs ücretsiz plan sınırı).
 - `api/health.js` — `{"ok":true,"key":true}` görmelisin; `key:false` ise `ELEVENLABS_API_KEY` deploy'a girmemiş demektir.
 
+## Supabase (hesaplar, ortak bakiye, çok oyunculu)
+1. supabase.com → New project. Authentication → Providers → Email açık; "Confirm email" kapatılırsa kayıt tek adımda olur.
+2. SQL Editor → `supabase/schema.sql` dosyasının içeriğini yapıştır → Run (profiller, otomatik profil, bakiye RPC'si, Realtime).
+3. Project Settings → API → **Project URL** ve **anon public** anahtarını `index.html` içindeki `SUPA` sabitine yaz. anon anahtarı tarayıcıda durmak için tasarlanmıştır; **service_role** anahtarını asla koyma.
+4. `SUPA.key` boşsa oyun eski PIN girişiyle ve yerel bakiyeyle çalışmaya devam eder.
+
 ## Vercel kurulumu
 1. vercel.com → Add New → Project → bu repoyu import et → Deploy
 2. Project → Settings → Environment Variables:

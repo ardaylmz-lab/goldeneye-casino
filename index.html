@@ -401,6 +401,14 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 #gate p{color:var(--mut);font-size:.85rem;margin:0 0 16px}
 #gate input{width:100%;font:900 1.8rem Montserrat,sans-serif;letter-spacing:12px;text-align:center;padding:12px;border-radius:12px;border:2px solid var(--gd);background:#000;color:#fff;outline:none;margin-bottom:12px}
 #gate input.err{border-color:#ff2b55;animation:shake .3s}
+#gate input.txt{font:600 1rem Montserrat,sans-serif;letter-spacing:0;text-align:left;padding:12px 14px;margin-bottom:10px}
+#gate .aerr{color:#ff5a6a;font-size:.8rem;min-height:1.1em;margin:8px 0 4px}#gate .aerr:empty{display:none}
+#gate .alink{margin:10px 0 0;font-size:.8rem}#gate .alink a{color:var(--gold);text-decoration:underline;cursor:pointer}
+#gate .busy{opacity:.6;pointer-events:none}
+.who{display:flex;justify-content:center;align-items:center;gap:10px;margin:-8px 0 14px;font-size:.72rem;color:var(--mut);letter-spacing:.5px}
+.who b{color:#ffe27a}.who a{color:var(--mut);text-decoration:underline;cursor:pointer}
+.who .on{display:inline-flex;align-items:center;gap:5px}.who .on i{width:7px;height:7px;border-radius:50%;background:#2ec46a;box-shadow:0 0 6px #2ec46a}
+.who.hide{display:none}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 #gate button{width:100%}
 .note{color:var(--mut);font-size:.75rem;text-align:center;margin-top:16px}
@@ -573,13 +581,17 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </g></symbol>
 </svg>
 
-<div id="gate"><div class="box"><h2>GOLDEN EYE</h2><p>Özel oyun · giriş PIN'i</p><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••"><button class="go" id="pinok">GİRİŞ</button></div></div>
+<div id="gate"><div class="box"><h2>GOLDEN EYE</h2>
+<div id="pinwrap"><p>Özel oyun · giriş PIN'i</p><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••"><button class="go" id="pinok">GİRİŞ</button></div>
+<div id="authwrap" class="hide"><p id="authsub">Hesabınla giriş yap</p><input id="aname" class="txt hide" type="text" autocomplete="nickname" placeholder="Adın"><input id="aemail" class="txt" type="email" autocomplete="email" placeholder="E-posta"><input id="apass" class="txt" type="password" autocomplete="current-password" placeholder="Şifre"><button class="go" id="abtn">GİRİŞ</button><p class="aerr" id="aerr"></p><p class="alink"><a id="atoggle">Hesabın yok mu? Kayıt ol</a></p></div>
+</div></div>
 <div class="wrap">
 <div class="sign"><h1>GOLDEN <span>EYE</span></h1></div>
 <div class="bar"><span>💶 Bakiye</span><b id="chips">10.000,00 €</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
 <button id="back" class="hide">← Ana sayfa</button>
 <div id="home">
 <div class="hero"><div class="hl"><span>WELCOME TO GOLDEN EYE</span></div><p>Özel kumarhane · Sanal bakiye · Arkadaşlar arası</p></div>
+<div class="who hide" id="who"><span>Hoş geldin, <b id="whoname"></b></span><span class="on" id="online"></span><a id="logout">Çıkış</a></div>
 <div class="jpbox home-jp"><div class="jt">JACKPOTLAR</div><div class="jpr"><div style="--c:#4af"><small>MINI</small><b>0</b></div><div style="--c:#4de08a"><small>MINOR</small><b>0</b></div><div style="--c:#ff5a6a"><small>MAJOR</small><b>0</b></div><div style="--c:#ffd23f"><small>GRAND</small><b>0</b></div></div></div>
 <div class="vitrin">
 <button class="mini" id="mini" data-go="slot"><div class="mt">SLOT</div><div class="mreels" id="mreels"><div class="mline"></div></div><div class="mb">Dokun, oyna</div></button>
@@ -620,20 +632,24 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 
 <script>
 const $=id=>document.getElementById(id);
-/* GİRİŞ PIN'i — değiştirmek için aşağıdaki değeri düzenle */
+/* ===== SUPABASE (bulut hesaplar, ortak bakiye). key boşsa PIN girişi kullanılır ===== */
+const SUPA={url:'https://jzmxwnpagkmeyeibykui.supabase.co',key:''};
+const CLOUD=!!(SUPA.url&&SUPA.key);
+/* GİRİŞ PIN'i (yalnız bulut kapalıyken) */
 const PIN='7777';
-(function(){let ok=false;try{ok=localStorage.getItem('ge_pin')===PIN}catch(e){}
+if(!CLOUD)(function(){let ok=false;try{ok=localStorage.getItem('ge_pin')===PIN}catch(e){}
 if(ok){$('gate').remove();return}
 const chk=()=>{if($('pin').value===PIN){try{localStorage.setItem('ge_pin',PIN)}catch(e){};$('gate').remove()}else{$('pin').classList.add('err');setTimeout(()=>$('pin').classList.remove('err'),400);$('pin').value=''}};
 $('pinok').onclick=chk;$('pin').onkeydown=e=>{if(e.key==='Enter')chk()};$('pin').focus()})();
+else{$('pinwrap').classList.add('hide');$('authwrap').classList.remove('hide')}
 let chips=10000,bet=50,busy=false,live=false,bonus=false;
 try{const s=localStorage.getItem('ge_chips');if(s!==null&&!isNaN(+s))chips=+s}catch(e){}
 /* bir kerelik +10.000 € bonus */
-try{if(!localStorage.getItem('ge_bonus1')){chips+=10000;localStorage.setItem('ge_bonus1','1');bonus=true}}catch(e){}
+if(!CLOUD)try{if(!localStorage.getItem('ge_bonus1')){chips+=10000;localStorage.setItem('ge_bonus1','1');bonus=true}}catch(e){}
 function fmt(n){return (Math.round(n*100)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fmtE(n){return fmt(n)+' €'}
 function fmtA(n){n=Math.round(n*100)/100;return Number.isInteger(n)?n.toLocaleString('tr-TR'):n.toLocaleString('tr-TR',{minimumFractionDigits:1,maximumFractionDigits:2})}
-function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}
+function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}if(window.onChips)onChips(n);
 $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
 const rnd=n=>Math.floor(Math.random()*n);
@@ -1058,6 +1074,45 @@ board.forEach((c,i)=>at(i<3?900+i*220:i===3?2300:3300,()=>{pb.insertAdjacentHTML
 hole.forEach((c,i)=>at(4200+i*260,()=>{ph.children[i].outerHTML=card(c,false,false,true)}));
 at(4900,()=>{const [lv,name]=pokerRank(hand);pr.textContent=name;pr.className='prank'+(lv>=6?' hi':'')})}
 pokerHand();setInterval(()=>pokerHand(),7000);
+</script>
+<script type="module">
+/* ===== BULUT: Supabase Auth + profiller + ortak bakiye + lobi varlığı ===== */
+if(CLOUD){
+const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/+esm');
+const sb=createClient(SUPA.url,SUPA.key,{auth:{persistSession:true,autoRefreshToken:true}});
+let me=null,prof=null,pushT=null,lastPushed=null,applying=false,lobby=null;
+const err=t=>{$('aerr').textContent=t||''};
+const tr={'Invalid login credentials':'E-posta veya şifre hatalı','Email not confirmed':'E-posta doğrulanmamış (Supabase → Auth → Confirm email kapatılabilir)','User already registered':'Bu e-posta zaten kayıtlı','Password should be at least 6 characters':'Şifre en az 6 karakter olmalı','Signup requires a valid password':'Geçerli bir şifre gir','Unable to validate email address: invalid format':'E-posta biçimi geçersiz'};
+let mode='login';$('atoggle').onclick=()=>{mode=mode==='login'?'signup':'login';$('aname').classList.toggle('hide',mode==='login');$('abtn').textContent=mode==='login'?'GİRİŞ':'KAYIT OL';$('authsub').textContent=mode==='login'?'Hesabınla giriş yap':'Yeni hesap oluştur';$('atoggle').textContent=mode==='login'?'Hesabın yok mu? Kayıt ol':'Hesabın var mı? Giriş yap';$('apass').autocomplete=mode==='login'?'current-password':'new-password';err('')};
+async function submit(){const email=$('aemail').value.trim(),pass=$('apass').value,name=$('aname').value.trim();if(!email||!pass){err('E-posta ve şifre gir');return}
+$('authwrap').classList.add('busy');err('');let r;
+if(mode==='signup'){if(!name){err('Adını gir');$('authwrap').classList.remove('busy');return}r=await sb.auth.signUp({email,password:pass,options:{data:{name}}});if(!r.error&&!r.data.session){err('Kayıt alındı. E-postanı doğrula ve giriş yap.');mode='signup';$('atoggle').click()}}
+else r=await sb.auth.signInWithPassword({email,password:pass});
+$('authwrap').classList.remove('busy');if(r.error)err(tr[r.error.message]||r.error.message)}
+$('abtn').onclick=submit;['aemail','apass','aname'].forEach(id=>$(id).onkeydown=e=>{if(e.key==='Enter')submit()});
+/* bakiye: her değişiklik 500 ms sonra buluta yazılır; sayfa kapanırken anında */
+window.onChips=n=>{if(!me||applying)return;clearTimeout(pushT);pushT=setTimeout(()=>push(n),500)};
+async function push(n){if(!me)return;lastPushed=n;const {error}=await sb.rpc('set_balance',{new_balance:n});if(error)console.warn('bakiye yazılamadı',error.message)}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&me&&pushT){clearTimeout(pushT);pushT=null;lastPushed=chips;
+try{sb.auth.getSession().then(({data})=>{const tk=data.session&&data.session.access_token;if(!tk)return;fetch(SUPA.url+'/rest/v1/rpc/set_balance',{method:'POST',keepalive:true,headers:{'apikey':SUPA.key,'Authorization':'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({new_balance:chips})})})}catch(e){}}});
+function applyBalance(b){applying=true;try{setChips(+b)}finally{applying=false}}
+async function enter(session){me=session.user;
+let {data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();
+if(!data){await sb.from('profiles').insert({id:me.id,name:(me.user_metadata&&me.user_metadata.name)||me.email.split('@')[0]});({data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle())}
+prof=data||{name:me.email.split('@')[0],balance:chips};applyBalance(prof.balance);
+$('whoname').textContent=prof.name;$('who').classList.remove('hide');const g=$('gate');if(g)g.remove();
+/* kendi profil satırındaki değişiklikler (başka cihazdan) */
+sb.channel('profile:'+me.id).on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+me.id},p=>{const b=+p.new.balance;if(b!==chips&&b!==lastPushed&&!busy&&!live)applyBalance(b);if(p.new.name){prof.name=p.new.name;$('whoname').textContent=p.new.name}}).subscribe();
+/* lobi: kim çevrimiçi */
+lobby=sb.channel('lobby',{config:{presence:{key:me.id}}});
+lobby.on('presence',{event:'sync'},()=>{const st=lobby.presenceState();const names=Object.values(st).map(a=>a[0]&&a[0].name).filter(Boolean);$('online').innerHTML='<i></i>Çevrimiçi: '+names.join(' · ')}).subscribe(async s=>{if(s==='SUBSCRIBED')await lobby.track({name:prof.name,at:Date.now()})});
+window.cloud={sb,me:()=>me,profile:()=>prof}}
+async function leave(){if(pushT){clearTimeout(pushT);await push(chips)}if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}me=null;prof=null;$('who').classList.add('hide');location.reload()}
+$('logout').onclick=async()=>{await leave();await sb.auth.signOut()};
+$('reset').addEventListener('click',()=>{if(me)push(10000)});
+sb.auth.onAuthStateChange((ev,session)=>{if(session&&!me)enter(session);else if(!session&&me){me=null}});
+const {data:{session}}=await sb.auth.getSession();if(session)enter(session);
+}
 </script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module">
