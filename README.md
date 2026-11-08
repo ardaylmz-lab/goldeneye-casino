@@ -6,7 +6,7 @@ Arkadaşlar arası eğlence oyunu. **Sanal jeton kullanılır, gerçek para yokt
 Vercel projesi: `arda-5509s-projects/ardaylmz-lab-goldeneye-casino`. Sesli sürüm budur; API fonksiyonları burada çalışır.
 GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.vercel.app` ayrı ve eski bir projedir, key tanımlı değildir.
 
-- Slot (5x5, 20 hat, wild/scatter, free spin), Rulet, Blackjack
+- Slot (5x5, 20 hat, wild/scatter, free spin), Rulet (3D çark), Blackjack (6 koltuklu masa, birden fazla el, böl/2x, 3:2)
 - `index.html` — oyunun tamamı (tek dosya). Rulet çarkı WebGL ile 3D (three.js, CDN'den yüklenir); WebGL ya da CDN yoksa CSS çark devreye girer.
 - `api/tts.js` — ElevenLabs sesli anons proxy'si (Vercel serverless). Key sadece Vercel ortam değişkeninde durur.
 - `api/sfx.js` — ElevenLabs ses efekti proxy'si (makara dönüşü, durma, scatter, gerilim, kazanç, coin, büyük kazanç, free spin, kayıp, tık). Her efekt bir kez üretilir, CDN'de 1 yıl önbellekte kalır. Efekt yüklenemezse oyun kendi sentez tonlarına döner.

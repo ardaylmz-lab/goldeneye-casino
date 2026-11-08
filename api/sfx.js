@@ -18,7 +18,9 @@ const EFFECTS = {
   // rulet
   chip:      { text: 'Single casino chip placed firmly on a felt table, short clay clack, close mic', d: 0.5 },
   rwheel:    { text: 'Roulette wheel spinning with a small ball rolling around the wooden track, steady rattle, seamless loop', d: 3, loop: true },
-  rdrop:     { text: 'Roulette ball bouncing between metal frets and settling into a pocket, quick clicks then silence', d: 1.3 }
+  rdrop:     { text: 'Roulette ball bouncing between metal frets and settling into a pocket, quick clicks then silence', d: 1.3 },
+  // blackjack
+  card:      { text: 'Single playing card dealt and slid across a felt table, quick crisp snap, close mic', d: 0.5 }
 };
 const cache = new Map(); // effect -> Promise<Buffer>
 
