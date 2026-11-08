@@ -1103,7 +1103,8 @@ async function push(n){if(!me)return;lastPushed=n;const {error}=await sb.rpc('se
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&me&&pushT){clearTimeout(pushT);pushT=null;lastPushed=chips;
 try{sb.auth.getSession().then(({data})=>{const tk=data.session&&data.session.access_token;if(!tk)return;fetch(SUPA.url+'/rest/v1/rpc/set_balance',{method:'POST',keepalive:true,headers:{'apikey':SUPA.key,'Authorization':'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({new_balance:chips})})})}catch(e){}}});
 function applyBalance(b){applying=true;try{setChips(+b)}finally{applying=false}}
-async function enter(session){me=session.user;
+let entering=false;
+async function enter(session){if(me||entering)return;entering=true;me=session.user;
 let {data,error}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();
 if(error&&/schema cache|profiles/.test(error.message)){setTimeout(()=>msg('Supabase şeması kurulmamış: supabase/schema.sql dosyasını SQL Editor\'da çalıştırın. Bakiye şimdilik bu cihazda tutuluyor.'),300)}
 if(!data&&!error){await sb.from('profiles').insert({id:me.id,name:(me.user_metadata&&me.user_metadata.name)||me.email.split('@')[0]});({data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle())}
@@ -1114,9 +1115,9 @@ sb.channel('profile:'+me.id).on('postgres_changes',{event:'UPDATE',schema:'publi
 /* lobi: kim çevrimiçi */
 lobby=sb.channel('lobby',{config:{presence:{key:me.id}}});
 lobby.on('presence',{event:'sync'},()=>{const st=lobby.presenceState();const names=Object.values(st).map(a=>a[0]&&a[0].name).filter(Boolean);$('online').innerHTML='<i></i>Çevrimiçi: '+names.join(' · ')}).subscribe(async s=>{if(s==='SUBSCRIBED')await lobby.track({name:prof.name,at:Date.now()})});
-window.cloud={sb,me:()=>me,profile:()=>prof}}
-async function leave(){if(pushT){clearTimeout(pushT);await push(chips)}if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}me=null;prof=null;$('who').classList.add('hide');location.reload()}
-$('logout').onclick=async()=>{await leave();await sb.auth.signOut()};
+window.cloud={sb,me:()=>me,profile:()=>prof};entering=false}
+async function leave(){if(pushT){clearTimeout(pushT);pushT=null;await push(chips)}try{if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}}catch(e){}await sb.auth.signOut();me=null;prof=null;try{localStorage.removeItem('ge_chips')}catch(e){}location.reload()}
+$('logout').onclick=()=>{leave()};
 $('reset').addEventListener('click',()=>{if(me)push(10000)});
 sb.auth.onAuthStateChange((ev,session)=>{if(session&&!me)enter(session);else if(!session&&me){me=null}});
 const {data:{session}}=await sb.auth.getSession();if(session)enter(session);
