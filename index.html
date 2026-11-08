@@ -148,13 +148,12 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc.won em{font-size:.5rem;color:#0a3a1a;background:repeating-conic-gradient(from -11.25deg,#eafff0 0 22.5deg,#2ec46a 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #0b6a32,0 5px 0 #064a20,0 0 12px #4dffa0aa}
 .tc.won em::before{background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#5be88f 60%,#1a9a4a 100%);box-shadow:inset 0 0 0 1.5px #eafff0,inset 0 1px 3px #0006}
 /* bilgi ekranı (tote board) */
-.rchairs{display:flex;justify-content:center;gap:34px;margin:-4px 0 26px;height:50px}
-.rchairs .stool{position:relative;margin:0;pointer-events:auto}
-.rchairs .stool i{display:none}
+.rchairs{display:flex;justify-content:center;gap:40px;margin:14px 0 48px;height:52px} /* üstte sırtlık, altta iki satırlık isim plakası için boşluk */
+.rchairs .stool{position:relative;margin:0;pointer-events:auto;--a:180deg}
 .rchairs .stool .plate{top:100%}
-.rchairs .stool.c0.taken,.rchairs .stool.c0.mine{box-shadow:0 0 0 3px #1e63d6,0 0 0 5px #15100a,0 0 16px #1e63d688,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
-.rchairs .stool.c1.taken,.rchairs .stool.c1.mine{box-shadow:0 0 0 3px #e0202c,0 0 0 5px #15100a,0 0 16px #e0202c88,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
-.rchairs .stool.c2.taken,.rchairs .stool.c2.mine{box-shadow:0 0 0 3px #2e9e4f,0 0 0 5px #15100a,0 0 16px #2e9e4f88,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
+.rchairs .stool.c0.taken,.rchairs .stool.c0.mine{box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #1e63d6,0 0 18px #1e63d688,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
+.rchairs .stool.c1.taken,.rchairs .stool.c1.mine{box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #e0202c,0 0 18px #e0202c88,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
+.rchairs .stool.c2.taken,.rchairs .stool.c2.mine{box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #2e9e4f,0 0 18px #2e9e4f88,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
 /* diğer oyuncuların masadaki çipleri (koltuk rengi) */
 .tc .om{position:absolute;z-index:2;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:.48rem;font-weight:900;color:#fff;text-shadow:0 1px 1px #000;box-shadow:0 0 0 1.5px #0009,0 2px 0 #0008,0 4px 6px #000b,inset 0 1px 1px #fff6}
 .tc .om.c0{background:repeating-conic-gradient(from -11.25deg,#e8f0ff 0 22.5deg,#1e63d6 22.5deg 45deg)}
@@ -194,13 +193,16 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .bjwrap.av .dplate{display:block}
 .stools{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));pointer-events:none}
 /* krupiye koltuğu: siyah deri, altın şerit, sırtlığı masaya ters */
-.stool.dc{width:62px;height:62px;margin:-31px;background:radial-gradient(circle at 42% 36%,#3d3d48,#17171c 55%,#050506);box-shadow:0 0 0 2.5px #c9971a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
-.stool.dc::before{inset:10px;border-color:#c9971a55}
-.stool.dc i{width:84px;height:84px;margin:-42px;border-width:9px;border-bottom-color:#1c1c22;box-shadow:0 0 0 0 #0000}
-.stool.dc i::after{content:"";position:absolute;left:50%;bottom:-9px;width:40px;height:3px;margin-left:-20px;border-radius:2px;background:#c9971a}
-.stool{position:absolute;width:50px;height:50px;margin:-25px;border-radius:50%;background:radial-gradient(circle at 42% 36%,#a0402f,#5e1c14 55%,#2e0b08);box-shadow:0 0 0 3px #3a2a1a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
-.stool::before{content:"";position:absolute;inset:9px;border-radius:50%;border:1.5px solid #ffffff22;box-shadow:inset 0 0 8px #0006}
-.stool i{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px;border-radius:50%;border:8px solid #0000;border-bottom-color:#4a2a10;transform:rotate(var(--a));filter:drop-shadow(0 3px 3px #0009)}
+.stool.dc{width:62px;height:62px;margin:-31px;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .8px,#0000 1.6px) 7px 7px/14px 14px,repeating-linear-gradient(45deg,#0000 0 13px,#ffffff12 13px 14px),repeating-linear-gradient(-45deg,#0000 0 13px,#ffffff12 13px 14px),radial-gradient(circle at 42% 36%,#3d3d48,#17171c 55%,#050506);box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #5a4018,0 12px 18px #000c,inset 0 3px 6px #ffffff30,inset 0 -5px 9px #0009}
+.stool.dc::before{inset:7px;border-color:#c9971a44}
+.stool.dc i{width:86px;height:86px;margin:-43px;border-width:11px;border-bottom-color:#1c1c22}
+.stool.dc i::after{content:"";position:absolute;left:50%;bottom:-11px;width:40px;height:3px;margin-left:-20px;border-radius:2px;background:#c9971a}
+/* sandalyeler: kapitone bordo deri (altın düğmeler), altın biye, koyu metal taban; sırtlık masaya ters, altın biyeli */
+.stool{position:absolute;width:52px;height:52px;margin:-26px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .8px,#0000 1.6px) 6.5px 6.5px/13px 13px,repeating-linear-gradient(45deg,#0000 0 12.2px,#00000042 12.2px 13.2px),repeating-linear-gradient(-45deg,#0000 0 12.2px,#00000042 12.2px 13.2px),radial-gradient(circle at 40% 34%,#c2583f,#8a2a1b 46%,#541309 78%,#2c0804);box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #5a4018,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
+.stool::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed #ffffff2e;box-shadow:inset 0 0 10px #0006}
+.stool::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 16%,#ffffff26,#0000 42%)}
+.stool i{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px;border-radius:50%;border:10px solid #0000;border-bottom-color:#7a2217;transform:rotate(var(--a));filter:drop-shadow(0 3px 4px #000a)}
+.stool i::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid #0000;border-bottom-color:#dcb765}
 .bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:9px;background:linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
 .bjtable{position:relative;width:100%;height:100%;border-radius:18px 18px 180px 180px/18px 18px 155px 155px;background:radial-gradient(ellipse at 50% 20%,#1b9a5a,#0f6b3d 50%,#0a4a2a 100%);box-shadow:inset 0 0 40px #0009,inset 0 0 0 1.5px #c9971a66}
 .bjsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -232,10 +234,10 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .btag i{display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,#ff7ae6,#7b3fe4);color:#fff;font-style:normal;font-size:.48rem;margin-right:3px;vertical-align:-2px}
 .seat.botseat .badge{top:46px}
 .stool{pointer-events:auto;cursor:pointer}.stools{pointer-events:none}
-.stool .plate{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:6px;padding:2px 8px;border-radius:8px;background:#000b;color:#ffe9a8;font-size:.52rem;font-weight:800;letter-spacing:.5px;white-space:nowrap;text-shadow:0 1px 2px #000}
-.stool .plate small{display:block;font-size:.42rem;letter-spacing:2px;color:#ffd23f;opacity:.9}.stool .plate:empty{display:none}
-.stool.taken{box-shadow:0 0 0 3px #3a2a1a,0 0 0 5px #15100a,0 0 16px #ffd23f66,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
-.stool.mine{box-shadow:0 0 0 3px #ffd23f,0 0 0 5px #15100a,0 0 18px #ffd23f99,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
+.stool .plate{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:7px;padding:3px 9px 2px;border-radius:6px;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;box-shadow:0 3px 6px #000a,inset 0 1px 0 #ffffff14;color:#ffe9a8;font-size:.5rem;font-weight:800;letter-spacing:.6px;white-space:nowrap;text-shadow:0 1px 2px #000;line-height:1.15;text-align:center}
+.stool .plate small{display:block;font-family:"Cinzel",Georgia,serif;font-size:.4rem;letter-spacing:2px;color:#dcb765;opacity:.95}.stool .plate:empty{display:none}
+.stool.taken{box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #dcb76588,0 0 18px #ffd23f55,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
+.stool.mine{box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #ffd23f,0 0 22px #ffd23f99,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
 .stool .dname{position:absolute;left:50%;top:-6px;transform:translate(-50%,-100%);padding:2px 8px;border-radius:8px;background:#000b;text-align:center;font-family:"Cinzel",Georgia,serif;font-size:.5rem;letter-spacing:2px;color:#ffe9a8;text-shadow:0 1px 2px #000;line-height:1.1}
 .stool .dname small{display:block;font-family:Montserrat,sans-serif;font-size:.36rem;letter-spacing:1.5px;color:#c9971a}
 .seat.taken .spot{border-style:solid;border-color:#ffd23f55;cursor:default}.seat.taken .spot small{font-size:.45rem;color:#ffd23fcc}
