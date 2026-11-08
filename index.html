@@ -789,8 +789,9 @@ drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:
 const x=r.total/sbet();if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));
 if(x>=100)say('epicwin',300);else if(x>=40)say('megawin',300);else if(x>=15)say('bigwin',300);else if(x>=5)say('great',200);else if(x>=2&&Math.random()<.6)say('nice',200);
 await countUp(r.total,x>=15?1800:700);
-if(!free||x>=5)slotWinFx(x,r.total,p);
-if(x>=15)await overlay('<h2 class="wt'+(x>=100?' t5':x>=40?' t4':'')+'">'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmtE(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',x>=100?3600:x>=40?3000:2600,true);
+/* 10 € ve altı kazanç yalnız KAZANÇ kutusunda; üstü ekranda */
+const showFx=r.total>10;if(showFx&&(!free||x>=5))slotWinFx(x,r.total,p);
+if(showFx&&x>=15)await overlay('<h2 class="wt'+(x>=100?' t5':x>=40?' t4':'')+'">'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmtE(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',x>=100?3600:x>=40?3000:2600,true);
 startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose()}
 setChips(chips+r.total);
 if(r.fs){S.fs();say(free?'bonus':'freespins',400);if(free){fsLeft+=T.retrig;await overlay('<div class="ic">'+ico(T.sym[T.S],'big')+'</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
@@ -800,7 +801,7 @@ if(free){fsTotal+=r.total;fsLeft--;fsbar.querySelector('.fsn').textContent=fsLef
 if(fsLeft>0){await wait(900);spin();return}
 await wait(600);grid.classList.remove('fsmode');fsbar.classList.add('hide');
 if(fsTotal/sbet()>=150)say('jackpot',200);
-if(fsTotal>0)slotWinFx(fsTotal/sbet(),fsTotal,p);await overlay('<h2 class="wt">FREE SPIN BİTTİ</h2><div class="n">+'+fmtE(fsTotal)+'</div><p>'+(fsTotal/sbet()).toFixed(1)+'x bahis</p>',3000,fsTotal>0)}
+if(fsTotal>10)slotWinFx(fsTotal/sbet(),fsTotal,p);await overlay('<h2 class="wt">FREE SPIN BİTTİ</h2><div class="n">+'+fmtE(fsTotal)+'</div><p>'+(fsTotal/sbet()).toFixed(1)+'x bahis</p>',3000,fsTotal>10)}
 busy=false;btnsLock();setChips(chips);
 if(auto&&chips>=sbet()){await wait(500);if(auto&&!busy)spin()}else if(auto){auto=false;autoBtn.classList.remove('on')}}
 let fsTotal=0;
