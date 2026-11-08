@@ -266,7 +266,7 @@ box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px 
 .mstrip{display:flex;flex-direction:column;animation:mreel 5.2s cubic-bezier(.25,.9,.3,1) var(--dl) infinite}
 .mstrip .sym{position:static;inset:auto;width:36px;height:36px;flex:none;padding:3px;box-sizing:border-box}
 @keyframes mreel{0%{transform:translateY(0)}68%{transform:translateY(calc(var(--k)*-36px))}100%{transform:translateY(calc(var(--k)*-36px))}}
-.mline{position:absolute;left:50%;top:calc(50% + 6px);width:124px;height:36px;margin-left:-62px;border-radius:4px;border:2px solid #ffd23f;box-shadow:0 0 10px #ffd23f99,inset 0 0 8px #ffd23f44;pointer-events:none;animation:mline 5.2s ease-out .9s infinite;opacity:0}
+.mline{position:absolute;left:4px;top:40px;right:4px;height:36px;border-radius:4px;border:2px solid #ffd23f;box-shadow:0 0 10px #ffd23f99,inset 0 0 8px #ffd23f44;pointer-events:none;animation:mline 5.2s ease-out .9s infinite;opacity:0}
 @keyframes mline{0%,74%{opacity:0}80%,92%{opacity:1}100%{opacity:0}}
 .mini .mb{margin-top:8px;font-size:.62rem;letter-spacing:2px;color:var(--mut)}
 .stabs{display:flex;gap:8px;margin-bottom:12px}.stabs.hide{display:none}.stabs button{flex:1;font-weight:600}
@@ -541,7 +541,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <button class="card c-rulet" data-go="rulet"><i class="acc"></i><div><b>Rulet</b><small>3D çark · Avrupa ruleti · 36'ya 1</small></div><span class="chev">›</span></button>
 <button class="card c-bj" data-go="bj"><i class="acc"></i><div><b>Blackjack</b><small>3 koltuk · Blackjack 3:2 · Sigorta</small></div><span class="chev">›</span></button>
 </div>
-<button class="mini" id="mini" data-go="slot"><div class="mt">GOLDEN SPIN</div><div class="mreels" id="mreels"></div><div class="mline"></div><div class="mb">Dokun, oyna</div></button>
+<button class="mini" id="mini" data-go="slot"><div class="mt">GOLDEN SPIN</div><div class="mreels" id="mreels"><div class="mline"></div></div><div class="mb">Dokun, oyna</div></button>
 </div>
 <div class="bets hide" id="bets">
 <button class="chip" data-b="2.5"><span class="v">2,5</span></button><button class="chip" data-b="5"><span class="v">5</span></button><button class="chip" data-b="10"><span class="v">10</span></button><button class="chip" data-b="25"><span class="v">25</span></button><button class="chip on" data-b="50"><span class="v">50</span></button><button class="chip" data-b="100"><span class="v">100</span></button>
@@ -837,10 +837,10 @@ goBtn.onclick=()=>{ac();S.click();spin()}
 p.addEventListener('click',()=>{if(!welcomed){welcomed=true;say('welcome')}},{once:true})}
 makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);
 /* ana ekrandaki minik slot: kendi kendine döner, orta sırada kazanç çizgisi yanıp söner */
-{const T=THEMES.slot,K=9,wins=[[0,0,0],[6,6,6],[7,7,7]];const mr=$('mreels');[0,1,2].forEach(c=>{const seq=[];for(let i=0;i<K;i++)seq.push(T.sym[rnd(T.sym.length)]);
+{const T=THEMES.slot,K=9,w=[6,7,5][rnd(3)];const mr=$('mreels');[0,1,2].forEach(c=>{const seq=[];for(let i=0;i<K;i++)seq.push(T.sym[rnd(T.sym.length)]);
 /* döngü sonunda görünen 3 sıra = başlangıçtaki 3 sıra olsun diye şerit kendini tekrar eder; orta sıra kazanan sembol */
-seq[1]=T.sym[wins[c%wins.length][c]];const strip=seq.concat(seq.slice(0,3));
-const d=document.createElement('div');d.className='mreel';d.innerHTML='<div class="mstrip" style="--k:'+K+';--dl:'+(c*.3)+'s">'+strip.map(id=>ico(id)).join('')+'</div>';mr.appendChild(d)})}
+seq[1]=T.sym[w];const strip=seq.concat(seq.slice(0,3));
+const d=document.createElement('div');d.className='mreel';d.innerHTML='<div class="mstrip" style="--k:'+K+';--dl:'+(c*.3)+'s">'+strip.map(id=>ico(id)).join('')+'</div>';mr.insertBefore(d,mr.querySelector('.mline'))})}
 
 /* RULET MASASI */
 const WO=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26],SG=360/37;
