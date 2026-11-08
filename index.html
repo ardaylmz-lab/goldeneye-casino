@@ -138,7 +138,11 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc.won{border-color:var(--gold);box-shadow:0 0 12px var(--gold);animation:pl .6s ease-in-out infinite alternate}
 .tc.won em{font-size:.72rem}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
-.bjwrap{position:relative;width:100%;max-width:360px;margin:4px auto 8px;aspect-ratio:340/318}
+.bjwrap{position:relative;width:100%;max-width:360px;margin:4px auto 8px;aspect-ratio:340/374}
+.stools{position:absolute;left:0;top:0;width:340px;height:318px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
+.stool{position:absolute;width:50px;height:50px;margin:-25px;border-radius:50%;background:radial-gradient(circle at 42% 36%,#a0402f,#5e1c14 55%,#2e0b08);box-shadow:0 0 0 3px #3a2a1a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
+.stool::before{content:"";position:absolute;inset:9px;border-radius:50%;border:1.5px solid #ffffff22;box-shadow:inset 0 0 8px #0006}
+.stool i{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px;border-radius:50%;border:8px solid #0000;border-bottom-color:#4a2a10;transform:rotate(var(--a));filter:drop-shadow(0 3px 3px #0009)}
 .bjrail{position:absolute;left:0;top:0;width:340px;height:318px;transform-origin:0 0;transform:scale(var(--s,1));border-radius:22px 22px 170px 170px/22px 22px 150px 150px;padding:9px;background:linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
 .bjtable{position:relative;width:100%;height:100%;border-radius:16px 16px 160px 160px/16px 16px 140px 140px;background:radial-gradient(ellipse at 50% 20%,#1b9a5a,#0f6b3d 50%,#0a4a2a 100%);box-shadow:inset 0 0 40px #0009,inset 0 0 0 1.5px #c9971a66}
 .bjsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -152,10 +156,10 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .dsum{position:absolute;left:50%;top:88px;transform:translateX(-50%);font-size:.6rem;letter-spacing:1px;color:#fff;font-weight:800;background:#0007;padding:1px 8px;border-radius:8px}
 .dsum:empty{display:none}
 .seat{position:absolute;left:0;top:0;width:0;height:0}
-.spot{position:absolute;left:-24px;top:-24px;width:48px;height:48px;border-radius:50%;border:2px dashed #ffd23fbb;display:grid;place-items:center;cursor:pointer;transition:box-shadow .2s,border-color .2s;background:#00000018}
+.spot{position:absolute;left:-27px;top:-27px;width:54px;height:54px;border-radius:50%;border:2px dashed #ffd23fbb;display:grid;place-items:center;cursor:pointer;transition:box-shadow .2s,border-color .2s;background:#00000018}
 .spot small{font-size:.52rem;color:#ffd23f99;font-weight:700;letter-spacing:1px;pointer-events:none}
 .seat.on .spot{border-style:solid;border-color:#fff3b0;box-shadow:0 0 0 3px #ffd23f55,0 0 18px #ffd23faa}
-.bchip{position:relative;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:.55rem;font-weight:900;color:#2a1a00;background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #8a5a08,0 5px 0 #5a3a05,0 7px 8px #000b,inset 0 1px 1px #fff8;pointer-events:none}
+.bchip{position:relative;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:.55rem;font-weight:900;color:#2a1a00;background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #8a5a08,0 5px 0 #5a3a05,0 7px 8px #000b,inset 0 1px 1px #fff8;pointer-events:none}
 .bchip::before{content:"";position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#f4c33c 60%,#b8860b 100%);box-shadow:inset 0 0 0 1.5px #fff6c0,inset 0 1px 3px #0006}
 .bchip span{position:relative;z-index:1}
 .hands{position:absolute;left:0;top:0;width:0;height:0}
@@ -163,7 +167,7 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .cs{position:absolute;left:-16px;top:-22px}
 .hsum{position:absolute;left:-18px;width:36px;text-align:center;font-size:.58rem;font-weight:800;color:#fff;background:#000a;border-radius:8px;padding:1px 0;letter-spacing:.5px}
 .hsum.on{background:var(--gold);color:#1a1000}.hsum.bust{background:#c40018;color:#fff}.hsum.bj{background:#ffd23f;color:#1a1000}
-.badge{position:absolute;left:-32px;top:27px;width:64px;text-align:center;font-size:.55rem;font-weight:900;letter-spacing:.3px;padding:2px 0;border-radius:8px;color:#fff;background:#000c;animation:rpop .35s cubic-bezier(.2,1.6,.4,1);white-space:nowrap}
+.badge{position:absolute;left:-34px;top:31px;width:64px;text-align:center;font-size:.55rem;font-weight:900;letter-spacing:.3px;padding:2px 0;border-radius:8px;color:#fff;background:#000c;animation:rpop .35s cubic-bezier(.2,1.6,.4,1);white-space:nowrap}
 .badge.win{background:#1a9a4a}.badge.lose{background:#8a0010}.badge.push{background:#444}.badge.bj{background:#ffd23f;color:#1a1000}
 .c{position:relative;width:32px;height:44px;border-radius:4px;background:linear-gradient(160deg,#fff,#eee9dc);color:#111;border:1px solid #cfc8b8;box-shadow:0 3px 6px #000a,inset 0 1px 0 #fff;font-weight:900;font-size:.72rem;line-height:1;backface-visibility:hidden}
 .c b{position:absolute;left:3px;top:3px}.c span{position:absolute;right:3px;bottom:2px;font-size:.85rem}.c i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-style:normal;font-size:1.05rem;opacity:.9}
@@ -174,6 +178,13 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .c.flip{animation:bjfp .45s ease-out}
 @keyframes bjfp{0%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
 #bjbtns button{flex:1 1 22%}#bjbtns .go{flex-basis:58%}
+.rack{position:absolute;left:50%;top:104px;width:126px;height:16px;transform:translateX(-50%);border-radius:4px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:2px 7px;box-sizing:border-box}
+.rack b{flex:1;border-radius:2px;background:repeating-linear-gradient(180deg,var(--c) 0 2px,#fff8 2px 3px);opacity:.9}
+.fly{position:absolute;left:0;top:0;width:28px;height:28px;margin:-14px;z-index:6;transition:transform .55s cubic-bezier(.25,.8,.35,1),opacity .25s;pointer-events:none}
+.insbar{display:flex;align-items:center;gap:8px;margin:6px 0;padding:8px 10px;border-radius:12px;background:linear-gradient(90deg,#3a2a00,#1a1200);border:1.5px solid var(--gold);box-shadow:0 0 14px #ffd23f55;font-size:.8rem;font-weight:700}
+.insbar span{flex:1;text-align:left}.insbar button{padding:8px 10px;font-size:.8rem}
+.insbar.hide{display:none}
+.badge.ins{background:#1a3a8a}
 #bjres{min-height:18px;color:var(--gold);font-weight:700;font-size:.85rem;margin:4px 0}
 #bets{gap:7px;align-items:center}
 /* ===== PREMIUM ÇİP ===== --c ana renk, --c2 koyu kenar, --e kenar dilimleri, --t yazı */
@@ -496,10 +507,11 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="bj">
-<div class="bjwrap" id="bjwrap"><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 322 300"><defs><path id="bja1" d="M55,151.5 A124,124 0 0 0 285,151.5"/><path id="bja2" d="M109.9,126.9 A64,64 0 0 0 230.1,126.9"/></defs><text font-size="11"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="6.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="170" y="112" font-size="5.5" text-anchor="middle">DEALER MUST STAND ON 17 · DRAW TO 16</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div id="seats"></div></div></div></div>
+<div class="bjwrap" id="bjwrap"><div class="stools" id="stools"></div><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 322 300"><defs><path id="bja1" d="M60.6,149.2 A118,118 0 0 0 279.4,149.2"/><path id="bja2" d="M109.9,126.9 A64,64 0 0 0 230.1,126.9"/></defs><text font-size="11"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="6.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="170" y="140" font-size="5.5" text-anchor="middle">DEALER STANDS ON 17</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div class="rack" id="rack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#7b3fe4"></b><b style="--c:#c9971a"></b></div><div id="seats"></div></div></div></div>
 <div class="res" id="bjres"></div>
+<div class="insbar hide" id="insbar"><span>Krupiyede As. Sigorta? Bahsin yarısı, blackjack çıkarsa 2:1 öder.</span><button id="insyes" class="on">Sigorta al</button><button id="insno">Hayır</button></div>
 <div class="row" id="bjbtns"><button class="go" id="deal">DAĞIT</button><button id="bjrebet">Tekrar</button><button id="hit">Çek</button><button id="stand">Dur</button><button id="dbl">2x</button><button id="spl">Böl</button><button id="bjclear">Bahisleri temizle</button></div>
-<div class="lbl">Seçili çipi koltuklara dokunarak koy (6 koltuk, birden fazla el). Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
+<div class="lbl">Seçili çipi koltuklara dokunarak koy (3 koltuk, birden fazla el). Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
 </div>
 
 <div id="msg"></div>
@@ -795,38 +807,49 @@ let deck=[];
 function draw(){if(deck.length<15){deck=[];for(const s of '♠♥♦♣')for(const r of ['A','2','3','4','5','6','7','8','9','10','J','Q','K'])deck.push(r+s);for(let i=deck.length-1;i>0;i--){const j=rnd(i+1);[deck[i],deck[j]]=[deck[j],deck[i]]}}return deck.pop()}
 function val(h){let t=0,a=0;for(const c of h){const r=c.slice(0,-1);if(r==='A'){t+=11;a++}else t+=isNaN(r)?10:+r}let soft=a>0;while(t>21&&a){t-=10;a--;soft=a>0}return{t,soft}}
 const sum=h=>val(h).t,rk=c=>c.slice(0,-1);
-const SEATS=[28,52.8,77.6,102.4,127.2,152].map(d=>d*Math.PI/180),BJC={x:170,y:105},RS=152,RC=96;
-const seats=SEATS.map(()=>({bet:0,hands:[],badge:null}));let dealerH=[],hole=true,phase='bet',cur=null,lastBets=null,dshown=0,dflip=false;
-function bjFit(){const w=$('bjwrap').clientWidth;if(w)$('bjrail').style.setProperty('--s',w/340)}
+const SEATS=[52,90,128].map(d=>d*Math.PI/180),BJC={x:170,y:105},RS=152,RC=90,RACK={x:170,y:112};
+const seats=SEATS.map(()=>({bet:0,ins:0,hands:[],badge:null}));let dealerH=[],hole=true,phase='bet',cur=null,lastBets=null,dshown=0,dflip=false;
+function bjFit(){const w=$('bjwrap').clientWidth;if(w)$('bjwrap').style.setProperty('--s',w/340)}
+/* tabureler: korkuluğun dışında, rail'in altında kalır */
+SEATS.forEach(th=>{const d=document.createElement('div');d.className='stool';d.style.left=(9+BJC.x+228*Math.cos(th)).toFixed(1)+'px';d.style.top=(9+BJC.y+228*Math.sin(th)).toFixed(1)+'px';d.innerHTML='<i style="--a:'+(th*180/Math.PI-90).toFixed(1)+'deg"></i>';$('stools').appendChild(d)});
 new ResizeObserver(bjFit).observe($('bjwrap'));bjFit();
 SEATS.forEach((th,k)=>{const d=document.createElement('div');d.className='seat';d.style.transform='translate('+(BJC.x+RS*Math.cos(th)).toFixed(1)+'px,'+(BJC.y+RS*Math.sin(th)).toFixed(1)+'px)';
 d.innerHTML='<div class="hands" style="transform:translate('+((RC-RS)*Math.cos(th)).toFixed(1)+'px,'+((RC-RS)*Math.sin(th)).toFixed(1)+'px) rotate('+(th*180/Math.PI-90).toFixed(1)+'deg)"></div><div class="spot"><small>'+(k+1)+'</small></div><div class="bd"></div>';
 d.querySelector('.spot').onclick=()=>placeBet(k);$('seats').appendChild(d)});
+const spotPos=k=>({x:BJC.x+RS*Math.cos(SEATS[k]),y:BJC.y+RS*Math.sin(SEATS[k])});
+/* çip uçuşu: raftan koltuğa (ödeme) veya koltuktan rafa (kayıp) */
+function flyChips(from,to,n,delay,label){for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
+requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
 function card(c,hid,nw,fl){const cls='c'+(hid?' h':/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':'');if(hid)return '<div class="'+cls+'"></div>';const r=c.slice(0,-1),su=c.slice(-1);return '<div class="'+cls+'"><b>'+r+'</b><i>'+su+'</i><span>'+su+'</span></div>'}
 function bjRender(){seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
 el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip"><span>'+fmtA(s.bet)+'</span></div>':'<small>'+(k+1)+'</small>';
 el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,v=val(h.cards),on=cur&&cur.s===k&&cur.h===j;
 return '<div class="hand" style="transform:translateX('+((j-(n-1)/2)*46)+'px)">'+h.cards.map((c,i)=>'<div class="cs" style="transform:translateY('+(-i*15)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(h.cards.length?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="top:-12px;left:'+((n===2&&j===1)?20:-56)+'px">'+(h.bj?'BJ':v.t)+(h.dbl?' ·2x':'')+'</div>':'')+'</div>'}).join('');
 s.hands.forEach(h=>h.shown=h.cards.length);
-el.querySelector('.bd').innerHTML=s.badge?'<div class="badge '+s.badge.c+'">'+s.badge.t+'</div>':''});
+el.querySelector('.bd').innerHTML=s.badge?'<div class="badge '+s.badge.c+'">'+s.badge.t+'</div>':(s.ins>0?'<div class="badge ins">SİGORTA '+fmtA(s.ins)+'</div>':'')});
 $('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&dflip)).join('');dshown=dealerH.length;dflip=false;
 $('dsum').textContent=dealerH.length&&!hole?sum(dealerH):''}
 function curHand(){return phase==='play'&&cur?seats[cur.s].hands[cur.h]:null}
 function canSplit(h){return !!h&&h.cards.length===2&&!h.split&&rk(h.cards[0])===rk(h.cards[1])&&chips>=h.bet&&seats[cur.s].hands.length<2}
-function bjBtns(){const h=curHand(),anyBet=seats.some(s=>s.bet>0);$('deal').disabled=phase!=='bet'||!anyBet;$('hit').disabled=!h;$('stand').disabled=!h;$('dbl').disabled=!h||h.cards.length!==2||chips<h.bet;$('spl').disabled=!canSplit(h);
+function bjBtns(){const h=curHand(),anyBet=seats.some(s=>s.bet>0);$('deal').disabled=phase!=='bet'||!anyBet;$('insyes').disabled=$('insyes').disabled&&phase==='insure';$('hit').disabled=!h;$('stand').disabled=!h;$('dbl').disabled=!h||h.cards.length!==2||chips<h.bet;$('spl').disabled=!canSplit(h);
 $('bjclear').disabled=phase!=='bet'||!anyBet;$('bjrebet').disabled=!(phase==='bet'||phase==='settle')||!lastBets||anyBet}
-function bjClearTable(){seats.forEach(s=>{s.hands=[];s.badge=null});dealerH=[];hole=true;dshown=0;$('bjres').textContent='';if(phase==='settle')phase='bet'}
-function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer')return;if(phase==='settle')bjClearTable();
+function bjClearTable(){seats.forEach(s=>{s.hands=[];s.badge=null;s.ins=0});dealerH=[];hole=true;dshown=0;$('bjres').textContent='';if(phase==='settle')phase='bet'}
+function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(phase==='settle')bjClearTable();
 if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;S.chip();msg('');bjRender();bjBtns()}
 $('bjclear').onclick=()=>{if(phase!=='bet')return;let t=0;seats.forEach(s=>{t+=s.bet;s.bet=0});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
 $('bjrebet').onclick=()=>{if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(b>0&&chips>=b&&seats[k].bet===0){setChips(chips-b);seats[k].bet=b;put=true}});if(put)S.chip();bjRender();bjBtns()};
-function nextHand(){for(let k=0;k<6;k++){const s=seats[k];for(let j=0;j<s.hands.length;j++)if(!s.hands[j].done)return{s:k,h:j}}return null}
+function nextHand(){for(let k=0;k<seats.length;k++){const s=seats[k];for(let j=0;j<s.hands.length;j++)if(!s.hands[j].done)return{s:k,h:j}}return null}
 async function bjDeal(){if(phase!=='bet'||busy)return;const act=seats.map((s,k)=>s.bet>0?k:-1).filter(k=>k>=0);if(!act.length)return;
 phase='deal';live=true;msg('');lastBets=seats.map(s=>s.bet);S.click();
 seats.forEach(s=>{s.hands=[];s.badge=null});act.forEach(k=>seats[k].hands=[{cards:[],bet:seats[k].bet,shown:0,done:false,dbl:false,split:false,bj:false}]);dealerH=[];hole=true;dshown=0;$('bjres').textContent='';bjBtns();bjRender();
 for(let r=0;r<2;r++){for(const k of act){seats[k].hands[0].cards.push(draw());S.card();bjRender();await wait(190)}dealerH.push(draw());S.card();bjRender();await wait(190)}
 act.forEach(k=>{const h=seats[k].hands[0];if(sum(h.cards)===21){h.bj=true;h.done=true}});bjRender();
+if(rk(dealerH[0])==='A'){ /* sigorta teklifi */
+phase='insure';const need=act.reduce((a,k)=>a+seats[k].bet/2,0);$('insyes').disabled=chips<need;$('insbar').classList.remove('hide');bjBtns();
+const take=await new Promise(res=>{$('insyes').onclick=()=>res(true);$('insno').onclick=()=>res(false)});$('insbar').classList.add('hide');
+if(take){act.forEach(k=>{seats[k].ins=seats[k].bet/2});setChips(chips-need);S.chip();bjRender();await wait(350)}}
 if(sum(dealerH)===21){await wait(600);hole=false;dflip=true;S.card();bjRender();await wait(700);return bjSettle()}
+if(seats.some(s=>s.ins>0)){seats.forEach(s=>{if(s.ins>0){s.badge={c:'lose',t:'SİGORTA -'+fmtA(s.ins)};s.ins=0}});bjRender()}
 phase='play';advance()}
 function advance(){cur=nextHand();if(cur){bjRender();bjBtns()}else bjDealer()}
 async function bjHit(){const h=curHand();if(!h)return;h.cards.push(draw());S.card();bjRender();bjBtns();if(sum(h.cards)>=21){h.done=true;await wait(550);advance()}}
@@ -840,11 +863,18 @@ async function bjDealer(){phase='dealer';cur=null;bjBtns();bjRender();await wait
 const anyLive=seats.some(s=>s.hands.some(h=>sum(h.cards)<=21&&!h.bj));
 if(anyLive){while(sum(dealerH)<17){dealerH.push(draw());S.card();bjRender();await wait(750)}}
 await wait(300);bjSettle()}
-function bjSettle(){phase='settle';const d=sum(dealerH),dbj=dealerH.length===2&&d===21;let net=0,ret=0,maxBet=0;
-seats.forEach(s=>{if(!s.hands.length)return;let sn=0,bj=false;s.hands.forEach(h=>{const p=sum(h.cards);let r=0;maxBet=Math.max(maxBet,h.bet);
+async function bjSettle(){phase='settle';const d=sum(dealerH),dbj=dealerH.length===2&&d===21;let net=0,ret=0,maxBet=0;const anim=[];
+seats.forEach((s,k)=>{if(!s.hands.length)return;let sn=0,bj=false,win=0;s.hands.forEach(h=>{const p=sum(h.cards);let r=0;maxBet=Math.max(maxBet,h.bet);
 if(h.bj&&!dbj){r=h.bet*2.5;bj=true}else if(h.bj&&dbj){r=h.bet}else if(p>21||dbj){r=0}else if(d>21||p>d){r=h.bet*2}else if(p===d){r=h.bet}
-ret+=r;sn+=r-h.bet});net+=sn;s.badge=bj&&sn>0?{c:'bj',t:'BJ +'+fmtA(sn)}:sn>0?{c:'win',t:'+'+fmtA(sn)}:sn<0?{c:'lose',t:'-'+fmtA(-sn)}:{c:'push',t:'PUSH'};s.bet=0});
-setChips(chips+ret);live=false;cur=null;bjRender();bjBtns();
+ret+=r;sn+=r-h.bet;win+=Math.max(0,r-h.bet)});
+let insTxt='';if(s.ins>0){if(dbj){ret+=s.ins*3;sn+=s.ins*2;win+=s.ins*2;insTxt=' · Sig +'+fmtA(s.ins*2)}else{sn-=s.ins;insTxt=' · Sig -'+fmtA(s.ins)}}
+net+=sn;s.badge=bj&&sn>0?{c:'bj',t:'BJ +'+fmtA(sn)+insTxt}:sn>0?{c:'win',t:'+'+fmtA(sn)+insTxt}:sn<0?{c:'lose',t:'-'+fmtA(-sn)+insTxt}:{c:'push',t:'PUSH'+insTxt};
+anim.push({k,win,lose:sn<0&&win===0})});
+cur=null;bjRender();bjBtns();
+/* çip animasyonu: kazanan koltuğa raftan çipler gelir, kaybeden bahis rafa gider */
+anim.forEach((a,i)=>{const sp=spotPos(a.k);if(a.win>0)flyChips(RACK,sp,Math.min(4,1+Math.floor(a.win/Math.max(1,maxBet))),i*150,fmtA(a.win));else if(a.lose)flyChips(sp,RACK,1,i*150,'')});
+if(anim.length)await wait(1250);
+setChips(chips+ret);live=false;seats.forEach(s=>{s.bet=0;s.ins=0});bjRender();bjBtns();
 $('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'Krupiye '+d;
 msg(net>0?'🎉 Kazandın +'+fmtA(net):net===0?'Başa baş':'Kaybettin -'+fmtA(-net));
 if(net>0){if(net/maxBet>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}
