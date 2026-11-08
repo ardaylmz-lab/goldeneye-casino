@@ -633,7 +633,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <script>
 const $=id=>document.getElementById(id);
 /* ===== SUPABASE (bulut hesaplar, ortak bakiye). key boşsa PIN girişi kullanılır ===== */
-const SUPA={url:'https://jzmxwnpagkmeyeibykui.supabase.co',key:''};
+const SUPA={url:'https://jzmxwnpagkmeyeibykui.supabase.co',key:'sb_publishable_ne1Sp-tJS4zYcdIX5jL87w_HuK4YuT4'};
 const CLOUD=!!(SUPA.url&&SUPA.key);
 /* GİRİŞ PIN'i (yalnız bulut kapalıyken) */
 const PIN='7777';
@@ -1097,8 +1097,9 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&me&&pushT)
 try{sb.auth.getSession().then(({data})=>{const tk=data.session&&data.session.access_token;if(!tk)return;fetch(SUPA.url+'/rest/v1/rpc/set_balance',{method:'POST',keepalive:true,headers:{'apikey':SUPA.key,'Authorization':'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({new_balance:chips})})})}catch(e){}}});
 function applyBalance(b){applying=true;try{setChips(+b)}finally{applying=false}}
 async function enter(session){me=session.user;
-let {data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();
-if(!data){await sb.from('profiles').insert({id:me.id,name:(me.user_metadata&&me.user_metadata.name)||me.email.split('@')[0]});({data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle())}
+let {data,error}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();
+if(error&&/schema cache|profiles/.test(error.message)){setTimeout(()=>msg('Supabase şeması kurulmamış: supabase/schema.sql dosyasını SQL Editor\'da çalıştırın. Bakiye şimdilik bu cihazda tutuluyor.'),300)}
+if(!data&&!error){await sb.from('profiles').insert({id:me.id,name:(me.user_metadata&&me.user_metadata.name)||me.email.split('@')[0]});({data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle())}
 prof=data||{name:me.email.split('@')[0],balance:chips};applyBalance(prof.balance);
 $('whoname').textContent=prof.name;$('who').classList.remove('hide');const g=$('gate');if(g)g.remove();
 /* kendi profil satırındaki değişiklikler (başka cihazdan) */
