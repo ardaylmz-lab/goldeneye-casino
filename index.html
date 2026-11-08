@@ -1434,79 +1434,107 @@ frame++;if(!st&&(frame&1))return;renderer.render(scene,cam)}
 fit();loop();box.classList.add('gl');
 window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:wrapA(phi),target:wrapA(ang(pocket)+ry),ry,wr,spinning:!!st,hops:st&&st.hops?st.hops.map(h=>+h.d.toFixed(3)):null,settle:st?+(st.settleT).toFixed(2):null,camD:+camD.toFixed(3)}),_cam:cam,_ball:ball,_camSet:(d,t)=>{camD=d;camT.copy(t)}};
 })();
-/* ===== 3D KRUPİYE (prosedürel, three.js). Blackjack masasının arkasında oturur: nefes alır, göz kırpar, bakar;
-   kart dağıtırken kolunu uzatır, ödeme yaparken çipleri iter, anons yaparken konuşur. Dış model/dosya yok. ===== */
+/* ===== 3D KRUPİYE (prosedürel, three.js): sarışın kadın krupiye. Blackjack masasının arkasında oturur: nefes alır,
+   göz kırpar, sıradaki oyuncuya bakar; kart dağıtırken kolunu uzatır, ödemede çipleri iter, anons yaparken konuşur.
+   Dış model/dosya yok; saç dokusu da çalışma anında tuvale çizilir. ===== */
 (()=>{try{
 const cv=document.getElementById('dlr3d'),wrap=document.getElementById('bjwrap');if(!cv||!wrap)return;
 let R;try{R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true})}catch(e){return}
 const W=260,H=196,RAIL=100; /* tasarım px: tuval 260x196, masa kenarı (kesme çizgisi) 100. satırda */
-R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H,false);R.localClippingEnabled=true;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.0;
+R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H,false);R.localClippingEnabled=true;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.02;
 const sc=new THREE.Scene();{const pm=new THREE.PMREMGenerator(R);sc.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose()}
-const cam=new THREE.PerspectiveCamera(26,W/H,.1,10);const CAM={y:.8,z:2.0,look:.47};
+const cam=new THREE.PerspectiveCamera(26,W/H,.1,10);const CAM={y:.8,z:2.0,look:.49};
 const clip=new THREE.Plane(new THREE.Vector3(0,1,0),0);
-function setCam(){cam.position.set(0,CAM.y,CAM.z);cam.lookAt(0,CAM.look,0);cam.updateMatrixWorld();
+function setCam(){cam.position.set(CAM.x||0,CAM.y,CAM.z);cam.lookAt(0,CAM.look,0);cam.updateMatrixWorld();
 /* kesme düzlemi: kameradan geçer ve ekranda tam masa kenarı satırına düşer (derinlikten bağımsız yatay çizgi) */
 const P=new THREE.Vector3(0,1-2*RAIL/H,.5).unproject(cam),D=P.sub(cam.position);const n=new THREE.Vector3(0,-D.z,D.y).normalize();clip.set(n,-n.dot(cam.position))}
 setCam();
-/* ışık: sıcak ana ışık sol üstten, soğuk dolgu, arkadan altın kontur */
-sc.add(new THREE.HemisphereLight(0xfff1dc,0x2a1a10,.55));
-const key=new THREE.DirectionalLight(0xffe4c0,1.7);key.position.set(-1.4,2.6,2.2);sc.add(key);
-const fill=new THREE.DirectionalLight(0x9fb8ff,.35);fill.position.set(2,1.2,1.6);sc.add(fill);
-const rim=new THREE.DirectionalLight(0xffd27a,1.5);rim.position.set(.4,2,-2.2);sc.add(rim);
+/* ışık: sıcak ana ışık sol üstten, yumuşak dolgu, arkadan altın kontur (saçta parlama) */
+sc.add(new THREE.HemisphereLight(0xfff1dc,0x2a1a10,.5));
+const key=new THREE.DirectionalLight(0xffe6c8,1.6);key.position.set(-1.3,2.4,2.3);sc.add(key);
+const fill=new THREE.DirectionalLight(0xbfd0ff,.5);fill.position.set(2,1.1,1.8);sc.add(fill);
+const rim=new THREE.DirectionalLight(0xffd99a,1.6);rim.position.set(.5,2.2,-2.2);sc.add(rim);
+/* saç dokusu: sarı tonlarında dikey tutam çizgileri */
+function hairTex(){const c=document.createElement('canvas');c.width=256;c.height=256;const g=c.getContext('2d');g.fillStyle='#d6ac4f';g.fillRect(0,0,256,256);
+const cols=['#f7e4a4','#e9c76a','#bd8d2a','#fbf0c8','#a97a21','#e3bc58','#f1d98a'];for(let i=0;i<1100;i++){g.strokeStyle=cols[i%cols.length];g.globalAlpha=.2+Math.random()*.5;g.lineWidth=.5+Math.random()*2.4;const x=Math.random()*256,dx=(Math.random()-.5)*7;g.beginPath();g.moveTo(x,-6);g.lineTo(x+dx,262);g.stroke()}
+g.globalAlpha=1;const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'rgba(255,243,200,.22)');gr.addColorStop(.45,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(80,50,8,.4)');g.fillStyle=gr;g.fillRect(0,0,256,256);
+const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(4,1);t.anisotropy=Math.min(4,R.capabilities.getMaxAnisotropy());return t}
+const HT=hairTex();
 const M=(c,r,m,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m||0},o||{}));
 const CL={clippingPlanes:[clip]};
-const skin=M(0xe6b58f,.58),vest=M(0x141418,.52,.04,CL),shirt=M(0xf4f1ea,.7,0,CL),sleeveF=M(0xf4f1ea,.7),sleeveU=M(0xf4f1ea,.7),satin=M(0x0a0a0e,.32,.08,CL),gold=M(0xd9ab2f,.3,.9),goldC=M(0xd9ab2f,.3,.9,CL),hair=M(0x1b1310,.78),dark=M(0x1a120e,.5),white=M(0xffffff,.35),iris=M(0x3b2a1c,.45),lip=M(0x9c5a52,.6),mouthIn=M(0x3a1012,.7);
-const V=(x,y,z)=>new THREE.Vector3(x,y,z),Y=V(0,1,0);
+const skin=M(0xf0c6a4,.5),vest=M(0x141418,.5,.04,CL),satin=M(0x0a0a0e,.3,.1,CL),shirt=M(0xf6f3ec,.65,0,CL),sleeve=M(0xf6f3ec,.65),gold=M(0xd9ab2f,.28,.9),goldC=M(0xd9ab2f,.28,.9,CL),
+hairM=M(0xffffff,.42,0,{map:HT}),hairMC=M(0xffffff,.42,0,{map:HT,clippingPlanes:[clip]}),brow=M(0x8a6230,.7),white=M(0xf3f0ec,.3),iris=M(0x4e86b8,.35),dark=M(0x100a08,.4),liner=M(0x1a1008,.6),
+lipM=M(0xc23a48,.3),mouthIn=M(0x4a1216,.7),blush=M(0xe8858a,.8,0,{transparent:true,opacity:.28,depthWrite:false}),pearl=M(0xfff6ea,.2,.1);
+const V=(x,y,z)=>new THREE.Vector3(x,y,z),Y=V(0,1,0),P2=a=>a.map(([r,y])=>new THREE.Vector2(r,y));
 const body=new THREE.Group();body.rotation.x=.08;sc.add(body);
-/* gövde: yelek (döner profil, göğüs yassı) */
-const prof=[[0,0],[.165,0],[.17,.12],[.178,.26],[.195,.4],[.206,.49],[.19,.555],[.125,.585],[.062,.6],[0,.6]].map(([r,y])=>new THREE.Vector2(r,y));
-const torso=new THREE.Mesh(new THREE.LatheGeometry(prof,56),vest);torso.scale.z=.72;body.add(torso);
-/* gömlek V'si (göğüs eğimini izler) */
-{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([-.058,.59,.086, .058,.59,.086, -.034,.47,.124, .034,.47,.124, 0,.35,.146],3));g.setIndex([0,2,1,1,2,3,2,4,3]);g.computeVertexNormals();body.add(new THREE.Mesh(g,shirt))}
-/* yaka uçları */
-[-1,1].forEach(s=>{const c=new THREE.Mesh(new THREE.BoxGeometry(.052,.017,.012),shirt);c.position.set(s*.036,.592,.082);c.rotation.z=-s*.62;body.add(c)});
-/* papyon: iki kanat + düğüm */
-[-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.ConeGeometry(.022,.056,14),satin);w.position.set(s*.033,.583,.092);w.rotation.z=-s*Math.PI/2;w.scale.z=.5;body.add(w)});
-{const k=new THREE.Mesh(new THREE.SphereGeometry(.0135,14,10),satin);k.position.set(0,.583,.096);k.scale.z=.6;body.add(k)}
-/* yelek düğmeleri ve altın isimlik */
-[.30,.37,.44].forEach(y=>{const b=new THREE.Mesh(new THREE.SphereGeometry(.0075,10,8),goldC);b.position.set(0,y,.149-(y-.3)*.12);body.add(b)});
-{const p=new THREE.Mesh(new THREE.BoxGeometry(.07,.02,.004),goldC);p.position.set(-.095,.47,.126);p.rotation.y=-.35;body.add(p)}
+/* gövde: ince bel, yelek (döner profil, göğüs yassı) */
+const torso=new THREE.Mesh(new THREE.LatheGeometry(P2([[0,0],[.15,0],[.145,.1],[.138,.17],[.148,.26],[.168,.36],[.178,.44],[.176,.5],[.15,.545],[.1,.575],[.055,.59],[0,.59]]),64),vest);torso.scale.z=.7;body.add(torso);
+/* gömlek V'si ve yelek yakaları */
+{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([-.05,.58,.09, .05,.58,.09, -.03,.47,.122, .03,.47,.122, 0,.37,.14],3));g.setIndex([0,2,1,1,2,3,2,4,3]);g.computeVertexNormals();body.add(new THREE.Mesh(g,shirt))}
+[-1,1].forEach(s=>{const l=new THREE.Mesh(new THREE.BoxGeometry(.013,.22,.006),satin);l.position.set(s*.027,.475,.118);l.rotation.z=-s*.234;l.rotation.x=-.2;body.add(l);
+const c=new THREE.Mesh(new THREE.BoxGeometry(.045,.015,.01),shirt);c.position.set(s*.03,.586,.088);c.rotation.z=-s*.62;body.add(c)});
+/* papyon */
+[-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.ConeGeometry(.019,.05,14),satin);w.position.set(s*.029,.578,.1);w.rotation.z=-s*Math.PI/2;w.scale.z=.5;body.add(w)});
+{const k=new THREE.Mesh(new THREE.SphereGeometry(.012,14,10),satin);k.position.set(0,.578,.104);k.scale.z=.6;body.add(k)}
+/* yelek düğmeleri, altın isimlik */
+[.3,.36,.42].forEach(y=>{const b=new THREE.Mesh(new THREE.SphereGeometry(.007,10,8),goldC);b.position.set(0,y,.147-(y-.3)*.1);body.add(b)});
+{const p=new THREE.Mesh(new THREE.BoxGeometry(.065,.018,.004),goldC);p.position.set(-.085,.47,.125);p.rotation.y=-.3;body.add(p)}
 /* boyun */
-{const n=new THREE.Mesh(new THREE.CylinderGeometry(.049,.056,.1,24),skin);n.position.set(0,.64,0);body.add(n)}
-/* baş grubu (boyun kökünden döner) */
-const head=new THREE.Group();head.position.set(0,.645,0);body.add(head);const hc=.125;
-{const h=new THREE.Mesh(new THREE.SphereGeometry(.115,40,28),skin);h.position.y=hc;h.scale.set(.93,1.07,.96);head.add(h)}
-/* saç: arkaya taranmış koyu başlık */
-{const s=new THREE.Mesh(new THREE.SphereGeometry(.1215,40,22,0,Math.PI*2,0,1.5),hair);s.position.set(0,hc+.012,-.014);s.rotation.x=-.24;s.scale.set(.95,1,.98);head.add(s);const q=new THREE.Mesh(new THREE.SphereGeometry(.1,24,16),hair);q.position.set(0,hc+.098,.004);q.scale.set(.92,.3,.9);q.rotation.x=-.25;head.add(q)}
-/* kulaklar */
-[-1,1].forEach(s=>{const e=new THREE.Mesh(new THREE.SphereGeometry(.024,16,12),skin);e.position.set(s*.107,hc-.002,-.004);e.scale.set(.5,1,.8);head.add(e)});
-/* gözler (kırpma için grup) */
-const eyes=[];[-1,1].forEach(s=>{const g=new THREE.Group();g.position.set(s*.042,hc+.016,.1);const w=new THREE.Mesh(new THREE.SphereGeometry(.0185,18,14),white);w.scale.z=.6;g.add(w);const p=new THREE.Mesh(new THREE.SphereGeometry(.0095,14,10),iris);p.position.z=.011;g.add(p);const pu=new THREE.Mesh(new THREE.SphereGeometry(.0045,10,8),dark);pu.position.z=.019;g.add(pu);const hl=new THREE.Mesh(new THREE.SphereGeometry(.0028,8,6),white);hl.position.set(.0035,.0035,.022);g.add(hl);head.add(g);eyes.push(g)});
-/* kaşlar, burun, ağız */
-[-1,1].forEach(s=>{const b=new THREE.Mesh(new THREE.BoxGeometry(.046,.0075,.012),hair);b.position.set(s*.044,hc+.06,.1);b.rotation.z=s*.1;head.add(b)});
-{const n=new THREE.Mesh(new THREE.SphereGeometry(.017,16,12),skin);n.position.set(0,hc-.012,.113);n.scale.set(.85,1.15,1);head.add(n)}
-const mouthArc=Math.PI*.62,mouth=new THREE.Mesh(new THREE.TorusGeometry(.024,.0035,8,24,mouthArc),lip);mouth.position.set(0,hc-.044,.1);mouth.rotation.z=Math.PI*1.5-mouthArc/2;head.add(mouth);
-const mo=new THREE.Mesh(new THREE.SphereGeometry(.011,14,10),mouthIn);mo.position.set(0,hc-.066,.1);mo.scale.set(1.5,.06,.4);head.add(mo);
-/* omuzlar ve kollar */
-const SH=[V(-.19,.54,0),V(.19,.54,0)],L1=.25,L2=.23,arms=[];
-SH.forEach((S,i)=>{const sh=new THREE.Mesh(new THREE.SphereGeometry(.056,24,18),sleeveU);sh.position.copy(S);body.add(sh);
-const up=new THREE.Group();up.add(new THREE.Mesh(new THREE.CapsuleGeometry(.05,L1-.05,6,18),sleeveU));const gt=new THREE.Mesh(new THREE.TorusGeometry(.055,.007,8,28),goldC);gt.rotation.x=Math.PI/2;gt.position.y=-.06;up.add(gt);body.add(up);
-const fo=new THREE.Group();fo.add(new THREE.Mesh(new THREE.CapsuleGeometry(.042,L2-.045,6,18),sleeveF));const cf=new THREE.Mesh(new THREE.CylinderGeometry(.047,.047,.03,20),sleeveF);cf.position.y=L2/2-.03;fo.add(cf);body.add(fo);
-const hand=new THREE.Mesh(new THREE.SphereGeometry(.05,20,14),skin);hand.scale.set(1,.45,1.3);body.add(hand);
-const s=i?1:-1;arms.push({S,up,fo,hand,hint:V(s*.8,-1,-.3),rest:V(s*.2,.5,.22),tgt:V(s*.2,.5,.22),cur:V(s*.2,.5,.22)})});
+{const n=new THREE.Mesh(new THREE.CylinderGeometry(.042,.05,.11,24),skin);n.position.set(0,.635,0);body.add(n)}
+/* baş grubu (boyun kökünden döner); baş: çeneye doğru incelen döner profil */
+const head=new THREE.Group();head.position.set(0,.64,0);body.add(head);const hc=.13;
+{const hd=new THREE.Mesh(new THREE.LatheGeometry(P2([[0,-.135],[.03,-.133],[.058,-.122],[.08,-.1],[.095,-.07],[.103,-.035],[.107,.005],[.106,.045],[.1,.08],[.087,.105],[.062,.122],[.032,.13],[0,.133]]),64),skin);hd.position.y=hc;hd.scale.set(.96,1,1.06);head.add(hd)}
+/* kulaklar ve inci küpeler */
+[-1,1].forEach(s=>{const e=new THREE.Mesh(new THREE.SphereGeometry(.02,16,12),skin);e.position.set(s*.1,hc-.005,-.004);e.scale.set(.5,1,.75);head.add(e);
+const st=new THREE.Mesh(new THREE.SphereGeometry(.0035,8,6),gold);st.position.set(s*.104,hc-.022,0);head.add(st);const pr=new THREE.Mesh(new THREE.SphereGeometry(.006,10,8),pearl);pr.position.set(s*.105,hc-.032,0);head.add(pr)});
+/* gözler: beyaz, mavi iris, göz bebeği, parıltı, eyeliner yayı, kirpikler (kırpma: grup y ölçeği) */
+const eyes=[];[-1,1].forEach(s=>{const g=new THREE.Group();g.position.set(s*.035,hc+.015,.097);
+const w=new THREE.Mesh(new THREE.SphereGeometry(.0175,20,14),white);w.scale.z=.7;g.add(w);
+const ir=new THREE.Mesh(new THREE.SphereGeometry(.0092,16,12),iris);ir.position.z=.0105;ir.scale.z=.5;g.add(ir);
+const pu=new THREE.Mesh(new THREE.SphereGeometry(.0042,10,8),dark);pu.position.z=.0152;g.add(pu);
+const hl=new THREE.Mesh(new THREE.SphereGeometry(.0024,8,6),white);hl.position.set(.003,.003,.0175);g.add(hl);
+const lid=new THREE.Mesh(new THREE.SphereGeometry(.0188,20,10,0,Math.PI*2,0,.78),skin);lid.scale.set(1,1,.72);lid.rotation.x=.6;g.add(lid);
+const ln=new THREE.Mesh(new THREE.TorusGeometry(.0165,.0019,6,20,Math.PI*.95),liner);ln.position.z=.012;ln.rotation.z=Math.PI*.025;g.add(ln);
+[.3,.55,.85].forEach(a=>{const ang=s>0?a:Math.PI-a;const la=new THREE.Mesh(new THREE.CylinderGeometry(.0006,.0013,.009,5),liner);la.position.set(Math.cos(ang)*.021,Math.sin(ang)*.021,.012);la.rotation.z=ang-Math.PI/2;g.add(la)});
+head.add(g);eyes.push(g)});
+/* kaşlar: kemerli ince yay, dışa doğru hafif yukarı */
+[-1,1].forEach(s=>{const b=new THREE.Mesh(new THREE.TorusGeometry(.03,.0024,6,18,Math.PI*.5),brow);b.scale.set(1,.55,1);const g=new THREE.Group();g.position.set(s*.038,hc+.04,.09);g.rotation.y=s*.35;g.rotation.z=s*.1;b.rotation.z=Math.PI*.25;g.add(b);head.add(g)});
+/* burun: ince köprü, küçük uç, kanatlar */
+{const br=new THREE.Mesh(new THREE.CapsuleGeometry(.009,.032,4,10),skin);br.position.set(0,hc-.004,.107);br.rotation.x=-.2;head.add(br);
+const tp=new THREE.Mesh(new THREE.SphereGeometry(.0115,14,10),skin);tp.position.set(0,hc-.026,.116);tp.scale.set(1.05,.9,1);head.add(tp);
+[-1,1].forEach(s=>{const n=new THREE.Mesh(new THREE.SphereGeometry(.006,10,8),skin);n.position.set(s*.0095,hc-.03,.107);head.add(n)})}
+/* dudaklar (ruj), konuşurken alt dudak iner */
+const lipUp=new THREE.Mesh(new THREE.SphereGeometry(.012,16,12),lipM);lipUp.position.set(0,hc-.064,.104);lipUp.scale.set(1.7,.4,.5);head.add(lipUp);
+const lipLoY=hc-.076,lipLo=new THREE.Mesh(new THREE.SphereGeometry(.012,16,12),lipM);lipLo.position.set(0,lipLoY,.103);lipLo.scale.set(1.45,.55,.55);head.add(lipLo);
+const mo=new THREE.Mesh(new THREE.SphereGeometry(.01,14,10),mouthIn);mo.position.set(0,hc-.07,.1);mo.scale.set(1.5,.05,.4);head.add(mo);
+/* allık */
+[-1,1].forEach(s=>{const b=new THREE.Mesh(new THREE.SphereGeometry(.03,16,12),blush);b.position.set(s*.058,hc-.03,.082);b.scale.set(1,.7,.45);head.add(b)});
+/* saç: başlık, yana taranmış perçem, omuzlara dökülen yan tutamlar, arkada hacim */
+{const cap=new THREE.Mesh(new THREE.SphereGeometry(.118,48,32,0,Math.PI*2,0,1.3),hairM);cap.position.set(0,hc+.002,-.008);cap.rotation.x=-.26;cap.scale.set(.97,1.34,1.09);head.add(cap);
+const fr=new THREE.Mesh(new THREE.SphereGeometry(.058,24,16),hairM);fr.position.set(-.012,hc+.082,.072);fr.scale.set(1.75,.3,.5);fr.rotation.set(-.35,0,.22);head.add(fr);
+const lockG=new THREE.LatheGeometry(P2([[0,0],[.022,.03],[.03,.12],[.03,.22],[.02,.3],[0,.33]]),20);
+[-1,1].forEach(s=>{const pv=new THREE.Group();pv.position.set(s*.095,hc+.02,-.005);pv.rotation.set(.1,0,s*.12);const lk=new THREE.Mesh(lockG,hairMC);lk.position.y=-.33;lk.scale.z=.6;pv.add(lk);head.add(pv)});
+const bk=new THREE.Mesh(new THREE.SphereGeometry(.1,28,20),hairMC);bk.position.set(0,hc-.1,-.075);bk.scale.set(1.35,1.7,.75);head.add(bk)}
+/* omuzlar ve kollar (iki eklemli, ters kinematik) */
+const SH=[V(-.165,.535,0),V(.165,.535,0)],L1=.23,L2=.21,arms=[];
+SH.forEach((S,i)=>{const sh=new THREE.Mesh(new THREE.SphereGeometry(.05,24,18),sleeve);sh.position.copy(S);body.add(sh);
+const up=new THREE.Group();up.add(new THREE.Mesh(new THREE.CapsuleGeometry(.04,L1-.04,6,18),sleeve));const gt=new THREE.Mesh(new THREE.TorusGeometry(.044,.006,8,28),gold);gt.rotation.x=Math.PI/2;gt.position.y=-.05;up.add(gt);body.add(up);
+const fo=new THREE.Group();fo.add(new THREE.Mesh(new THREE.CapsuleGeometry(.034,L2-.035,6,18),sleeve));const cf=new THREE.Mesh(new THREE.CylinderGeometry(.038,.038,.025,20),sleeve);cf.position.y=L2/2-.025;fo.add(cf);body.add(fo);
+const hand=new THREE.Mesh(new THREE.SphereGeometry(.042,20,14),skin);hand.scale.set(1,.42,1.3);body.add(hand);
+const s=i?1:-1;arms.push({S,up,fo,hand,hint:V(s*.8,-1,-.3),rest:V(s*.19,.5,.21),tgt:V(s*.19,.5,.21),cur:V(s*.19,.5,.21)})});
 function ik(a){const d=a.cur.clone().sub(a.S);let len=d.length();const mx=(L1+L2)*.995,mn=Math.abs(L1-L2)+.03;if(len>mx){d.multiplyScalar(mx/len);len=mx}else if(len<mn){d.multiplyScalar(mn/len);len=mn}
 const u=d.clone().normalize(),q=(L1*L1-L2*L2+len*len)/(2*len),h=Math.sqrt(Math.max(0,L1*L1-q*q)),v=a.hint.clone().addScaledVector(u,-a.hint.dot(u)).normalize();
 const E=a.S.clone().addScaledVector(u,q).addScaledVector(v,h),Hh=a.S.clone().add(d);
 a.up.position.lerpVectors(a.S,E,.5);a.up.quaternion.setFromUnitVectors(Y,E.clone().sub(a.S).normalize());
-a.fo.position.lerpVectors(E,Hh,.5);a.fo.quaternion.setFromUnitVectors(Y,Hh.clone().sub(E).normalize());a.hand.position.copy(Hh).add(V(0,-.005,.03))}
+a.fo.position.lerpVectors(E,Hh,.5);a.fo.quaternion.setFromUnitVectors(Y,Hh.clone().sub(E).normalize());a.hand.position.copy(Hh).add(V(0,-.004,.026))}
 /* durum ve jestler */
 const now=()=>performance.now();let gestUntil=0,talkUntil=0,blinkAt=now()+1800,blinkT=0,lookTgt=null,lookUntil=0,glancing=false,glanceAt=now()+4000,glanceEnd=0,glanceY=0,headY=0,headX=0,lean=0,leanT=0,active=0;
 const seatX=nx=>Math.max(-1,Math.min(1,+nx||0));
 function gesture(ms){gestUntil=now()+ms;active=now()+ms+600}
 const api={
- deal(k){if(k==='d'){arms[0].tgt.set(-.02,.4,.44);arms[1].tgt.set(.3,.42,.26)}else{const nx=seatX(k);arms[0].tgt.set(nx*.42-.03,.34,.48);arms[1].tgt.set(.3,.37,.26);lookTgt=nx;lookUntil=now()+700;leanT=nx*.06}gesture(330)},
- pay(nx){nx=seatX(nx);arms[0].tgt.set(nx*.33-.1,.35,.52);arms[1].tgt.set(nx*.33+.1,.35,.52);lookTgt=nx;lookUntil=now()+900;leanT=nx*.05;gesture(560)},
- take(nx){nx=seatX(nx);arms[0].tgt.set(nx*.4,.35,.5);gesture(300);setTimeout(()=>{if(now()>gestUntil-20){arms[0].tgt.set(-.02,.42,.27);gesture(260)}},280)},
+ deal(k){if(k==='d'){arms[0].tgt.set(-.02,.4,.42);arms[1].tgt.set(.28,.42,.24)}else{const nx=seatX(k);arms[0].tgt.set(nx*.4-.03,.34,.46);arms[1].tgt.set(.28,.37,.24);lookTgt=nx;lookUntil=now()+700;leanT=nx*.06}gesture(330)},
+ pay(nx){nx=seatX(nx);arms[0].tgt.set(nx*.3-.1,.35,.5);arms[1].tgt.set(nx*.3+.1,.35,.5);lookTgt=nx;lookUntil=now()+900;leanT=nx*.05;gesture(560)},
+ take(nx){nx=seatX(nx);arms[0].tgt.set(nx*.38,.35,.48);gesture(300);setTimeout(()=>{if(now()>gestUntil-20){arms[0].tgt.set(-.02,.42,.25);gesture(260)}},280)},
  talk(ms){talkUntil=now()+Math.min(6000,Math.max(300,ms||800));active=talkUntil+400},
  look(nx){lookTgt=nx==null?null:seatX(nx);lookUntil=nx==null?0:now()+6e4;leanT=0},
  _cam:(o)=>{Object.assign(CAM,o);setCam();active=now()+300},_rest:(x,y,z)=>{arms.forEach((a,i)=>a.rest.set((i?1:-1)*x,y,z));active=now()+300},_hint:(x,y,z)=>{arms.forEach((a,i)=>a.hint.set((i?1:-1)*x,y,z));active=now()+300}
@@ -1527,8 +1555,8 @@ if(t<talkUntil){wx+=.03*Math.sin(T*7);wy+=.02*Math.sin(T*3.1)}
 const kh=1-Math.exp(-dt*6);headY+=(wy-headY)*kh;headX+=(wx-headX)*kh;head.rotation.y=headY+.02*Math.sin(T*.8);head.rotation.x=headX+.012*Math.sin(T*1.1);head.rotation.z=.015*Math.sin(T*.5);
 /* göz kırpma */
 if(t>blinkAt){blinkT=t+140;blinkAt=t+2600+Math.random()*3400}const bl=t<blinkT?.08:1;eyes.forEach(e=>{e.scale.y+=(bl-e.scale.y)*Math.min(1,dt*40)});
-/* konuşma: ağız açılıp kapanır */
-const open=t<talkUntil?.35+.65*Math.abs(Math.sin(T*11.3)*Math.sin(T*4.7)):.06;mo.scale.y+=(open-mo.scale.y)*Math.min(1,dt*30);
+/* konuşma: ağız açılır, alt dudak iner */
+const open=t<talkUntil?.3+.7*Math.abs(Math.sin(T*11.3)*Math.sin(T*4.7)):.05;mo.scale.y+=(open-mo.scale.y)*Math.min(1,dt*30);lipLo.position.y=lipLoY-(mo.scale.y-.05)*.014;
 frame++;if(t>active&&(frame&1))return;R.render(sc,cam)}
 arms.forEach(ik);loop();
 Object.assign(window.DLR,api);wrap.classList.add('av');
