@@ -52,14 +52,18 @@ button:disabled{opacity:.45}
 .lbl{color:var(--mut);font-size:.85rem;margin-top:8px}
 #msg{min-height:28px;margin-top:12px;font-weight:800;color:var(--gold);text-align:center;text-shadow:0 0 10px #ffd23f66}
 .hide{display:none}
-.cards{display:grid;gap:14px;perspective:900px}
-.card{display:flex;align-items:center;gap:16px;text-align:left;padding:18px;border-radius:18px;transform-style:preserve-3d;animation:cin .6s cubic-bezier(.2,1.3,.4,1) both;
-background:linear-gradient(135deg,#3a0a0a,#160606 60%);border:2px solid var(--gd);box-shadow:0 5px 0 #2a1a00,0 14px 24px #000c,inset 0 1px 0 #ffd23f44}
-.card:nth-child(2){background:linear-gradient(135deg,#0a3a24,#061608 60%);animation-delay:.08s}.card:nth-child(3){background:linear-gradient(135deg,#1a1a3a,#060610 60%);animation-delay:.16s}
+.cards{display:grid;gap:12px;perspective:900px}
+.card{position:relative;display:flex;align-items:center;gap:14px;text-align:left;padding:18px 18px 18px 22px;border-radius:16px;overflow:hidden;transform-style:preserve-3d;animation:cin .6s cubic-bezier(.2,1.3,.4,1) both;
+background:linear-gradient(135deg,#1c1118,#0d080c 60%,#120a10);border:1.5px solid #c9971a66;box-shadow:0 0 0 1px #000,0 6px 0 #0a0608,0 14px 24px #000c,inset 0 1px 0 #ffd23f33}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 100% 0,#ffd23f14,#0000 55%);pointer-events:none}
+.card .acc{position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#ffd23f);box-shadow:0 0 12px var(--ac,#ffd23f)}
+.card.c-slot{--ac:#ff3b4a}.card.c-rulet{--ac:#2ec46a;animation-delay:.08s}.card.c-bj{--ac:#4a8cff;animation-delay:.16s}
+.card .chev{margin-left:auto;font-size:1.8rem;line-height:1;color:#ffd23f99;font-weight:300}
+.card:active{transform:rotateX(6deg) scale(.98)}
+.card>div{flex:1}
 @keyframes cin{from{opacity:0;transform:rotateX(-30deg) translateY(30px)}}
 .card:active{transform:rotateX(6deg) scale(.98)}
 .card>span{font-size:3rem;filter:drop-shadow(0 6px 6px #000c);transform:translateZ(30px)}
-.card b{display:block;font-size:1.2rem}.card small{color:var(--mut)}
 #back{margin-bottom:12px}
 @keyframes sp{0%{transform:translateY(-14%)}100%{transform:translateY(14%)}}
 @keyframes ld{0%{transform:translateY(-30%)}60%{transform:translateY(6%)}100%{transform:none}}
@@ -248,8 +252,23 @@ box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px 
 .betrow .disp.flash .v{animation:ledflash .32s ease-out}
 @keyframes ledflash{0%{color:#fff3c0;text-shadow:0 0 10px #ffd23f,0 0 28px #ffb020,0 0 2px #fff}60%{color:#ffd060}100%{color:#ffb020}}
 .cbot .bal{font-size:1rem;letter-spacing:-.3px}
-.card b{font-family:"Cinzel",Georgia,serif;letter-spacing:1px;color:var(--gold);font-size:1.2rem;text-shadow:0 2px 0 #5a4005,0 0 10px #ffd23f66}
-.card small{color:var(--mut);font-size:.8rem}
+.card b{display:block;font-family:"Cinzel",Georgia,serif;font-weight:800;letter-spacing:2px;color:#ffe27a;font-size:1.15rem;text-shadow:0 2px 0 #5a4005,0 0 10px #ffd23f55}
+.card small{display:block;margin-top:3px;color:var(--mut);font-size:.72rem;letter-spacing:.5px}
+/* ana ekran: karşılama ve minik slot */
+.hero{text-align:center;margin:6px 0 16px}
+.hero .hl{display:flex;align-items:center;gap:12px;color:#ffe27a;font-family:"Cinzel",Georgia,serif;font-weight:800;font-size:.8rem;letter-spacing:4px;text-shadow:0 0 12px #ffd23f66}
+.hero .hl::before,.hero .hl::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#0000,#c9971a,#ffd23f,#c9971a,#0000)}
+.hero p{margin:8px 0 0;color:var(--mut);font-size:.72rem;letter-spacing:1.5px}
+.mini{display:block;width:100%;margin:18px auto 0;padding:10px 12px 10px;border-radius:16px;text-align:center;color:var(--txt);background:linear-gradient(180deg,#2a0a0a,#120404);border:2px solid var(--gd);box-shadow:0 0 0 3px #3a1a00,0 10px 24px #000c,inset 0 0 30px #0008;animation:cin .6s cubic-bezier(.2,1.3,.4,1) .24s both;position:relative;overflow:hidden}
+.mini .mt{font-family:"Lilita One",Montserrat,sans-serif;font-size:.85rem;letter-spacing:3px;color:#ffd23f;text-shadow:0 1px 0 #8a5a00,0 0 10px #ffd23f88;margin-bottom:8px}
+.mreels{position:relative;display:flex;gap:4px;justify-content:center;width:124px;height:116px;margin:0 auto;padding:4px;border-radius:8px;background:linear-gradient(180deg,#5a0c0c,#2a0404);border:2px solid #c9971a;box-shadow:inset 0 0 18px #000}
+.mreel{width:36px;height:108px;overflow:hidden;border-radius:4px;background:linear-gradient(180deg,#0000 0,#0008 50%,#0000 100%),#3a0808}
+.mstrip{display:flex;flex-direction:column;animation:mreel 5.2s cubic-bezier(.25,.9,.3,1) var(--dl) infinite}
+.mstrip .sym{width:36px;height:36px;flex:none;padding:3px;box-sizing:border-box}
+@keyframes mreel{0%{transform:translateY(0)}68%{transform:translateY(calc(var(--k)*-36px))}100%{transform:translateY(calc(var(--k)*-36px))}}
+.mline{position:absolute;left:50%;top:calc(50% + 6px);width:124px;height:36px;margin-left:-62px;border-radius:4px;border:2px solid #ffd23f;box-shadow:0 0 10px #ffd23f99,inset 0 0 8px #ffd23f44;pointer-events:none;animation:mline 5.2s ease-out .9s infinite;opacity:0}
+@keyframes mline{0%,74%{opacity:0}80%,92%{opacity:1}100%{opacity:0}}
+.mini .mb{margin-top:8px;font-size:.62rem;letter-spacing:2px;color:var(--mut)}
 .stabs{display:flex;gap:8px;margin-bottom:12px}.stabs.hide{display:none}.stabs button{flex:1;font-weight:600}
 .stabs button.on{border-color:var(--gold);color:var(--gold);box-shadow:0 3px 0 #5a4005,0 0 12px #ffd23f88}
 
@@ -516,11 +535,13 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="bar"><span>💶 Bakiye</span><b id="chips">10.000,00 €</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
 <button id="back" class="hide">← Ana sayfa</button>
 <div id="home">
+<div class="hero"><div class="hl"><span>WELCOME TO GOLDEN EYE</span></div><p>Özel kumarhane · Sanal bakiye · Arkadaşlar arası</p></div>
 <div class="cards">
-<button class="card" data-go="slot"><span>🎰</span><div><b>Slot Makinesi</b><small>Çevir, 7️⃣ 7️⃣ 7️⃣ yakala</small></div></button>
-<button class="card" data-go="rulet"><span>🎡</span><div><b>Rulet</b><small>Renge, sayıya, şansına oyna</small></div></button>
-<button class="card" data-go="bj"><span>🃏</span><div><b>Blackjack</b><small>21'e en yakın sen ol</small></div></button>
+<button class="card c-slot" data-go="slot"><i class="acc"></i><div><b>Slot Makinesi</b><small>Burning Fruits · Jade Dragon · 20 hat</small></div><span class="chev">›</span></button>
+<button class="card c-rulet" data-go="rulet"><i class="acc"></i><div><b>Rulet</b><small>3D çark · Avrupa ruleti · 36'ya 1</small></div><span class="chev">›</span></button>
+<button class="card c-bj" data-go="bj"><i class="acc"></i><div><b>Blackjack</b><small>3 koltuk · Blackjack 3:2 · Sigorta</small></div><span class="chev">›</span></button>
 </div>
+<button class="mini" id="mini" data-go="slot"><div class="mt">GOLDEN SPIN</div><div class="mreels" id="mreels"></div><div class="mline"></div><div class="mb">Dokun, oyna</div></button>
 </div>
 <div class="bets hide" id="bets">
 <button class="chip" data-b="2.5"><span class="v">2,5</span></button><button class="chip" data-b="5"><span class="v">5</span></button><button class="chip" data-b="10"><span class="v">10</span></button><button class="chip" data-b="25"><span class="v">25</span></button><button class="chip on" data-b="50"><span class="v">50</span></button><button class="chip" data-b="100"><span class="v">100</span></button>
@@ -815,6 +836,11 @@ function btnsLock(){goBtn.disabled=busy;infoBtn.disabled=busy;autoBtn.disabled=b
 goBtn.onclick=()=>{ac();S.click();spin()}
 p.addEventListener('click',()=>{if(!welcomed){welcomed=true;say('welcome')}},{once:true})}
 makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);
+/* ana ekrandaki minik slot: kendi kendine döner, orta sırada kazanç çizgisi yanıp söner */
+{const T=THEMES.slot,K=9,wins=[[0,0,0],[6,6,6],[7,7,7]];const mr=$('mreels');[0,1,2].forEach(c=>{const seq=[];for(let i=0;i<K;i++)seq.push(T.sym[rnd(T.sym.length)]);
+/* döngü sonunda görünen 3 sıra = başlangıçtaki 3 sıra olsun diye şerit kendini tekrar eder; orta sıra kazanan sembol */
+seq[1]=T.sym[wins[c%wins.length][c]];const strip=seq.concat(seq.slice(0,3));
+const d=document.createElement('div');d.className='mreel';d.innerHTML='<div class="mstrip" style="--k:'+K+';--dl:'+(c*.3)+'s">'+strip.map(id=>ico(id)).join('')+'</div>';mr.appendChild(d)})}
 
 /* RULET MASASI */
 const WO=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26],SG=360/37;
