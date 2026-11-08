@@ -658,6 +658,7 @@ setChips(chips);
 function route(x){let h=typeof x==='string'?x:location.hash.slice(1);if(!['slot','slot2','rulet','bj'].includes(h))h='home';
 ['home','slot','slot2','rulet','bj'].forEach(t=>$(t).classList.toggle('hide',t!==h));
 $('bets').classList.toggle('hide',h==='home'||h==='slot'||h==='slot2');
+if(h==='rulet')voPrefetch(['nomore','place']);if(h==='bj'){const L=['bust','bj','dbj','dbust','push','ins'];for(let n=12;n<=21;n++)L.push('n'+n);voPrefetch(L)}
 /* blackjack'te çipler 10-25-50-100 */
 document.querySelectorAll('#bets [data-b="2.5"],#bets [data-b="5"]').forEach(b=>b.classList.toggle('hide',h==='bj'));
 if(h==='bj'&&bet<10){bet=10;document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',+x.dataset.b===10))}$('stabs').classList.toggle('hide',h!=='slot'&&h!=='slot2');
@@ -770,8 +771,11 @@ let wheelSrc=null,wheelTick=null;
 
 /* ===== KONUŞAN SES (ElevenLabs TTS, api/tts) ===== */
 let voSrc=null;
+/* krupiye cümleleri gerektiğinde yüklenir: masaya girince veya sonuç belli olunca önceden */
+const AUDREQ={};function voEnsure(k){const key='vo-'+k;if(AUDBUF[key]||AUDFAIL[key]||AUDREQ[key])return;AUDREQ[key]=1;audLoad(key,'api/tts?k='+k+'&v='+AUD_V)}
+function voPrefetch(list){list.forEach(voEnsure)}
 function say(k,delay){if(muted)return;const go=()=>{if(muted||!bus())return;const key='vo-'+k;
-if(!AUDBUF[key]){if(!AUDFAIL[key]&&k==='welcome')pendSay={k:key,until:Date.now()+10000};return}
+if(!AUDBUF[key]){if(!AUDFAIL[key]){voEnsure(k);pendSay={k:key,until:Date.now()+(k==='welcome'?10000:4000)}}return}
 if(voSrc){try{voSrc.src.stop()}catch(e){}}voSrc=playBuf(key,1,null,'vo');if(!voSrc)return;
 /* anons sırasında efektleri kıs */
 const t=AC.currentTime;sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(.45,t,.05);sfxBus.gain.setTargetAtTime(.9,t+voSrc.dur,.15)};
@@ -943,15 +947,15 @@ function rBtns(){const tot=rTot(RB);$('rclear').disabled=busy||!tot;$('rdbl').di
 $('rrebet').onclick=()=>{if(busy||!lastRB)return;const tot=rTot(lastRB);if(!tot||chips<tot){msg('Yetersiz bakiye');return}clearWon();setChips(chips-tot);for(const k in lastRB){RB[k]=(RB[k]||0)+lastRB[k];mark(k)}S.chip();msg('');renderBoard();rBtns()};
 $('rdbl').onclick=()=>{if(busy)return;const tot=rTot(RB);if(!tot)return;if(chips<tot){msg('Yetersiz bakiye, x2 için '+fmtA(tot)+' gerekir');return}clearWon();setChips(chips-tot);for(const k in RB){RB[k]*=2;mark(k)}S.chip();msg('');renderBoard();rBtns()};
 $('rspin').onclick=()=>{if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya çip koy');return}
-busy=true;msg('');lastRB=Object.assign({},RB);rBtns();ac();S.click();const gl=!!(window.RW&&RW.ok),dur=gl?RW.dur:4.2;S.wheelStart(dur);setTimeout(()=>S.drop(),dur*1000-1500);const n=rnd(37),i=WO.indexOf(n);
+busy=true;msg('');lastRB=Object.assign({},RB);rBtns();ac();S.click();const gl=!!(window.RW&&RW.ok),dur=gl?RW.dur:4.2;S.wheelStart(dur);setTimeout(()=>S.drop(),dur*1000-1500);const n=rnd(37),i=WO.indexOf(n);say('nomore',150);voEnsure('r'+n);
 if(!gl){$('orb').classList.remove('run');void $('orb').offsetWidth;$('orb').classList.add('run');const cur=rot%360,delta=(((-(i+.5)*SG-cur)%360)+360)%360;rot+=1800+delta;$('wheel').style.transform='translateZ(2px) rotate('+rot+'deg)'}
-const finish=()=>{S.wheelStop();show(n);let w=0,ws=[];clearWon();for(const k in RB)if(wins(k,n)){const a=RB[k]*mult(k);w+=a;ws.push([k,a])}
+const finish=()=>{S.wheelStop();show(n);say('r'+n,250);let w=0,ws=[];clearWon();for(const k in RB)if(wins(k,n)){const a=RB[k]*mult(k);w+=a;ws.push([k,a])}
 hist.unshift(n);hist=hist.slice(0,100);try{localStorage.setItem('ge_rh',JSON.stringify(hist))}catch(e){}lastNet=w-tot;
 clearBets();renderBoard();busy=false;setChips(chips+w);rBtns();
 ws.forEach(x=>{const c=document.querySelector('.tc[data-k="'+x[0]+'"]');c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(x[1])+'</span>'});
 $('rres').innerHTML=ws.length?'Kazanan bahisler: '+ws.map(x=>document.querySelector('.tc[data-k="'+x[0]+'"]').dataset.n+' <b>+'+fmtA(x[1])+'</b>').join(' · '):'Bu el kazanan bahis yok';
 msg(w>tot?'Sayı '+n+' · Kazandın +'+fmtE(w-tot):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(tot));
-if(w>tot){const x=(w-tot)/bet;if(x>=15){S.big();say('bigwin',300)}else{S.win(Math.min(6,2+Math.floor(x)));if(x>=5)say('great',200);else if(Math.random()<.5)say('nice',200)}celebrate(w-tot)}else if(w===0)S.lose()};
+if(w>tot){const x=(w-tot)/bet;if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-tot)}else if(w===0)S.lose();setTimeout(()=>{if(!busy&&!$('rulet').classList.contains('hide'))say('place')},3200)};
 if(gl)RW.spin(i).then(finish);else setTimeout(finish,4200)};
 $('rclear').onclick=()=>{if(busy)return;let t=0;for(const k in RB)t+=RB[k];if(t)S.chip();clearBets();setChips(chips+t);renderBoard();rBtns()};rBtns();
 
@@ -1003,15 +1007,17 @@ phase='deal';live=true;msg('');lastBets=seats.map((s,k)=>k===BOT?0:s.bet);S.clic
 if(botBank<10){botBank=1000;msg(BOTNAME+' kasasını yeniledi')}const bb=[10,25,50].filter(v=>v<=botBank);seats[BOT].bet=bb[rnd(bb.length)];botBank-=seats[BOT].bet;saveBot();act.push(BOT);S.chip();
 seats.forEach(s=>{s.hands=[];s.badge=null});act.forEach(k=>seats[k].hands=[{cards:[],bet:seats[k].bet,shown:0,done:false,dbl:false,split:false,bj:false}]);dealerH=[];hole=true;dshown=0;$('bjres').textContent='';bjBtns();bjRender();
 for(let r=0;r<2;r++){for(const k of act){seats[k].hands[0].cards.push(draw());S.card();bjRender();await wait(190)}dealerH.push(draw());S.card();bjRender();await wait(190)}
-act.forEach(k=>{const h=seats[k].hands[0];if(sum(h.cards)===21){h.bj=true;h.done=true}});bjRender();
+act.forEach(k=>{const h=seats[k].hands[0];if(sum(h.cards)===21){h.bj=true;h.done=true}});bjRender();if(act.some(k=>seats[k].hands[0].bj))say('bj',200);
 if(rk(dealerH[0])==='A'){ /* sigorta teklifi */
-phase='insure';const need=act.filter(k=>k!==BOT).reduce((a,k)=>a+seats[k].bet/2,0);$('insyes').disabled=chips<need;$('insbar').classList.remove('hide');bjBtns();
+phase='insure';say('ins',300);const need=act.filter(k=>k!==BOT).reduce((a,k)=>a+seats[k].bet/2,0);$('insyes').disabled=chips<need;$('insbar').classList.remove('hide');bjBtns();
 const take=await new Promise(res=>{$('insyes').onclick=()=>res(true);$('insno').onclick=()=>res(false)});$('insbar').classList.add('hide');
 if(take){act.filter(k=>k!==BOT).forEach(k=>{seats[k].ins=seats[k].bet/2});setChips(chips-need);S.chip();bjRender();await wait(350)}}
-if(sum(dealerH)===21){await wait(600);hole=false;dflip=true;S.card();bjRender();await wait(700);return bjSettle()}
+if(sum(dealerH)===21){await wait(600);hole=false;dflip=true;S.card();bjRender();say('dbj',200);await wait(900);return bjSettle()}
 if(seats.some(s=>s.ins>0)){seats.forEach(s=>{if(s.ins>0){s.badge={c:'lose',t:'SİGORTA -'+fmtA(s.ins)};s.ins=0}});bjRender()}
 phase='play';advance()}
-function advance(){cur=nextHand();if(cur){bjRender();bjBtns();if(cur.s===BOT)botPlay()}else bjDealer()}
+/* sıradaki elin toplamı söylenir (ör. 'Seventeen'); batınca 'Bust' */
+function sayHand(h,delay){if(!h)return;const t=sum(h.cards);say(t>21?'bust':h.bj?'bj':'n'+t,delay||0)}
+function advance(){cur=nextHand();if(cur){bjRender();bjBtns();sayHand(curHand(),350);if(cur.s===BOT)botPlay()}else bjDealer()}
 /* Mira: temel strateji */
 function botDecide(h,dv,s){const v=val(h.cards),two=h.cards.length===2,r0=rk(h.cards[0]),r1=rk(h.cards[1]);const canSpl=two&&!h.split&&r0===r1&&s.hands.length<2&&botBank>=h.bet,canDbl=two&&botBank>=h.bet;
 if(canSpl){const pv=r0==='A'?11:isNaN(r0)?10:+r0;if(pv===11||pv===8)return'split';if(pv===9&&dv>=2&&dv<=9&&dv!==7)return'split';if(pv===7&&dv<=7)return'split';if(pv===6&&dv<=6)return'split';if((pv===2||pv===3)&&dv<=7)return'split'}
@@ -1022,21 +1028,21 @@ async function botPlay(){await wait(600);const s=seats[BOT],dr=rk(dealerH[0]),dv
 while(cur&&cur.s===BOT&&phase==='play'){const h=curHand();if(!h)break;const a=botDecide(h,dv,s);
 if(a==='split'){const b=h.cards.pop();const h2={cards:[b],bet:h.bet,shown:1,done:false,dbl:false,split:true,bj:false};h.split=true;s.hands.push(h2);botBank-=h.bet;saveBot();S.chip();bjRender();await wait(260);h.cards.push(draw());S.card();bjRender();await wait(260);h2.cards.push(draw());S.card();bjRender();if(rk(b)==='A'){h.done=true;h2.done=true}else if(sum(h.cards)===21)h.done=true;await wait(450)}
 else if(a==='double'){botBank-=h.bet;saveBot();S.chip();h.bet*=2;h.dbl=true;h.cards.push(draw());S.card();h.done=true;bjRender();await wait(700)}
-else if(a==='hit'){h.cards.push(draw());S.card();bjRender();if(sum(h.cards)>=21){h.done=true;await wait(550)}else await wait(700)}
+else if(a==='hit'){h.cards.push(draw());S.card();bjRender();sayHand(h,250);if(sum(h.cards)>=21){h.done=true;await wait(900)}else await wait(900)}
 else{h.done=true;await wait(400)}
 if(h.done){cur=nextHand();if(!cur||cur.s!==BOT)break;bjRender()}}
 advance()}
-async function bjHit(){const h=curHand();if(!h)return;h.cards.push(draw());S.card();bjRender();bjBtns();if(sum(h.cards)>=21){h.done=true;await wait(550);advance()}}
+async function bjHit(){const h=curHand();if(!h)return;h.cards.push(draw());S.card();bjRender();bjBtns();sayHand(h,250);if(sum(h.cards)>=21){h.done=true;await wait(900);advance()}}
 function bjStand(){const h=curHand();if(!h)return;S.click();h.done=true;advance()}
-async function bjDbl(){const h=curHand();if(!h||h.cards.length!==2||chips<h.bet)return;setChips(chips-h.bet);S.chip();h.bet*=2;h.dbl=true;h.cards.push(draw());S.card();h.done=true;bjRender();bjBtns();await wait(650);advance()}
+async function bjDbl(){const h=curHand();if(!h||h.cards.length!==2||chips<h.bet)return;setChips(chips-h.bet);S.chip();h.bet*=2;h.dbl=true;h.cards.push(draw());S.card();h.done=true;bjRender();bjBtns();sayHand(h,250);await wait(900);advance()}
 async function bjSplit(){const h=curHand();if(!canSplit(h))return;setChips(chips-h.bet);S.chip();const s=seats[cur.s],b=h.cards.pop();const h2={cards:[b],bet:h.bet,shown:1,done:false,dbl:false,split:true,bj:false};h.split=true;s.hands.push(h2);bjRender();bjBtns();
 await wait(260);h.cards.push(draw());S.card();bjRender();await wait(260);h2.cards.push(draw());S.card();bjRender();
 if(rk(b)==='A'){h.done=true;h2.done=true;await wait(500);return advance()}
 if(sum(h.cards)===21){h.done=true;await wait(400);return advance()}bjBtns()}
 async function bjDealer(){phase='dealer';cur=null;bjBtns();bjRender();await wait(450);hole=false;dflip=true;S.card();bjRender();await wait(700);
 const anyLive=seats.some(s=>s.hands.some(h=>sum(h.cards)<=21&&!h.bj));
-if(anyLive){while(sum(dealerH)<17){dealerH.push(draw());S.card();bjRender();await wait(750)}}
-await wait(300);bjSettle()}
+if(anyLive){sayHand({cards:dealerH},150);while(sum(dealerH)<17){await wait(900);dealerH.push(draw());S.card();bjRender();const t=sum(dealerH);say(t>21?'dbust':'n'+t,250)}}
+await wait(700);bjSettle()}
 async function bjSettle(){phase='settle';const d=sum(dealerH),dbj=dealerH.length===2&&d===21;let net=0,ret=0,maxBet=0;const anim=[];
 seats.forEach((s,k)=>{if(!s.hands.length)return;let sn=0,bj=false,win=0;s.hands.forEach(h=>{const p=sum(h.cards);let r=0;if(!s.bot)maxBet=Math.max(maxBet,h.bet);
 if(h.bj&&!dbj){r=h.bet*2.5;bj=true}else if(h.bj&&dbj){r=h.bet}else if(p>21||dbj){r=0}else if(d>21||p>d){r=h.bet*2}else if(p===d){r=h.bet}
@@ -1051,6 +1057,7 @@ if(anim.length)await wait(1250);
 setChips(chips+ret);saveBot();live=false;seats.forEach(s=>{s.bet=0;s.ins=0});bjRender();bjBtns();
 $('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'Krupiye '+d;
 msg(net>0?'Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));
+if(net===0&&seats.some((s,k)=>k!==BOT&&s.hands.length))say('push',200);
 if(net>0){if(net/Math.max(1,maxBet)>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}
 $('deal').onclick=bjDeal;$('hit').onclick=bjHit;$('stand').onclick=bjStand;$('dbl').onclick=bjDbl;$('spl').onclick=bjSplit;bjBtns();bjRender();
 /* ana ekran kart destesi önizlemesi: her 3,6 sn iki kart, dördüncüde blackjack */
