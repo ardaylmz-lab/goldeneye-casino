@@ -8,6 +8,7 @@ GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.ver
 
 - Slot (5x5, 20 hat, wild/scatter, free spin), Rulet (3D çark), Blackjack (6 koltuklu masa, birden fazla el, böl/2x, 3:2)
 - `index.html` — oyunun tamamı (tek dosya). Rulet çarkı WebGL ile 3D (three.js, CDN'den yüklenir); WebGL ya da CDN yoksa CSS çark devreye girer.
+- `audio/music/*.mp3` — ElevenLabs Music ile üretilmiş üç lounge parçası; ilk dokunuşla kısık sesle başlar, parçalar çapraz geçişle döner (🎵 ile kapatılır).
 - `audio/tts/*.mp3`, `audio/sfx/*.mp3` — ElevenLabs'te bir kez üretilmiş sabit klipler; oyun sesleri önce buradan yükler (GitHub Pages dahil her yerde çalışır), dosya yoksa `api/…` proxy'sine düşer.
 - `api/tts.js` — ElevenLabs sesli anons proxy'si (Vercel serverless). Key sadece Vercel ortam değişkeninde durur.
 - `api/sfx.js` — ElevenLabs ses efekti proxy'si (makara dönüşü, durma, scatter, gerilim, kazanç, coin, büyük kazanç, free spin, kayıp, tık). Her efekt bir kez üretilir, CDN'de 1 yıl önbellekte kalır. Efekt yüklenemezse oyun kendi sentez tonlarına döner.

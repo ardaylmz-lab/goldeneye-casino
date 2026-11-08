@@ -207,7 +207,7 @@ begin
   sp := jsonb_set(sp, '{owner}', to_jsonb(uid::text));
   sp := jsonb_set(sp, '{name}', to_jsonb(coalesce(nm,'Oyuncu')));
   st := jsonb_set(st, array['spots', p_spot::text], sp);
-  if st->>'deadline' is null then st := jsonb_set(st, '{deadline}', to_jsonb(now() + interval '20 seconds')); end if;
+  if st->>'deadline' is null then st := jsonb_set(st, '{deadline}', to_jsonb(now() + interval '10 seconds')); end if;
   perform public.bj_save(st);
   return st;
 end $$;

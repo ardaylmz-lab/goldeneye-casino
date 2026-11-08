@@ -33,6 +33,7 @@ background:linear-gradient(180deg,#3a2a08,#1a1206 50%,#0a0803);border:2px solid 
 .bar span{font-weight:700;color:var(--gold);letter-spacing:1px}
 .bar b{color:#fff;font-size:1.45rem;font-weight:900;text-shadow:0 0 12px #ffd23f99;font-variant-numeric:tabular-nums;display:inline-block}
 .bar b.bump{animation:bump .5s cubic-bezier(.2,1.6,.4,1)}
+.hbtns{display:flex;gap:6px}.hbtns button{padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)}.hbtns button.off{opacity:.4;filter:grayscale(1)}
 @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.25) rotateX(25deg)}100%{transform:scale(1)}}
 .tabs{display:flex;gap:8px;margin-bottom:12px}
 .tabs button{flex:1}
@@ -600,7 +601,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div></div>
 <div class="wrap">
 <div class="sign"><h1>GOLDEN <span>EYE</span></h1></div>
-<div class="bar"><span>💶 Bakiye</span><b id="chips">10.000,00 €</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
+<div class="bar"><span>💶 Bakiye</span><b id="chips">10.000,00 €</b><span class="hbtns"><button id="mus" title="Müzik">🎵</button><button id="snd">🔊</button></span></div>
 <button id="back" class="hide">← Ana sayfa</button>
 <div id="home">
 <div class="hero"><div class="hl"><span>WELCOME TO GOLDEN EYE</span></div><p>Özel kumarhane · Sanal bakiye · Arkadaşlar arası</p></div>
@@ -724,7 +725,7 @@ else floatText('+'+fmtE(total),'t0')}
 /* ===== SES ===== */
 let AC=null,muted=false;try{muted=localStorage.getItem('ge_mute')==='1'}catch(e){}
 $('snd').textContent=muted?'🔇':'🔊';
-$('snd').onclick=()=>{muted=!muted;$('snd').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ge_mute',muted?'1':'0')}catch(e){};if(muted){S.spinStop();S.wheelStop()}else S.click()};
+$('snd').onclick=()=>{muted=!muted;$('snd').textContent=muted?'🔇':'🔊';try{localStorage.setItem('ge_mute',muted?'1':'0')}catch(e){};if(muted){S.spinStop();S.wheelStop();musicStop()}else{S.click();musicStart()}};
 function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}decodeAud()}if(AC&&AC.state!=='running'){try{AC.resume()}catch(e){}}return AC}
 /* iOS: Web Audio telefonun sessiz anahtarına uyar, <audio> elemanı uymaz. Oturumu "medya" moduna al:
    Safari 17+ resmi Audio Session API; eski iOS'ta ilk dokunuşta döngüde sessiz bir <audio> çal (unmute hilesi). */
@@ -793,9 +794,23 @@ function say(k,delay){if(muted)return;const go=()=>{if(muted||!bus())return;cons
 if(!AUDBUF[key]){if(!AUDFAIL[key]){voEnsure(k);pendSay={k:key,until:Date.now()+(k==='welcome'?10000:4000)}}return}
 if(voSrc){try{voSrc.src.stop()}catch(e){}}voSrc=playBuf(key,1,null,'vo');if(!voSrc)return;
 /* anons sırasında efektleri kıs */
-const t=AC.currentTime;sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(.45,t,.05);sfxBus.gain.setTargetAtTime(.9,t+voSrc.dur,.15)};
+const t=AC.currentTime;sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(.45,t,.05);sfxBus.gain.setTargetAtTime(.9,t+voSrc.dur,.15);if(musBus){musBus.gain.cancelScheduledValues(t);musBus.gain.setTargetAtTime(.45,t,.05);musBus.gain.setTargetAtTime(1,t+voSrc.dur,.2)}};
 if(delay)setTimeout(go,delay);else go()}
 let welcomed=false;
+/* ===== ARKA PLAN MÜZİĞİ: loş kumarhane lounge, kısık, sürekli döngü (parçalar 4 sn çapraz geçişle) ===== */
+const MUSIC=['audio/music/lounge1.mp3','audio/music/lounge2.mp3','audio/music/lounge3.mp3'],MVOL=.16;
+let musicOn=true;try{musicOn=localStorage.getItem('ge_music')!=='0'}catch(e){}
+let musBus=null,mCur=null,mNext=null,mIdx=rnd(MUSIC.length),mStarted=false;
+$('mus').classList.toggle('off',!musicOn);
+function mTrack(i){const a=new Audio(MUSIC[i]);a.preload='auto';a.loop=false;const c=ac();const src=c.createMediaElementSource(a),g=c.createGain();g.gain.value=0;src.connect(g);g.connect(musBus);return{a,g,i}}
+function mFade(t,to,sec){const c=AC;t.g.gain.cancelScheduledValues(c.currentTime);t.g.gain.setValueAtTime(t.g.gain.value,c.currentTime);t.g.gain.linearRampToValueAtTime(to,c.currentTime+sec)}
+function mPlay(t,fadeSec){t.a.play().then(()=>mFade(t,MVOL,fadeSec)).catch(()=>{})}
+function mArm(t){t.a.ontimeupdate=()=>{if(!t.a.duration||mNext||t!==mCur)return;if(t.a.currentTime>t.a.duration-4.5){mIdx=(mIdx+1)%MUSIC.length;mNext=mTrack(mIdx);mPlay(mNext,4);mFade(t,0,4)}};
+t.a.onended=()=>{if(mNext){mCur=mNext;mNext=null;mArm(mCur)}else{mIdx=(mIdx+1)%MUSIC.length;mCur=mTrack(mIdx);mArm(mCur);mPlay(mCur,3)}}}
+function musicStart(){if(mStarted||!musicOn||muted||$('gate'))return;const c=ac();if(!c)return;mStarted=true;if(!musBus){musBus=c.createGain();musBus.gain.value=1;musBus.connect(c.destination)}mCur=mTrack(mIdx);mArm(mCur);mPlay(mCur,4)}
+function musicStop(){[mCur,mNext].forEach(t=>{if(t){try{mFade(t,0,.6)}catch(e){}setTimeout(()=>{try{t.a.pause()}catch(e){}},700)}});mCur=null;mNext=null;mStarted=false}
+$('mus').onclick=()=>{musicOn=!musicOn;$('mus').classList.toggle('off',!musicOn);try{localStorage.setItem('ge_music',musicOn?'1':'0')}catch(e){}if(musicOn)musicStart();else musicStop()};
+['touchend','click'].forEach(ev=>document.addEventListener(ev,()=>{if(!$('gate'))musicStart()},{passive:true}));
 /* ===== SLOT MOTORU ===== */
 /* Golden Eye slot engine — pure math, no DOM. Works in browser and node. */
 const SLOT_LINES=[
