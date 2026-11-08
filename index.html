@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
-<meta name="description" content="Arkadaşlar arası eğlence oyunu. Sanal jeton, gerçek para yoktur.">
+<meta name="description" content="Arkadaşlar arası eğlence oyunu. Sanal euro bakiyesi, gerçek para yoktur.">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@400;600;700;900&family=Lilita+One&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#07050a;--card:#15101a;--pink:#ff2b55;--cyan:#19f0ff;--gold:#ffd23f;--gd:#b8860b;--txt:#fff6e0;--mut:#b3a28a;--felt:#0f5a34;--felt2:#083a21;box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -177,13 +177,13 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 @keyframes bjdl{0%{transform:translate(150px,-160px) rotate(30deg);opacity:0}100%{transform:none;opacity:1}}
 .c.flip{animation:bjfp .45s ease-out}
 @keyframes bjfp{0%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
-#bjbtns button{flex:1 1 22%}#bjbtns .go{flex-basis:58%}
+#bjbtns button{flex:1 1 20%}#bjbtns .go{flex-basis:100%}#bjrebet,#bjclear{flex:1 1 45%}
 /* premium ana düğmeler */
-#deal,#rspin{position:relative;overflow:hidden;font-family:"Lilita One",Montserrat,sans-serif;font-weight:400;font-size:1.3rem;letter-spacing:3px;padding:15px 14px;color:#fff;background:linear-gradient(180deg,#ff6a5a,#c40018 48%,#7a0010);border:2px solid var(--gold);border-radius:14px;text-shadow:0 2px 0 #0008,0 0 10px #ff8a8a66;box-shadow:0 0 0 2px #5a0010,0 5px 0 #4a0008,0 9px 18px #000b,0 0 20px #ff2b2b66,inset 0 2px 2px #fff6,inset 0 -2px 4px #0006}
-#deal::before,#rspin::before{content:"";position:absolute;inset:3px;border-radius:10px;border:1px solid #ffd23f55;pointer-events:none}
-#deal::after,#rspin::after{content:"";position:absolute;top:-60%;left:-70%;width:45%;height:220%;background:linear-gradient(100deg,#fff0 0,#fff7 50%,#fff0 100%);transform:skewX(-22deg);animation:sheen 3s ease-in-out infinite;pointer-events:none}
+#deal,#rspin{position:relative;overflow:hidden;flex:1 1 100%;font-family:"Lilita One",Montserrat,sans-serif;font-weight:400;font-size:1.3rem;letter-spacing:3px;padding:15px 14px;color:#f3e2c4;background:linear-gradient(180deg,#7a1f2e,#4e0c1a 48%,#2c0610);border:2px solid #c9971a;border-radius:14px;text-shadow:0 2px 0 #0009;box-shadow:0 0 0 2px #2a0610,0 5px 0 #1e040c,0 9px 18px #000b,0 0 14px #7a1f2e55,inset 0 2px 2px #fff3,inset 0 -2px 4px #0007}
+#deal::before,#rspin::before{content:"";position:absolute;inset:3px;border-radius:10px;border:1px solid #ffd23f44;pointer-events:none}
+#deal::after,#rspin::after{content:"";position:absolute;top:-60%;left:-70%;width:45%;height:220%;background:linear-gradient(100deg,#fff0 0,#fff3 50%,#fff0 100%);transform:skewX(-22deg);animation:sheen 3.4s ease-in-out infinite;pointer-events:none}
 @keyframes sheen{0%{left:-70%}55%{left:140%}100%{left:140%}}
-#deal:active:not(:disabled),#rspin:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 2px #5a0010,0 1px 0 #4a0008,0 3px 8px #000b,inset 0 2px 2px #fff6}
+#deal:active:not(:disabled),#rspin:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 2px #2a0610,0 1px 0 #1e040c,0 3px 8px #000b,inset 0 2px 2px #fff3}
 #deal:disabled,#rspin:disabled{opacity:1;filter:grayscale(.55) brightness(.55)}#deal:disabled::after,#rspin:disabled::after{display:none}
 #rulet .row button{flex:1}#rspin{flex-basis:100%}
 .rack{position:absolute;left:50%;top:104px;width:126px;height:16px;transform:translateX(-50%);border-radius:4px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:2px 7px;box-sizing:border-box}
@@ -488,7 +488,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div id="gate"><div class="box"><h2>GOLDEN EYE</h2><p>Özel oyun · giriş PIN'i</p><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••"><button class="go" id="pinok">GİRİŞ</button></div></div>
 <div class="wrap">
 <div class="sign"><h1>GOLDEN <span>EYE</span></h1></div>
-<div class="bar"><span>🪙 Jeton</span><b id="chips">10.000,00</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
+<div class="bar"><span>💶 Bakiye</span><b id="chips">10.000,00 €</b><button id="snd" style="padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)">🔊</button></div>
 <button id="back" class="hide">← Ana sayfa</button>
 <div id="home">
 <div class="cards">
@@ -511,20 +511,20 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
 <div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button></div>
-<div class="lbl">Seçili bahis kadar jetonu istediğin kutulara koy. Sayı x36 · 12'li ve sütun x3 · diğerleri x2</div>
+<div class="lbl">Seçili çipi istediğin kutulara koy. Sayı x36 · 12'li ve sütun x3 · diğerleri x2</div>
 </div>
 
 <div class="panel hide" id="bj">
 <div class="bjwrap" id="bjwrap"><div class="stools" id="stools"></div><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 322 300"><defs><path id="bja1" d="M60.6,149.2 A118,118 0 0 0 279.4,149.2"/><path id="bja2" d="M109.9,126.9 A64,64 0 0 0 230.1,126.9"/></defs><text font-size="11"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="6.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="170" y="140" font-size="5.5" text-anchor="middle">DEALER STANDS ON 17</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div class="rack" id="rack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#7b3fe4"></b><b style="--c:#c9971a"></b></div><div id="seats"></div></div></div></div>
 <div class="res" id="bjres"></div>
 <div class="insbar hide" id="insbar"><span>Krupiyede As. Sigorta? Bahsin yarısı, blackjack çıkarsa 2:1 öder.</span><button id="insyes" class="on">Sigorta al</button><button id="insno">Hayır</button></div>
-<div class="row" id="bjbtns"><button class="go" id="deal">🃏 DAĞIT</button><button id="bjrebet">Tekrar</button><button id="hit">Çek</button><button id="stand">Dur</button><button id="dbl">2x</button><button id="spl">Böl</button><button id="bjclear">Bahisleri temizle</button></div>
+<div class="row" id="bjbtns"><button class="go" id="deal">🃏 DAĞIT</button><button id="hit">Çek</button><button id="stand">Dur</button><button id="dbl">2x</button><button id="spl">Böl</button><button id="bjrebet">Tekrarla</button><button id="bjclear">Bahisleri temizle</button></div>
 <div class="lbl">Seçili çipi koltuklara dokunarak koy (3 koltuk, birden fazla el). Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
 </div>
 
 <div id="msg"></div>
-<div class="row"><button id="reset" class="hide">Jetonları yenile (10.000)</button></div>
-<p class="note">Bu site tamamen eğlence amaçlıdır. Sanal jeton kullanılır, gerçek para yoktur.</p>
+<div class="row"><button id="reset" class="hide">Bakiyeyi yenile (10.000 €)</button></div>
+<p class="note">Bu site tamamen eğlence amaçlıdır. Sanal euro bakiyesi kullanılır, gerçek para yoktur.</p>
 </div>
 
 <script>
@@ -535,11 +535,14 @@ const PIN='7777';
 if(ok){$('gate').remove();return}
 const chk=()=>{if($('pin').value===PIN){try{localStorage.setItem('ge_pin',PIN)}catch(e){};$('gate').remove()}else{$('pin').classList.add('err');setTimeout(()=>$('pin').classList.remove('err'),400);$('pin').value=''}};
 $('pinok').onclick=chk;$('pin').onkeydown=e=>{if(e.key==='Enter')chk()};$('pin').focus()})();
-let chips=10000,bet=50,busy=false,live=false;
+let chips=10000,bet=50,busy=false,live=false,bonus=false;
 try{const s=localStorage.getItem('ge_chips');if(s!==null&&!isNaN(+s))chips=+s}catch(e){}
+/* bir kerelik +10.000 € bonus */
+try{if(!localStorage.getItem('ge_bonus1')){chips+=10000;localStorage.setItem('ge_bonus1','1');bonus=true}}catch(e){}
 function fmt(n){return (Math.round(n*100)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtE(n){return fmt(n)+' €'}
 function fmtA(n){n=Math.round(n*100)/100;return Number.isInteger(n)?n.toLocaleString('tr-TR'):n.toLocaleString('tr-TR',{minimumFractionDigits:1,maximumFractionDigits:2})}
-function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmt(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}
+function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}
 $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
 const rnd=n=>Math.floor(Math.random()*n);
@@ -567,13 +570,14 @@ document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',x==
 const BETS=[.5,1,1.5,2,2.5,5,10,50];let sbi=1;try{const v=localStorage.getItem('ge_sbi');if(v!==null&&BETS[+v]!==undefined)sbi=+v}catch(e){}
 const sbet=()=>BETS[sbi],BETUPD=[];
 function setBet(i){sbi=Math.max(0,Math.min(BETS.length-1,i));try{localStorage.setItem('ge_sbi',sbi)}catch(e){}BETUPD.forEach(f=>f())}
-$('reset').onclick=()=>{setChips(10000);msg('Jetonlar yenilendi!')};
+$('reset').onclick=()=>{setChips(10000);msg('Bakiye yenilendi!')};
+if(bonus)msg('🎁 Hesabına 10.000 € bonus eklendi!');
 
 /* RULET */
 const REDS=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 function show(n){const c=n===0?'green':REDS.includes(n)?'red':'black';const e=$('ball');e.textContent=n;e.className='ball '+c;const r=$('rwres');r.textContent=n;r.className='rres3d show '+c}
 
-function celebrate(a){const b=document.createElement('div');b.className='big';b.textContent='🎉 +'+fmt(a)+' 🎉';document.body.appendChild(b);setTimeout(()=>b.remove(),2000);
+function celebrate(a){const b=document.createElement('div');b.className='big';b.textContent='🎉 +'+fmtE(a)+' 🎉';document.body.appendChild(b);setTimeout(()=>b.remove(),2000);
 for(let i=0;i<26;i++){const c=document.createElement('i');c.className='cf';c.textContent=['🪙','✨','💎','⭐'][rnd(4)];c.style.left=rnd(96)+'vw';c.style.animationDelay=(Math.random()*.7)+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),2900)}}
 
 
@@ -688,7 +692,7 @@ p.innerHTML='<div class="cab'+(T.jade?' jade':'')+'">'+
 '<div class="ctitle">'+T.name+'</div>'+
 '<div class="fsbar hide"><span>🎁 FREE SPIN</span><span><b class="fsn">0</b> kaldı · <b>x'+T.fsMult+'</b></span></div>'+
 '<div class="stage">'+LN+'<div class="sgrid">'+Array.from({length:5},()=>'<div class="scol">'+Array.from({length:5},()=>'<div class="cell"></div>').join('')+'</div>').join('')+'<svg class="plsvg"></svg></div>'+LN+'</div>'+
-'<div class="cbot"><div><small>BAKİYE</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ</small><b class="wsum">0,00</b></div></div>'+
+'<div class="cbot"><div><small>BAKİYE €</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ €</small><b class="wsum">0,00</b></div></div>'+
 '<div class="betrow"><button class="bb minus" aria-label="Bahsi düşür">−</button><div class="disp"><small>BAHİS</small><span class="ghost">88,88</span><span class="v"></span></div><button class="bb plus" aria-label="Bahsi artır">+</button></div>'+
 '<div class="sctl"><button class="ic">ℹ️</button><button class="go">ÇEVİR</button><button class="ic auto">⟳</button></div>'+
 '<div class="tiny">20 hat · soldan sağa 3+ aynı · '+ico(T.sym[T.W],'i')+' wild · 3+ '+ico(T.sym[T.S],'i')+' = '+T.fs+' free spin x'+T.fsMult+'</div></div>';
@@ -696,7 +700,7 @@ const svg=p.querySelector('.plsvg'),bal=p.querySelector('.bal'),wsum=p.querySele
 /* jackpot şeridi (gösterim amaçlı sayaçlar) */
 const JP=[1200,6400,41000,776000].map((v,i)=>v+rnd(v/3));const jpEls=[0,1,2,3].map(i=>p.querySelector('.j'+i));
 function jpTick(){JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].textContent=Math.round(JP[i]).toLocaleString('tr-TR')})}jpTick();setInterval(jpTick,900);
-new MutationObserver(()=>bal.textContent=$('chips').textContent).observe($('chips'),{childList:true});bal.textContent=$('chips').textContent;
+new MutationObserver(()=>bal.textContent=fmt(chips)).observe($('chips'),{childList:true});bal.textContent=fmt(chips);
 const dispEl=p.querySelector('.betrow .disp'),minusB=p.querySelector('.bb.minus'),plusB=p.querySelector('.bb.plus');
 function updBet(){dispEl.querySelector('.v').textContent=fmt(sbet());minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1;dispEl.classList.remove('flash');void dispEl.offsetWidth;dispEl.classList.add('flash')}
 BETUPD.push(updBet);updBet();dispEl.classList.remove('flash');
@@ -720,7 +724,7 @@ autoBtn.onclick=()=>{S.click();auto=!auto;autoBtn.classList.toggle('on',auto);if
 
 async function spin(){
 if(busy&&!fsLeft)return;const free=fsLeft>0;
-if(!free){if(chips<sbet()){msg('Yetersiz jeton, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-sbet())}
+if(!free){if(chips<sbet()){msg('Yetersiz bakiye, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-sbet())}
 busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');
 g=slotSpin(T,Math.random);
 cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});S.spinStart();
@@ -742,7 +746,7 @@ drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:
 const x=r.total/sbet();if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));
 if(x>=100)say('epicwin',300);else if(x>=40)say('megawin',300);else if(x>=15)say('bigwin',300);else if(x>=5)say('great',200);else if(x>=2&&Math.random()<.6)say('nice',200);
 await countUp(r.total,x>=15?1800:700);
-if(x>=15)await overlay('<div class="ic">'+(x>=100?'👑':x>=40?'💥':'🎉')+'</div><h2>'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmt(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',2600);
+if(x>=15)await overlay('<div class="ic">'+(x>=100?'👑':x>=40?'💥':'🎉')+'</div><h2>'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmtE(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',2600);
 else if(r.total>0&&!free)celebrateSmall(r.total);
 startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose()}
 setChips(chips+r.total);
@@ -753,7 +757,7 @@ if(free){fsTotal+=r.total;fsLeft--;fsbar.querySelector('.fsn').textContent=fsLef
 if(fsLeft>0){await wait(900);spin();return}
 await wait(600);grid.classList.remove('fsmode');fsbar.classList.add('hide');
 if(fsTotal/sbet()>=150)say('jackpot',200);
-await overlay('<div class="ic">🏁</div><h2>FREE SPIN BİTTİ</h2><div class="n">+'+fmt(fsTotal)+'</div><p>'+(fsTotal/sbet()).toFixed(1)+'x bahis</p>',3000);if(fsTotal>0)celebrate(fsTotal)}
+await overlay('<div class="ic">🏁</div><h2>FREE SPIN BİTTİ</h2><div class="n">+'+fmtE(fsTotal)+'</div><p>'+(fsTotal/sbet()).toFixed(1)+'x bahis</p>',3000);if(fsTotal>0)celebrate(fsTotal)}
 busy=false;btnsLock();setChips(chips);
 if(auto&&chips>=sbet()){await wait(500);if(auto&&!busy)spin()}else if(auto){auto=false;autoBtn.classList.remove('on')}}
 let fsTotal=0;
@@ -763,7 +767,7 @@ if(r.scatWin)items.push({cells:r.scells,txt:ico(T.sym[T.S],'i')+'×'+r.sc+' scat
 if(items.length<2){return}let i=0;const show=()=>{const it=items[i%items.length];cells.forEach((col,c)=>col.forEach((e,rr)=>{const on=it.cells.some(([a,b])=>a===c&&b===rr);e.classList.toggle('win',on&&!it.scat);e.classList.toggle('scat',on&&it.scat);e.classList.toggle('dim',!on)}));
 drawLines([it.scat?{cells:it.cells,scat:true}:{cells:it.cells,line:it.line}]);wb.innerHTML=it.txt;i++};
 setTimeout(()=>{show();cycle=setInterval(show,1100)},1200)}
-function celebrateSmall(a){const b=document.createElement('div');b.className='big';b.style.fontSize='1.6rem';b.textContent='+'+fmt(a);document.body.appendChild(b);setTimeout(()=>b.remove(),2000)}
+function celebrateSmall(a){const b=document.createElement('div');b.className='big';b.style.fontSize='1.6rem';b.textContent='+'+fmtE(a);document.body.appendChild(b);setTimeout(()=>b.remove(),2000)}
 function btnsLock(){goBtn.disabled=busy;infoBtn.disabled=busy;autoBtn.disabled=busy&&fsLeft>0;minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1}
 goBtn.onclick=()=>{ac();S.click();spin()}
 p.addEventListener('click',()=>{if(!welcomed){welcomed=true;say('welcome')}},{once:true})}
@@ -783,8 +787,8 @@ const hot=hist.length>=3?[...Array(37).keys()].filter(i=>cnt[i]>0).sort((a,b)=>c
 const cold=hist.length>=10?[...Array(37).keys()].sort((a,b)=>cnt[a]-cnt[b]||ago(b)-ago(a)).slice(0,3):[];
 const tot=Object.values(RB).reduce((a,b)=>a+b,0),tile=(l,v,c)=>'<div><small>'+l+'</small><b class="'+(c||'')+'">'+v+'</b></div>';
 $('rhist').innerHTML='<div class="rb-hist"><small>SON 10</small><div class="hsl">'+(n?h10.map(x=>'<span class="hs '+rcol(x)+'">'+x+'</span>').join(''):'<span class="rb-empty">henüz çevrilmedi</span>')+'</div></div>'+
-'<div class="rb-stats">'+tile('KIRMIZI',pct('red'),'r')+tile('SİYAH',pct('black'),'k')+tile('SIFIR',pct('green'),'g')+tile('SON',lastNet===null?'–':(lastNet>0?'+':'')+fmt(lastNet),lastNet>0?'pos':lastNet<0?'neg':'')+
-tile('SICAK',hot.length?hot.join(' '):'–')+tile('SOĞUK',cold.length?cold.join(' '):'–')+tile('MASA',fmt(tot))+tile('TUR',hist.length)+'</div>'}
+'<div class="rb-stats">'+tile('KIRMIZI',pct('red'),'r')+tile('SİYAH',pct('black'),'k')+tile('SIFIR',pct('green'),'g')+tile('SON',lastNet===null?'–':(lastNet>0?'+':'')+fmtE(lastNet),lastNet>0?'pos':lastNet<0?'neg':'')+
+tile('SICAK',hot.length?hot.join(' '):'–')+tile('SOĞUK',cold.length?cold.join(' '):'–')+tile('MASA',fmtE(tot))+tile('TUR',hist.length)+'</div>'}
 function mk(k,txt,cls,r,c,rs,cs,name){const d=document.createElement('button');d.className='tc '+cls;d.dataset.k=k;d.dataset.n=name||txt;d.innerHTML=txt+'<em></em>';
 d.style.gridRow=r+(rs?' / span '+rs:'');d.style.gridColumn=c+(cs?' / span '+cs:'');d.onclick=()=>pbet(k);$('tbl').appendChild(d)}
 mk('n:0','0','green',1,3,0,3);
@@ -794,7 +798,7 @@ renderBoard();
 [['d1','1. 12'],['d2','2. 12'],['d3','3. 12']].forEach((o,i)=>mk(o[0],o[1],'out',2+i*4,2,4));
 [1,2,3].forEach((j,i)=>mk('c'+j,'2:1','out',14,3+i));
 function mark(k){const e=document.querySelector('.tc[data-k="'+k+'"] em');if(e)e.innerHTML=RB[k]?'<span>'+fmtA(RB[k])+'</span>':''}
-function pbet(k){if(busy)return;clearWon();if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('');renderBoard();S.chip();rBtns()}
+function pbet(k){if(busy)return;clearWon();if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('');renderBoard();S.chip();rBtns()}
 function wins(k,n){if(n===0)return k==='n:0';if(k[0]==='n')return +k.slice(2)===n;
 return {red:REDS.includes(n),black:!REDS.includes(n),odd:n%2===1,even:n%2===0,low:n<=18,high:n>=19,d1:n<=12,d2:n>12&&n<=24,d3:n>24,c1:n%3===1,c2:n%3===2,c3:n%3===0}[k]}
 function mult(k){return k[0]==='n'?36:/^[dc]/.test(k)?3:2}
@@ -802,9 +806,9 @@ function clearWon(){document.querySelectorAll('.tc.won').forEach(e=>{e.classList
 function clearBets(){Object.keys(RB).forEach(k=>{delete RB[k];mark(k)})}
 let lastRB=null;const rTot=o=>Object.values(o||{}).reduce((a,b)=>a+b,0);
 function rBtns(){const tot=rTot(RB);$('rclear').disabled=busy||!tot;$('rdbl').disabled=busy||!tot||chips<tot;$('rrebet').disabled=busy||tot>0||!lastRB||!rTot(lastRB)||chips<rTot(lastRB)}
-$('rrebet').onclick=()=>{if(busy||!lastRB)return;const tot=rTot(lastRB);if(!tot||chips<tot){msg('Yetersiz jeton');return}clearWon();setChips(chips-tot);for(const k in lastRB){RB[k]=(RB[k]||0)+lastRB[k];mark(k)}S.chip();msg('');renderBoard();rBtns()};
-$('rdbl').onclick=()=>{if(busy)return;const tot=rTot(RB);if(!tot)return;if(chips<tot){msg('Yetersiz jeton, x2 için '+fmtA(tot)+' gerekir');return}clearWon();setChips(chips-tot);for(const k in RB){RB[k]*=2;mark(k)}S.chip();msg('');renderBoard();rBtns()};
-$('rspin').onclick=()=>{if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya jeton koy');return}
+$('rrebet').onclick=()=>{if(busy||!lastRB)return;const tot=rTot(lastRB);if(!tot||chips<tot){msg('Yetersiz bakiye');return}clearWon();setChips(chips-tot);for(const k in lastRB){RB[k]=(RB[k]||0)+lastRB[k];mark(k)}S.chip();msg('');renderBoard();rBtns()};
+$('rdbl').onclick=()=>{if(busy)return;const tot=rTot(RB);if(!tot)return;if(chips<tot){msg('Yetersiz bakiye, x2 için '+fmtA(tot)+' gerekir');return}clearWon();setChips(chips-tot);for(const k in RB){RB[k]*=2;mark(k)}S.chip();msg('');renderBoard();rBtns()};
+$('rspin').onclick=()=>{if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya çip koy');return}
 busy=true;msg('');lastRB=Object.assign({},RB);rBtns();ac();S.click();const gl=!!(window.RW&&RW.ok),dur=gl?RW.dur:4.2;S.wheelStart(dur);setTimeout(()=>S.drop(),dur*1000-1500);const n=rnd(37),i=WO.indexOf(n);
 if(!gl){$('orb').classList.remove('run');void $('orb').offsetWidth;$('orb').classList.add('run');const cur=rot%360,delta=(((-(i+.5)*SG-cur)%360)+360)%360;rot+=1800+delta;$('wheel').style.transform='translateZ(2px) rotate('+rot+'deg)'}
 const finish=()=>{S.wheelStop();show(n);let w=0,ws=[];clearWon();for(const k in RB)if(wins(k,n)){const a=RB[k]*mult(k);w+=a;ws.push([k,a])}
@@ -812,7 +816,7 @@ hist.unshift(n);hist=hist.slice(0,100);try{localStorage.setItem('ge_rh',JSON.str
 clearBets();renderBoard();busy=false;setChips(chips+w);rBtns();
 ws.forEach(x=>{const c=document.querySelector('.tc[data-k="'+x[0]+'"]');c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(x[1])+'</span>'});
 $('rres').innerHTML=ws.length?'Kazanan bahisler: '+ws.map(x=>document.querySelector('.tc[data-k="'+x[0]+'"]').dataset.n+' <b>+'+fmtA(x[1])+'</b>').join(' · '):'Bu el kazanan bahis yok';
-msg(w>tot?'🎉 Sayı '+n+' · Kazandın +'+fmtA(w-tot):w>0?'Sayı '+n+' · Geri aldın +'+fmtA(w):'Sayı '+n+' · Kaybettin -'+fmtA(tot));
+msg(w>tot?'🎉 Sayı '+n+' · Kazandın +'+fmtE(w-tot):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(tot));
 if(w>tot){const x=(w-tot)/bet;if(x>=15){S.big();say('bigwin',300)}else{S.win(Math.min(6,2+Math.floor(x)));if(x>=5)say('great',200);else if(Math.random()<.5)say('nice',200)}celebrate(w-tot)}else if(w===0)S.lose()};
 if(gl)RW.spin(i).then(finish);else setTimeout(finish,4200)};
 $('rclear').onclick=()=>{if(busy)return;let t=0;for(const k in RB)t+=RB[k];if(t)S.chip();clearBets();setChips(chips+t);renderBoard();rBtns()};rBtns();
@@ -850,7 +854,7 @@ function bjBtns(){const h=curHand(),anyBet=seats.some(s=>s.bet>0);$('deal').disa
 $('bjclear').disabled=phase!=='bet'||!anyBet;$('bjrebet').disabled=!(phase==='bet'||phase==='settle')||!lastBets||anyBet}
 function bjClearTable(){seats.forEach(s=>{s.hands=[];s.badge=null;s.ins=0});dealerH=[];hole=true;dshown=0;$('bjres').textContent='';if(phase==='settle')phase='bet'}
 function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(phase==='settle')bjClearTable();
-if(chips<bet){msg('Yetersiz jeton, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;S.chip();msg('');bjRender();bjBtns()}
+if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;S.chip();msg('');bjRender();bjBtns()}
 $('bjclear').onclick=()=>{if(phase!=='bet')return;let t=0;seats.forEach(s=>{t+=s.bet;s.bet=0});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
 $('bjrebet').onclick=()=>{if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(b>0&&chips>=b&&seats[k].bet===0){setChips(chips-b);seats[k].bet=b;put=true}});if(put)S.chip();bjRender();bjBtns()};
 function nextHand(){for(let k=0;k<seats.length;k++){const s=seats[k];for(let j=0;j<s.hands.length;j++)if(!s.hands[j].done)return{s:k,h:j}}return null}
@@ -891,7 +895,7 @@ anim.forEach((a,i)=>{const sp=spotPos(a.k);if(a.win>0)flyChips(RACK,sp,Math.min(
 if(anim.length)await wait(1250);
 setChips(chips+ret);live=false;seats.forEach(s=>{s.bet=0;s.ins=0});bjRender();bjBtns();
 $('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'Krupiye '+d;
-msg(net>0?'🎉 Kazandın +'+fmtA(net):net===0?'Başa baş':'Kaybettin -'+fmtA(-net));
+msg(net>0?'🎉 Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));
 if(net>0){if(net/maxBet>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}
 $('deal').onclick=bjDeal;$('hit').onclick=bjHit;$('stand').onclick=bjStand;$('dbl').onclick=bjDbl;$('spl').onclick=bjSplit;bjBtns();bjRender();
 </script>

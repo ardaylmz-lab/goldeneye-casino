@@ -1,6 +1,6 @@
 # Golden Eye Casino 🎰
 
-Arkadaşlar arası eğlence oyunu. **Sanal jeton kullanılır, gerçek para yoktur.**
+Arkadaşlar arası eğlence oyunu. **Sanal euro bakiyesi kullanılır, gerçek para yoktur.**
 
 **Canlı:** https://ardaylmz-lab-goldeneye-casino.vercel.app (alias: https://goldeneye-casino-fvni.vercel.app)
 Vercel projesi: `arda-5509s-projects/ardaylmz-lab-goldeneye-casino`. Sesli sürüm budur; API fonksiyonları burada çalışır.
