@@ -205,7 +205,7 @@ box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px 
 .chip .v small{display:block;font-size:.42em;letter-spacing:1.5px;opacity:.85;margin-top:2px}
 .chip.pop{animation:cpop .32s cubic-bezier(.2,1.6,.4,1)}
 @keyframes cpop{0%{transform:scale(.72) rotate(-14deg)}100%{transform:scale(1) rotate(0)}}
-#bets .chip{--sz:46px}
+#bets .chip{--sz:46px}#bets .chip.hide{display:none}
 #bets .chip:active{transform:translateY(3px);box-shadow:0 0 0 1.5px #0009,0 2px 0 var(--c2),0 4px 8px #000c}
 #bets .chip.on{transform:translateY(-7px) scale(1.12);box-shadow:0 0 0 3px var(--gold),0 5px 0 var(--c2),0 12px 16px #000c,0 0 22px #ffd23f99}
 /* slot bahis seçici */
@@ -510,7 +510,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="rboard" id="rhist"></div>
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
-<div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Bahsi tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button></div>
+<div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button></div>
 <div class="lbl">Seçili bahis kadar jetonu istediğin kutulara koy. Sayı x36 · 12'li ve sütun x3 · diğerleri x2</div>
 </div>
 
