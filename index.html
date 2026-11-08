@@ -1225,16 +1225,15 @@ function countdown(){clearInterval(cdT);cdT=setInterval(()=>{if(!RST||!onRL())re
 if(RST.phase==='bet'){if(dl)$('rres').textContent='Bahisler kapanıyor: '+left+' sn';else if(!$('rres').textContent||/kapanıyor/.test($('rres').textContent))$('rres').textContent=(RST.bets&&RST.bets.length)?'':'Bahisleri koyun'}
 if(dl&&Date.now()>dl+400&&!tickT){tickT=setTimeout(()=>{tickT=null},2500);rpc('rl_tick').catch(()=>{})}},500)}
 function btns(){const st=RST,myTot=rTot(RB),betting=st&&st.phase==='bet'&&!busy;$('rspin').disabled=!betting||!myTot;$('rclear').disabled=!betting||!myTot;$('rdbl').disabled=!betting||!myTot||chips<myTot;$('rrebet').disabled=!betting||myTot>0||!myLastRL||!rTot(myLastRL)}
-cloud.rl={redraw,btns,
+const rlApi={redraw,btns,
 bet:(k,amt)=>rpc('rl_bet',{p_key:k,p_amount:amt}).then(st=>{if(onRL())S.chip();applyRL(st)}).catch(()=>{}),
 unbet:()=>rpc('rl_unbet').then(st=>{if(onRL())S.chip();applyRL(st)}).catch(()=>{}),
 double:()=>rpc('rl_double').then(st=>{if(onRL())S.chip();applyRL(st)}).catch(()=>{}),
 rebet:async()=>{if(!myLastRL)return;for(const k in myLastRL){try{applyRL(await rpc('rl_bet',{p_key:k,p_amount:myLastRL[k]}))}catch(e){break}}if(onRL())S.chip()},
 spin:()=>{myLastRL=Object.assign({},RB);rpc('rl_spin').then(applyRL).catch(()=>{})},
 _apply:applyRL};
-sb.from('rl_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Rulet motoru kurulmamış: supabase/rl_engine.sql çalıştırın');return}if(data&&data.state&&data.state.phase){spunRound=data.state.phase==='spin'?-1:data.state.round;applyRL(data.state)}else rpc('rl_tick').then(applyRL).catch(()=>{})});
-sb.channel('rl_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'rl_table'},p=>applyRL(p.new.state)).subscribe();
-countdown()}
+sb.from('rl_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message)){msg('Ortak rulet henüz kurulu değil (rl_engine.sql). Rulet şimdilik tek kişilik.');}return}cloud.rl=rlApi;rBtns();if(data&&data.state&&data.state.phase){spunRound=data.state.phase==='spin'?-1:data.state.round;applyRL(data.state)}else rpc('rl_tick').then(applyRL).catch(()=>{});
+sb.channel('rl_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'rl_table'},p=>applyRL(p.new.state)).subscribe();countdown()})}
 /* ===== ORTAK BLACKJACK (sunucu motoru: supabase/bj_engine.sql) ===== */
 {const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|bj_/.test(error.message)&&/find|exist/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
 let ST=null,myLast=null,revealing=false,lastCurKey='',lastPhase='',shownDealer=0,shownRes=-1,tickT=null,cdT=null;
@@ -1296,17 +1295,16 @@ function btns(){if(dealing){['deal','hit','stand','dbl','spl','bjclear','bjrebet
 $('deal').disabled=!st||st.phase!=='bet'||!myBets;$('hit').disabled=!mine;$('stand').disabled=!mine;$('dbl').disabled=!mine||h.cards.length!==2||chips<h.bet;
 $('spl').disabled=!mine||h.cards.length!==2||h.split||rk(h.cards[0])!==rk(h.cards[1])||seats[cur.s].hands.length>=2||chips<h.bet;
 $('bjclear').disabled=!st||st.phase!=='bet'||!myBets;$('bjrebet').disabled=!st||!(st.phase==='bet'||st.phase==='settle')||!myLast||myBets}
-cloud.bj={btns,
+const bjApi={btns,
 bet:(k,amt)=>rpc('bj_bet',{p_spot:k,p_amount:amt}).then(st=>{S.chip();applyState(st)}).catch(()=>{}),
 unbet:()=>rpc('bj_unbet').then(st=>{S.chip();applyState(st)}).catch(()=>{}),
 deal:()=>{myLast=seats.map(s=>s.owner==='me'?s.bet:0);rpc('bj_deal').then(st=>{S.click();applyState(st)}).catch(()=>{})},
 rebet:async()=>{if(!myLast)return;for(let k=0;k<6;k++)if(myLast[k]>0){try{applyState(await rpc('bj_bet',{p_spot:k,p_amount:myLast[k]}))}catch(e){break}}S.chip()},
 act:a=>rpc('bj_action',{p_act:a}).then(st=>{if(a==='stand')S.click();else S.chip();applyState(st)}).catch(()=>{}),
 insure:t=>{$('insbar').classList.add('hide');rpc('bj_insure',{p_take:t}).then(st=>{if(t)S.chip();applyState(st)}).catch(()=>{})},_apply:applyState,_dealing:()=>dealing};
-/* masa durumunu al ve dinle */
-sb.from('bj_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');return}if(data&&data.state&&data.state.phase)applyState(data.state);else rpc('bj_tick').then(applyState).catch(()=>{})});
-sb.channel('bj_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'bj_table'},p=>applyState(p.new.state)).subscribe();
-countdown()}
+/* masa durumunu al ve dinle; tablo yoksa tek kişilik mod sürer */
+sb.from('bj_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Ortak blackjack henüz kurulu değil (bj_engine.sql). Masa şimdilik tek kişilik.');return}cloud.bj=bjApi;bjBtns();if(data&&data.state&&data.state.phase)applyState(data.state);else rpc('bj_tick').then(applyState).catch(()=>{});
+sb.channel('bj_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'bj_table'},p=>applyState(p.new.state)).subscribe();countdown()})}
 entering=false}
 async function leave(){try{await sb.rpc('leave_seat',{p_game:'bj'});await sb.rpc('leave_seat',{p_game:'rl'})}catch(e){}if(pushT){clearTimeout(pushT);pushT=null;await push(chips)}try{if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}}catch(e){}await sb.auth.signOut();me=null;prof=null;try{localStorage.removeItem('ge_chips')}catch(e){}location.reload()}
 $('logout').onclick=()=>{leave()};
