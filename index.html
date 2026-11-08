@@ -277,14 +277,24 @@ box-shadow:0 0 0 1.5px #0009,0 5px 0 var(--c2),0 9px 14px #000c,inset 0 1px 1px 
 .dtot:empty{display:none}
 .dbj{position:absolute;right:6px;bottom:7px;padding:2px 7px;border-radius:8px;background:#ffd23f;color:#1a1000;font-size:.5rem;font-weight:900;letter-spacing:1.5px;box-shadow:0 0 10px #ffd23faa;opacity:0;transform:scale(.6);transition:opacity .3s,transform .3s}
 .deck.bj .dbj{opacity:1;transform:scale(1)}
-.bonus{display:flex;flex-direction:column;align-items:center;justify-content:space-between;animation-delay:.48s}
-.bwheel{position:relative;width:112px;height:112px;margin:2px auto 8px}
-.bptr{position:absolute;left:50%;top:-5px;z-index:2;margin-left:-7px;width:0;height:0;border:7px solid #0000;border-top:13px solid #ffd23f;filter:drop-shadow(0 0 4px #ffd23f) drop-shadow(0 2px 2px #000)}
-.bdisc{position:relative;width:100%;height:100%;border-radius:50%;border:3px solid #c9971a;box-shadow:0 0 0 2px #3a1a00,0 6px 12px #000a,inset 0 0 14px #0009;background:repeating-conic-gradient(#7a1f2e 0 45deg,#1c1118 45deg 90deg);transition:transform 4.2s cubic-bezier(.15,.7,.1,1)}
-.bdisc::after{content:"";position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff6c0,#d9a92a 50%,#8a5a00);box-shadow:0 0 0 2px #3a1a00,0 2px 4px #000a}
-.bdisc span{position:absolute;left:50%;top:50%;width:30px;margin:-7px 0 0 -15px;text-align:center;font-size:.55rem;font-weight:800;color:#ffe9a8;text-shadow:0 1px 2px #000;transform:rotate(var(--a)) translateY(-41px)}
-#bspin{padding:7px 16px;font-size:.72rem;letter-spacing:2px;font-weight:800;border:1.5px solid var(--gold);color:var(--gold);background:linear-gradient(180deg,#2a2030,#141018);border-radius:10px}
-#bspin:disabled{opacity:.45}
+.dice{animation-delay:.48s}
+.zfelt{position:relative;width:124px;height:116px;margin:0 auto;border-radius:8px;background:radial-gradient(ellipse at 50% 25%,#1b9a5a,#0f6b3d 55%,#0a4a2a);border:2px solid #c9971a;box-shadow:inset 0 0 18px #000a,0 2px 6px #0008;perspective:320px}
+.zline{position:absolute;left:0;right:0;top:9px;text-align:center;font-family:"Cinzel",Georgia,serif;font-size:.45rem;letter-spacing:2.5px;color:#ffd23f99}
+.dwrap{position:absolute;top:44px;width:30px;height:30px;transform-style:preserve-3d}
+#d1{left:28px}#d2{left:66px}
+.die{position:relative;width:30px;height:30px;transform-style:preserve-3d;transition:transform 1.4s cubic-bezier(.2,.8,.3,1)}
+.die i{position:absolute;inset:0;border-radius:5px;background-color:#f6f1e6;box-shadow:inset 0 0 0 1px #0002,inset 0 0 4px #0003;backface-visibility:hidden}
+.die .f1{transform:translateZ(15px);background-image:radial-gradient(circle at 50% 50%,#1a1a1a 0 3px,#0000 3.6px)}
+.die .f6{transform:rotateY(180deg) translateZ(15px);background-image:radial-gradient(circle at 28% 22%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 28% 50%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 28% 78%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 72% 22%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 72% 50%,#1a1a1a 0 2.6px,#0000 3.2px),radial-gradient(circle at 72% 78%,#1a1a1a 0 2.6px,#0000 3.2px)}
+.die .f2{transform:rotateY(90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 74%,#1a1a1a 0 3px,#0000 3.6px)}
+.die .f5{transform:rotateY(-90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 74% 26%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 50% 50%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 26% 74%,#1a1a1a 0 2.8px,#0000 3.4px),radial-gradient(circle at 74% 74%,#1a1a1a 0 2.8px,#0000 3.4px)}
+.die .f3{transform:rotateX(90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 50% 50%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 74%,#1a1a1a 0 3px,#0000 3.6px)}
+.die .f4{transform:rotateX(-90deg) translateZ(15px);background-image:radial-gradient(circle at 26% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 26%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 26% 74%,#1a1a1a 0 3px,#0000 3.6px),radial-gradient(circle at 74% 74%,#1a1a1a 0 3px,#0000 3.6px)}
+.dwrap.roll{animation:dbounce 1.4s cubic-bezier(.3,.7,.4,1)}
+@keyframes dbounce{0%{transform:translateY(0)}30%{transform:translateY(-24px)}55%{transform:translateY(0)}72%{transform:translateY(-8px)}85%{transform:translateY(0)}100%{transform:translateY(0)}}
+.dsh{position:absolute;left:-5px;right:-5px;bottom:-11px;height:9px;border-radius:50%;background:radial-gradient(ellipse,#000a,#0000 70%);transform:translateZ(-16px)}
+.zsum{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);min-width:14px;padding:1px 8px;border-radius:8px;background:#000a;color:#fff;font-size:.62rem;font-weight:800;transition:background .3s}
+.zsum:empty{display:none}.zsum.nat{background:#ffd23f;color:#1a1000;box-shadow:0 0 10px #ffd23faa}
 /* minik rulet */
 .rmini{animation-delay:.4s}
 .rwrap{position:relative;width:116px;height:116px;margin:0 auto 8px;border-radius:50%;padding:5px;box-sizing:border-box;background:conic-gradient(#fff2b0,#b8860b,#fff2b0,#8a6208,#fff2b0,#b8860b,#fff2b0);box-shadow:0 6px 12px #000a,0 0 14px #ffd23f44}
@@ -575,7 +585,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <button class="mini" id="mini" data-go="slot"><div class="mt">SLOT</div><div class="mreels" id="mreels"><div class="mline"></div></div><div class="mb">Dokun, oyna</div></button>
 <button class="mini deck" id="deck" data-go="bj"><div class="mt">BLACKJACK</div><div class="dfelt"><div class="dstack"><i></i><i></i><i></i></div><div class="dh"><div class="dc d1"></div><div class="dc d2"></div></div><div class="dtot"></div><div class="dbj">BLACKJACK</div></div><div class="mb">Dokun, oyna</div></button>
 <button class="mini rmini" id="rmini" data-go="rulet"><div class="mt">RULET</div><div class="rwrap"><div class="rw" id="rwmini"></div><div class="rball"></div><div class="rhub"></div></div><div class="mb">Dokun, oyna</div></button>
-<div class="mini bonus" id="bonus"><div class="mt">GÜNLÜK BONUS</div><div class="bwheel"><div class="bptr"></div><div class="bdisc" id="bdisc"></div></div><button id="bspin">ÇEVİR</button><div class="mb" id="bnote"></div></div>
+<div class="mini dice" id="dice"><div class="mt">ZAR MASASI</div><div class="zfelt"><div class="zline">PASS LINE</div><div class="dwrap" id="d1"><div class="die"><i class="f1"></i><i class="f6"></i><i class="f2"></i><i class="f5"></i><i class="f3"></i><i class="f4"></i></div><b class="dsh"></b></div><div class="dwrap" id="d2"><div class="die"><i class="f1"></i><i class="f6"></i><i class="f2"></i><i class="f5"></i><i class="f3"></i><i class="f4"></i></div><b class="dsh"></b></div><div class="zsum" id="zsum"></div></div><div class="mb">Yakında</div></div></div>
 </div>
 </div>
 <div class="bets hide" id="bets">
@@ -1011,17 +1021,12 @@ $('deal').onclick=bjDeal;$('hit').onclick=bjHit;$('stand').onclick=bjStand;$('db
 let deckN=0;function deckDeal(){deckN++;const bj=deckN%4===0,RK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SU='♠♥♦♣';const rc=()=>RK[rnd(13)]+SU[rnd(4)];const h=bj?['A♠','K♥']:[rc(),rc()];const box=$('deck');box.classList.remove('bj');box.querySelector('.dtot').textContent='';
 h.forEach((c,i)=>setTimeout(()=>{const el=box.querySelector('.d'+(i+1));el.innerHTML=card(c,false,true);if(i===1){box.querySelector('.dtot').textContent=sum(h);if(bj)box.classList.add('bj')}},i*260))}
 deckDeal();setInterval(deckDeal,3600);
-/* günlük bonus çarkı: günde bir çevirme, telefonda tarih kontrolü */
-{const PR=[100,200,150,500,100,1000,250,300],W=[30,20,25,8,30,3,15,12],disc=$('bdisc'),btn=$('bspin'),note=$('bnote');let rot=0,spinning=false;
-disc.innerHTML=PR.map((v,i)=>'<span style="--a:'+((i+.5)*45)+'deg">'+v+'</span>').join('');
-const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-const left=()=>{const d=new Date(),m=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)-d;return Math.floor(m/36e5)+' sa '+Math.floor(m%36e5/6e4)+' dk'};
-function bUpd(){let used=false;try{used=localStorage.getItem('ge_bonus_day')===today()}catch(e){}btn.disabled=used||spinning;if(!spinning)note.textContent=used?'Yeni çark: '+left():'Günde bir çevir, 100–1.000 €'}
-btn.onclick=()=>{if(btn.disabled||busy||live)return;spinning=true;btn.disabled=true;note.textContent='Dönüyor…';ac();S.click();S.wheelStart(4.2);
-let r=Math.random()*W.reduce((a,b)=>a+b,0),i=0;while(r>=W[i]){r-=W[i];i++}
-const cur=rot%360,target=((360-(i+.5)*45)-cur+720)%360;rot+=1800+target;disc.style.transform='rotate('+rot+'deg)';
-setTimeout(()=>{S.wheelStop();spinning=false;try{localStorage.setItem('ge_bonus_day',today())}catch(e){}setChips(chips+PR[i]);celebrate(PR[i]);S.win(4);say('bonus');note.textContent='+'+fmtE(PR[i])+' bonus!';setTimeout(bUpd,3000)},4300)};
-bUpd();setInterval(bUpd,60000);window.__bonusPick=()=>null}
+/* ana ekran zar masası önizlemesi: iki 3D zar her 4,2 sn takla atıp rastgele düşer */
+const DF={1:[0,0],6:[0,180],2:[0,-90],5:[0,90],3:[-90,0],4:[90,0]};let diceTurns=[0,0],diceVals=[1,1];
+function diceRoll(){const ws=[$('d1'),$('d2')];diceVals=ws.map((w,i)=>{const n=1+rnd(6),[rx,ry]=DF[n];diceTurns[i]++;const k=diceTurns[i];
+w.querySelector('.die').style.transform='rotateX('+(rx+360*k+(rnd(2)?360:0))+'deg) rotateY('+(ry+360*k)+'deg)';w.classList.remove('roll');void w.offsetWidth;w.classList.add('roll');return n});
+const sm=diceVals[0]+diceVals[1],z=$('zsum');z.textContent='';setTimeout(()=>{z.textContent=sm;z.classList.toggle('nat',sm===7||sm===11)},1250)}
+diceRoll();setInterval(diceRoll,4200);
 </script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module">
