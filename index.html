@@ -831,8 +831,8 @@ const N=37,cw=96,HH=384,c=document.createElement('canvas');c.width=cw*N;c.height
 for(let i=0;i<N;i++){const j=36-i,n=WO[i],col=n===0?'#0e8a44':REDS.includes(n)?'#d0132f':'#1c1c20',dark=n===0?'#064a23':REDS.includes(n)?'#6e0616':'#060607',X=j*cw;
 const g=x.createLinearGradient(0,0,0,HH);g.addColorStop(0,col);g.addColorStop(.55,col);g.addColorStop(.60,dark);g.addColorStop(.72,col);g.addColorStop(1,dark);x.fillStyle=g;x.fillRect(X,0,cw,HH);
 x.fillStyle='rgba(255,255,255,.06)';x.fillRect(X,0,cw,HH*.55);
-/* iç yüzeyden bakıldığı için yatay aynalı; rakamın tepesi merkeze bakar */
-x.save();x.translate(X+cw/2,HH*.27);x.rotate(Math.PI);x.scale(-1,1);x.font='900 108px Montserrat, Arial, Helvetica, sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=10;x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.55)';x.strokeText(String(n),0,0);x.fillStyle='#fff';x.fillText(String(n),0,0);x.restore();
+/* gerçek çarktaki gibi radyal yazı: sayı cebin uzun ekseni boyunca, cebin ortasında; iç yüzeyden bakıldığı için aynalanır */
+x.save();x.translate(X+cw/2,HH*.28);x.scale(-1,1);x.rotate(Math.PI/2);x.font='900 66px Montserrat, Arial, Helvetica, sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=8;x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.6)';x.strokeText(String(n),0,0);x.fillStyle='#fff';x.fillText(String(n),0,0);x.restore();
 x.fillStyle='rgba(0,0,0,.45)';x.fillRect(X,0,2,HH);x.fillRect(X+cw-2,0,2,HH)}
 const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
 /* --- malzemeler --- */
@@ -900,7 +900,7 @@ ball.position.set(r*Math.sin(phi),surfY(r)+BR+hop,r*Math.cos(phi));
 const vis=!document.hidden&&!document.getElementById('rulet').classList.contains('hide');if(!vis)return;
 frame++;if(!st&&(frame&1))return;renderer.render(scene,cam)}
 fit();loop();box.classList.add('gl');
-window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:wrapA(phi),target:wrapA(ang(pocket)+ry),ry,wr,spinning:!!st,hops:st&&st.hops?st.hops.map(h=>+h.d.toFixed(3)):null,settle:st?+(st.settleT).toFixed(2):null})};
+window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:wrapA(phi),target:wrapA(ang(pocket)+ry),ry,wr,spinning:!!st,hops:st&&st.hops?st.hops.map(h=>+h.d.toFixed(3)):null,settle:st?+(st.settleT).toFixed(2):null}),_cam:cam};
 })();
 </script>
 </body>
