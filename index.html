@@ -139,6 +139,10 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc em::before{content:"";position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#f4c33c 60%,#b8860b 100%);box-shadow:inset 0 0 0 1.5px #fff6c0,inset 0 1px 3px #0006}
 .tc em span{position:relative;z-index:1}
 .tc em:empty{display:none}
+.tz{z-index:3;width:24px;height:24px;align-self:center;justify-self:center;border-radius:50%;background:#0000;border:0;box-shadow:none;overflow:visible}
+.tz::before{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:#ffd23f;opacity:.28;box-shadow:0 0 4px #ffd23f}
+.tz:active{transform:none;filter:none}.tz em{right:-2px;top:-2px}
+.tz.won{border:0;box-shadow:none;animation:none}.tz.won::before{opacity:1;background:#fff}
 .tc.won{border-color:#fff3b0;box-shadow:0 0 0 2px var(--gold),0 0 18px var(--gold),inset 0 0 12px #ffd23f55;animation:pl .6s ease-in-out infinite alternate;z-index:1}
 .tc.won em{font-size:.5rem;color:#0a3a1a;background:repeating-conic-gradient(from -11.25deg,#eafff0 0 22.5deg,#2ec46a 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #0b6a32,0 5px 0 #064a20,0 0 12px #4dffa0aa}
 .tc.won em::before{background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#5be88f 60%,#1a9a4a 100%);box-shadow:inset 0 0 0 1.5px #eafff0,inset 0 1px 3px #0006}
@@ -162,8 +166,8 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc.won{border-color:var(--gold);box-shadow:0 0 12px var(--gold);animation:pl .6s ease-in-out infinite alternate}
 .tc.won em{font-size:.72rem}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
-.bjwrap{position:relative;width:100%;max-width:360px;margin:4px auto 8px;aspect-ratio:340/436}
-.stools{position:absolute;left:0;top:0;width:340px;height:318px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(38px);pointer-events:none}
+.bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/422}
+.stools{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(38px);pointer-events:none}
 /* krupiye koltuğu: siyah deri, altın şerit, sırtlığı masaya ters */
 .stool.dc{width:62px;height:62px;margin:-31px;background:radial-gradient(circle at 42% 36%,#3d3d48,#17171c 55%,#050506);box-shadow:0 0 0 2.5px #c9971a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
 .stool.dc::before{inset:10px;border-color:#c9971a55}
@@ -172,8 +176,8 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .stool{position:absolute;width:50px;height:50px;margin:-25px;border-radius:50%;background:radial-gradient(circle at 42% 36%,#a0402f,#5e1c14 55%,#2e0b08);box-shadow:0 0 0 3px #3a2a1a,0 0 0 5px #15100a,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
 .stool::before{content:"";position:absolute;inset:9px;border-radius:50%;border:1.5px solid #ffffff22;box-shadow:inset 0 0 8px #0006}
 .stool i{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px;border-radius:50%;border:8px solid #0000;border-bottom-color:#4a2a10;transform:rotate(var(--a));filter:drop-shadow(0 3px 3px #0009)}
-.bjrail{position:absolute;left:0;top:0;width:340px;height:318px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(38px);border-radius:22px 22px 170px 170px/22px 22px 150px 150px;padding:9px;background:linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
-.bjtable{position:relative;width:100%;height:100%;border-radius:16px 16px 160px 160px/16px 16px 140px 140px;background:radial-gradient(ellipse at 50% 20%,#1b9a5a,#0f6b3d 50%,#0a4a2a 100%);box-shadow:inset 0 0 40px #0009,inset 0 0 0 1.5px #c9971a66}
+.bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(38px);border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:9px;background:linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
+.bjtable{position:relative;width:100%;height:100%;border-radius:18px 18px 180px 180px/18px 18px 155px 155px;background:radial-gradient(ellipse at 50% 20%,#1b9a5a,#0f6b3d 50%,#0a4a2a 100%);box-shadow:inset 0 0 40px #0009,inset 0 0 0 1.5px #c9971a66}
 .bjsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .bjsvg text{font-family:"Cinzel",Georgia,serif;font-weight:800;fill:#ffd23fcc;letter-spacing:2px}
 .bjsvg .ins{fill:#ffffffb0;letter-spacing:1.5px}.bjsvg .logo{fill:#ffffff18;letter-spacing:4px;font-size:13px}
@@ -182,10 +186,10 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tray{left:14px;background:linear-gradient(180deg,#3a3a40,#15151a)}
 .dealer{position:absolute;left:50%;top:36px;transform:translateX(-50%);display:flex;min-height:48px}
 .dealer .c+.c{margin-left:-14px}
-.dsum{position:absolute;left:50%;top:88px;transform:translateX(-50%);font-size:.6rem;letter-spacing:1px;color:#fff;font-weight:800;background:#0007;padding:1px 8px;border-radius:8px}
+.dsum{position:absolute;left:50%;top:92px;transform:translateX(-50%);font-size:.6rem;letter-spacing:1px;color:#fff;font-weight:800;background:#0007;padding:1px 8px;border-radius:8px}
 .dsum:empty{display:none}
 .seat{position:absolute;left:0;top:0;width:0;height:0}
-.spot{position:absolute;left:-27px;top:-27px;width:54px;height:54px;border-radius:50%;border:2px dashed #ffd23fbb;display:grid;place-items:center;cursor:pointer;transition:box-shadow .2s,border-color .2s;background:#00000018}
+.spot{position:absolute;left:-25px;top:-25px;width:50px;height:50px;border-radius:50%;border:2px dashed #ffd23fbb;display:grid;place-items:center;cursor:pointer;transition:box-shadow .2s,border-color .2s;background:#00000018}
 .spot small{font-size:.52rem;color:#ffd23f99;font-weight:700;letter-spacing:1px;pointer-events:none}
 .seat.on .spot{border-style:solid;border-color:#fff3b0;box-shadow:0 0 0 3px #ffd23f55,0 0 18px #ffd23faa}
 .bchip{position:relative;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:.55rem;font-weight:900;color:#2a1a00;background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #8a5a08,0 5px 0 #5a3a05,0 7px 8px #000b,inset 0 1px 1px #fff8;pointer-events:none}
@@ -196,7 +200,7 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .cs{position:absolute;left:0;top:0}
 .hsum{position:absolute;width:40px;text-align:center;font-size:.58rem;font-weight:800;color:#fff;background:#000a;border-radius:8px;padding:1px 0;letter-spacing:.5px}
 .hsum.on{background:var(--gold);color:#1a1000}.hsum.bust{background:#c40018;color:#fff}.hsum.bj{background:#ffd23f;color:#1a1000}
-.badge{position:absolute;left:-34px;top:31px;width:64px;text-align:center;font-size:.55rem;font-weight:900;letter-spacing:.3px;padding:2px 0;border-radius:8px;color:#fff;background:#000c;animation:rpop .35s cubic-bezier(.2,1.6,.4,1);white-space:nowrap}
+.badge{position:absolute;left:-34px;top:29px;width:64px;text-align:center;font-size:.55rem;font-weight:900;letter-spacing:.3px;padding:2px 0;border-radius:8px;color:#fff;background:#000c;animation:rpop .35s cubic-bezier(.2,1.6,.4,1);white-space:nowrap}
 .bchip.bot{background:repeating-conic-gradient(from -11.25deg,#e8f0ff 0 22.5deg,#1e63d6 22.5deg 45deg);color:#fff}
 .bchip.bot::before{background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#3b7ae8 60%,#0e3a86 100%);box-shadow:inset 0 0 0 1.5px #e8f0ff,inset 0 1px 3px #0006}
 .btag{position:absolute;left:-44px;top:31px;width:88px;text-align:center;font-size:.5rem;font-weight:800;color:#ffe9a8;letter-spacing:.3px;white-space:nowrap;text-shadow:0 1px 2px #000}
@@ -210,8 +214,9 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .stool .dname{position:absolute;left:50%;top:-6px;transform:translate(-50%,-100%);padding:2px 8px;border-radius:8px;background:#000b;text-align:center;font-family:"Cinzel",Georgia,serif;font-size:.5rem;letter-spacing:2px;color:#ffe9a8;text-shadow:0 1px 2px #000;line-height:1.1}
 .stool .dname small{display:block;font-family:Montserrat,sans-serif;font-size:.36rem;letter-spacing:1.5px;color:#c9971a}
 .seat.taken .spot{border-style:solid;border-color:#ffd23f55;cursor:default}.seat.taken .spot small{font-size:.45rem;color:#ffd23fcc}
+.seat.mine .spot{border-color:#ffd23f}
 .badge.win{background:#1a9a4a}.badge.lose{background:#8a0010}.badge.push{background:#444}.badge.bj{background:#ffd23f;color:#1a1000}
-.c{position:relative;width:32px;height:44px;border-radius:4px;background:linear-gradient(160deg,#fff,#eee9dc);color:#111;border:1px solid #cfc8b8;box-shadow:0 3px 6px #000a,inset 0 1px 0 #fff;font-weight:900;font-size:.72rem;line-height:1;backface-visibility:hidden}
+.c{position:relative;width:34px;height:48px;border-radius:4px;background:linear-gradient(160deg,#fff,#eee9dc);color:#111;border:1px solid #cfc8b8;box-shadow:0 3px 6px #000a,inset 0 1px 0 #fff;font-weight:900;font-size:.72rem;line-height:1;backface-visibility:hidden}
 .c b{position:absolute;left:3px;top:3px}.c span{position:absolute;right:3px;bottom:2px;font-size:.85rem}.c i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-style:normal;font-size:1.05rem;opacity:.9}
 .c.r{color:#d90429}
 .c.h{background:repeating-linear-gradient(45deg,#8a0010 0 3px,#c40018 3px 6px);border:2px solid #fff;outline:1px solid var(--gd)}
@@ -228,7 +233,7 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 #deal:active:not(:disabled),#rspin:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 2px #2a0610,0 1px 0 #1e040c,0 3px 8px #000b,inset 0 2px 2px #fff3}
 #deal:disabled,#rspin:disabled{opacity:1;filter:grayscale(.55) brightness(.55)}#deal:disabled::after,#rspin:disabled::after{display:none}
 #rulet .row button{flex:1}#rspin{flex-basis:100%}
-.rack{position:absolute;left:50%;top:104px;width:126px;height:16px;transform:translateX(-50%);border-radius:4px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:2px 7px;box-sizing:border-box}
+.rack{position:absolute;left:50%;top:100px;width:126px;height:16px;transform:translateX(-50%);border-radius:4px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:2px 7px;box-sizing:border-box}
 .rack b{flex:1;border-radius:2px;background:repeating-linear-gradient(180deg,var(--c) 0 2px,#fff8 2px 3px);opacity:.9}
 .fly{position:absolute;left:0;top:0;width:28px;height:28px;margin:-14px;z-index:6;transition:transform .55s cubic-bezier(.25,.8,.35,1),opacity .25s;pointer-events:none}
 .insbar{display:flex;align-items:center;gap:8px;margin:6px 0;padding:8px 10px;border-radius:12px;background:linear-gradient(90deg,#3a2a00,#1a1200);border:1.5px solid var(--gold);box-shadow:0 0 14px #ffd23f55;font-size:.8rem;font-weight:700}
@@ -622,15 +627,15 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
 <div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button></div>
-<div class="lbl">Seçili çipi istediğin kutulara koy. Sayı x36 · 12'li ve sütun x3 · diğerleri x2</div>
+<div class="lbl">Seçili çipi kutulara, iki sayının arasına (ikili 17:1) ya da dört sayının köşesine (dörtlü 8:1) koy. Sayı 35:1 · 12'li ve sütun 2:1 · diğerleri 1:1</div>
 </div>
 
 <div class="panel hide" id="bj">
-<div class="bjwrap" id="bjwrap"><div class="stools" id="stools"></div><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 322 300"><defs><path id="bja1" d="M60.6,149.2 A118,118 0 0 0 279.4,149.2"/><path id="bja2" d="M109.9,126.9 A64,64 0 0 0 230.1,126.9"/></defs><text font-size="11"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="6.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="170" y="140" font-size="5.5" text-anchor="middle">DEALER STANDS ON 17</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div class="rack" id="rack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#7b3fe4"></b><b style="--c:#c9971a"></b></div><div id="seats"></div></div></div></div>
+<div class="bjwrap" id="bjwrap"><div class="stools" id="stools"></div><div class="bjrail" id="bjrail"><div class="bjtable" id="bjt"><svg class="bjsvg" viewBox="0 0 422 312"><defs><path id="bja1" d="M79.6,160.5 A140,140 0 0 0 342.4,160.5"/><path id="bja2" d="M141.7,139.7 A74,74 0 0 0 280.3,139.7"/></defs><text font-size="11.5"><textPath href="#bja1" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text><text class="ins" font-size="6.5"><textPath href="#bja2" startOffset="50%" text-anchor="middle">INSURANCE PAYS 2 TO 1</textPath></text><text class="ins" x="211" y="148" font-size="5.5" text-anchor="middle">DEALER STANDS ON 17</text></svg><div class="tray"></div><div class="shoe"></div><div class="dealer" id="dh"></div><div class="dsum" id="dsum"></div><div class="rack" id="rack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#7b3fe4"></b><b style="--c:#c9971a"></b></div><div id="seats"></div></div></div></div>
 <div class="res" id="bjres"></div>
 <div class="insbar hide" id="insbar"><span>Krupiyede As. Sigorta? Bahsin yarısı, blackjack çıkarsa 2:1 öder.</span><button id="insyes" class="on">Sigorta al</button><button id="insno">Hayır</button></div>
 <div class="row" id="bjbtns"><button class="go" id="deal">🃏 DAĞIT</button><button id="hit">Çek</button><button id="stand">Dur</button><button id="dbl">2x</button><button id="spl">Böl</button><button id="bjrebet">Tekrarla</button><button id="bjclear">Bahisleri temizle</button></div>
-<div class="lbl">Bir sandalyeye dokunup otur, sonra seçili çipi kendi koltuğuna koy. Krupiye: Mira. Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
+<div class="lbl">Bir sandalyeye dokunup otur, sonra seçili çipi istediğin bahis yerine koy (en fazla iki yer). Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
 </div>
 
 <div id="msg"></div>
@@ -943,11 +948,18 @@ for(let n=1;n<=36;n++)mk('n:'+n,n,REDS.includes(n)?'red':'black',2+Math.floor((n
 renderBoard();
 [['d1','1. 12'],['d2','2. 12'],['d3','3. 12']].forEach((o,i)=>mk(o[0],o[1],'out',2+i*4,2,4));
 [1,2,3].forEach((j,i)=>mk('c'+j,'2:1','out',14,3+i));
-function mark(k){const e=document.querySelector('.tc[data-k="'+k+'"] em');if(e)e.innerHTML=RB[k]?'<span>'+fmtA(RB[k])+'</span>':''}
+/* ikili (split, 17:1) ve dörtlü (corner, 8:1) bahis bölgeleri: sayıların kenarları ve köşeleri */
+function mz(k,nums,r,c,rs,cs){const d=document.createElement('button');d.className='tc tz';d.dataset.k=k;d.dataset.n=nums.join('-');d.innerHTML='<em></em>';d.style.gridRow=r+(rs?' / span '+rs:'');d.style.gridColumn=c+(cs?' / span '+cs:'');d.title=nums.join(' · ');d.onclick=()=>pbet(k);$('tbl').appendChild(d)}
+for(let n=1;n<=36;n++){const r=2+Math.floor((n-1)/3),c=3+(n-1)%3;
+if(c<5)mz('sp:'+n+'-'+(n+1),[n,n+1],r,c,0,2);          /* yatay komşu */
+if(n<=33)mz('sp:'+n+'-'+(n+3),[n,n+3],r,c,2,0);        /* dikey komşu */
+if(c<5&&n<=33)mz('co:'+n+'-'+(n+1)+'-'+(n+3)+'-'+(n+4),[n,n+1,n+3,n+4],r,c,2,2)} /* köşe */
+[1,2,3].forEach(n=>mz('sp:0-'+n,[0,n],1,2+n,2,0));
+function mark(k){const e=document.querySelector('[data-k="'+k+'"] em');if(e)e.innerHTML=RB[k]?'<span>'+fmtA(RB[k])+'</span>':''}
 function pbet(k){if(busy)return;clearWon();if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('');renderBoard();S.chip();rBtns()}
-function wins(k,n){if(n===0)return k==='n:0';if(k[0]==='n')return +k.slice(2)===n;
+function wins(k,n){if(k.startsWith('sp:')||k.startsWith('co:'))return k.slice(3).split('-').map(Number).includes(n);if(n===0)return k==='n:0';if(k[0]==='n')return +k.slice(2)===n;
 return {red:REDS.includes(n),black:!REDS.includes(n),odd:n%2===1,even:n%2===0,low:n<=18,high:n>=19,d1:n<=12,d2:n>12&&n<=24,d3:n>24,c1:n%3===1,c2:n%3===2,c3:n%3===0}[k]}
-function mult(k){return k[0]==='n'?36:/^[dc]/.test(k)?3:2}
+function mult(k){return k.startsWith('sp:')?18:k.startsWith('co:')?9:k[0]==='n'?36:/^[dc]/.test(k)?3:2}
 function clearWon(){document.querySelectorAll('.tc.won').forEach(e=>{e.classList.remove('won');e.querySelector('em').innerHTML=''})}
 function clearBets(){Object.keys(RB).forEach(k=>{delete RB[k];mark(k)})}
 let lastRB=null;const rTot=o=>Object.values(o||{}).reduce((a,b)=>a+b,0);
@@ -972,38 +984,40 @@ let deck=[];
 function draw(){if(deck.length<15){deck=[];for(const s of '♠♥♦♣')for(const r of ['A','2','3','4','5','6','7','8','9','10','J','Q','K'])deck.push(r+s);for(let i=deck.length-1;i>0;i--){const j=rnd(i+1);[deck[i],deck[j]]=[deck[j],deck[i]]}}return deck.pop()}
 function val(h){let t=0,a=0;for(const c of h){const r=c.slice(0,-1);if(r==='A'){t+=11;a++}else t+=isNaN(r)?10:+r}let soft=a>0;while(t>21&&a){t-=10;a--;soft=a>0}return{t,soft}}
 const sum=h=>val(h).t,rk=c=>c.slice(0,-1);
-const SEATS=[52,90,128].map(d=>d*Math.PI/180),BJC={x:170,y:105},RS=152,RC=90,RACK={x:170,y:112};
-const seats=SEATS.map(()=>({bet:0,ins:0,hands:[],badge:null}));let dealerH=[],hole=true,phase='bet',cur=null,lastBets=null,dshown=0,dflip=false;
+/* 6 bahis yeri (geniş yay), 3 sandalye; masa tasarım alanı 440x330 */
+const SPOTS=[[366,200],[304,250],[242,274],[180,274],[118,250],[56,200]].map(([x,y])=>({x,y})),CHAIRS=[{x:356,y:300,a:36},{x:211,y:352,a:0},{x:66,y:300,a:-36}],RACK={x:211,y:108};
+const seats=SPOTS.map(()=>({bet:0,ins:0,hands:[],badge:null,owner:null}));let dealerH=[],hole=true,phase='bet',cur=null,lastBets=null,dshown=0,dflip=false;
 /* sanal oyuncu: Mira, 3. koltuk, kendi kasası (sizin bakiyenizden bağımsız) */
 const BOT=-1,BOTNAME='';let botBank=0;const saveBot=()=>{}; /* sanal oyuncu kaldırıldı; krupiye: Mira */
-function bjFit(){const w=$('bjwrap').clientWidth;if(w)$('bjwrap').style.setProperty('--s',w/340)}
+function bjFit(){const w=$('bjwrap').clientWidth;if(w)$('bjwrap').style.setProperty('--s',w/440)}
 /* tabureler: korkuluğun dışında, rail'in altında kalır */
-SEATS.forEach((th,k)=>{const d=document.createElement('div');d.className='stool';d.dataset.k=k;d.style.left=(9+BJC.x+228*Math.cos(th)).toFixed(1)+'px';d.style.top=(9+BJC.y+228*Math.sin(th)).toFixed(1)+'px';d.innerHTML='<i style="--a:'+(th*180/Math.PI-90).toFixed(1)+'deg"></i><b class="plate"></b>';d.onclick=()=>seatTap(k);$('stools').appendChild(d)});
+CHAIRS.forEach((c,k)=>{const d=document.createElement('div');d.className='stool';d.dataset.k=k;d.style.left=(9+c.x)+'px';d.style.top=(9+c.y)+'px';d.innerHTML='<i style="--a:'+c.a+'deg"></i><b class="plate"></b>';d.onclick=()=>seatTap(k);$('stools').appendChild(d)});
 /* ortak koltuklar: bulutta kim nerede oturuyor (SEATMAP[k]={user_id,name}); bulut kapalıysa herkes her koltuğa oynar */
 let SEATMAP={},mySeat=-1;
-function seatAllowed(k){if(!CLOUD||!window.cloud||!cloud.me())return true;if(mySeat===k)return true;const o=SEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return false}msg('Önce bir sandalyeye dokunup otur');return false}
+function seatAllowed(k){if(!CLOUD||!window.cloud||!cloud.me())return true;if(mySeat<0){msg('Önce bir sandalyeye dokunup otur');return false}const o=seats[k].owner;if(o&&o!=='me'){msg('Bu yere '+o+' oynuyor');return false}if(!o&&seats.filter(s=>s.owner==='me'&&s.bet>0).length>=2){msg('En fazla iki yere oynayabilirsin');return false}return true}
 function seatTap(k){if(!CLOUD||!window.cloud||!cloud.me()){msg('Koltuklar için giriş gerekli');return}if(phase!=='bet'&&phase!=='settle'){msg('El bitince');return}
 if(mySeat===k){cloud.leaveSeat('bj');return}const o=SEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return}cloud.takeSeat('bj',k)}
 function renderSeats(){const me=window.cloud&&cloud.me();mySeat=-1;Object.entries(SEATMAP).forEach(([k,o])=>{if(me&&o.user_id===me.id)mySeat=+k});
 document.querySelectorAll('#stools .stool[data-k]').forEach(d=>{const k=+d.dataset.k,o=SEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeat===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeat===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'')});
-$('seats').querySelectorAll('.seat').forEach((el,k)=>{const o=SEATMAP[k];el.classList.toggle('taken',!!o&&mySeat!==k);el.querySelector('.spot small').textContent=o&&mySeat!==k?o.name:(k+1)})}
+$('seats').querySelectorAll('.seat').forEach((el,k)=>{const o=seats[k].owner;el.classList.toggle('taken',!!o&&o!=='me');el.classList.toggle('mine',o==='me');el.querySelector('.spot small').textContent=o&&o!=='me'?o:(k+1)})}
 window.applySeats=rows=>{SEATMAP={};rows.forEach(r=>{if(r.game==='bj')SEATMAP[r.seat]=r});renderSeats()};renderSeats();
-{const d=document.createElement('div');d.className='stool dc';d.style.left=(9+BJC.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">MİRA<small>KRUPİYE</small></b>';$('stools').appendChild(d)}
+{const d=document.createElement('div');d.className='stool dc';d.style.left=(9+RACK.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">KRUPİYE</b>';$('stools').appendChild(d)}
 new ResizeObserver(bjFit).observe($('bjwrap'));bjFit();
-SEATS.forEach((th,k)=>{const d=document.createElement('div');d.className='seat';d.style.transform='translate('+(BJC.x+RS*Math.cos(th)).toFixed(1)+'px,'+(BJC.y+RS*Math.sin(th)).toFixed(1)+'px)';
-d.innerHTML='<div class="hands" style="transform:translateY(-49px)"></div><div class="spot"><small>'+(k+1)+'</small></div>'+(k===BOT?'<div class="btag"><i>M</i><span></span></div>':'')+'<div class="bd"></div>';if(k===BOT)d.classList.add('botseat');
+SPOTS.forEach((sp,k)=>{const d=document.createElement('div');d.className='seat';d.style.transform='translate('+sp.x+'px,'+sp.y+'px)';
+d.innerHTML='<div class="hands" style="transform:translateY(-47px)"></div><div class="spot"><small>'+(k+1)+'</small></div><div class="bd"></div>';
 d.querySelector('.spot').onclick=()=>placeBet(k);$('seats').appendChild(d)});
-const spotPos=k=>({x:BJC.x+RS*Math.cos(SEATS[k]),y:BJC.y+RS*Math.sin(SEATS[k])});
+const spotPos=k=>SPOTS[k];
 /* çip uçuşu: raftan koltuğa (ödeme) veya koltuktan rafa (kayıp) */
 function flyChips(from,to,n,delay,label){for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
 requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
 function card(c,hid,nw,fl){const cls='c'+(hid?' h':/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':'');if(hid)return '<div class="'+cls+'"></div>';const r=c.slice(0,-1),su=c.slice(-1);return '<div class="'+cls+'"><b>'+r+'</b><i>'+su+'</i><span>'+su+'</span></div>'}
 function bjRender(){seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
 el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip'+(s.bot?' bot':'')+'"><span>'+fmtA(s.bet)+'</span></div>':'<small>'+(s.bot?BOTNAME:(k+1))+'</small>';
-if(s.bot)el.querySelector('.btag span').textContent=(cur&&cur.s===BOT&&phase==='play')?'düşünüyor…':fmtE(botBank);
+
 /* her el kendi bahsinin üstünde, kartlar sağa-yukarı yelpaze (14px/-6px), bölünmüş eller yan yana (60px), toplam etiketi yelpazenin altında */
-el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,m=h.cards.length,v=val(h.cards),on=cur&&cur.s===k&&cur.h===j,st=m>=4?12:14,fw=32+st*(m-1),x0=-fw/2;
-return '<div class="hand" style="transform:translateX('+((j-(n-1)/2)*60)+'px)">'+h.cards.map((c,i)=>'<div class="cs" style="transform:translate('+(x0+i*st)+'px,'+(-44-i*6)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(m?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="left:-20px;top:3px">'+(h.bj?'BJ':v.t)+(h.dbl?'·2x':'')+'</div>':'')+'</div>'}).join('');
+el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,m=h.cards.length,v=val(h.cards),on=cur&&cur.s===k&&cur.h===j,st=m>=4?10:14,fw=34+st*(m-1),x0=-fw/2;
+/* bölünmüş ikinci el birincinin üstünde (hafif sağda), etiketi üstte */
+return '<div class="hand" style="transform:translate('+(j*(k<3?-14:14))+'px,'+(-j*58)+'px)">'+h.cards.map((c,i)=>'<div class="cs" style="transform:translate('+(x0+i*st)+'px,'+(-48-i*6)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(m?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="left:-20px;top:'+(j?(-48-6*(m-1)-18):3)+'px">'+(h.bj?'BJ':v.t)+(h.dbl?'·2x':'')+'</div>':'')+'</div>'}).join('');
 s.hands.forEach(h=>h.shown=h.cards.length);
 el.querySelector('.bd').innerHTML=s.badge?'<div class="badge '+s.badge.c+'">'+s.badge.t+'</div>':(s.ins>0?'<div class="badge ins">SİGORTA '+fmtA(s.ins)+'</div>':'')});
 $('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&dflip)).join('');dshown=dealerH.length;dflip=false;
@@ -1014,9 +1028,9 @@ function bjBtns(){const h=curHand(),mine=h&&cur.s!==BOT,anyBet=seats.some((s,k)=
 $('bjclear').disabled=phase!=='bet'||!anyBet;$('bjrebet').disabled=!(phase==='bet'||phase==='settle')||!lastBets||anyBet}
 function bjClearTable(){seats.forEach(s=>{s.hands=[];s.badge=null;s.ins=0});dealerH=[];hole=true;dshown=0;$('bjres').textContent='';if(phase==='settle')phase='bet'}
 function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(!seatAllowed(k))return;if(phase==='settle')bjClearTable();
-if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;S.chip();msg('');bjRender();bjBtns()}
-$('bjclear').onclick=()=>{if(phase!=='bet')return;let t=0;seats.forEach((s,k)=>{if(k===BOT)return;t+=s.bet;s.bet=0});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
-$('bjrebet').onclick=()=>{if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(k!==BOT&&b>0&&chips>=b&&seats[k].bet===0){setChips(chips-b);seats[k].bet=b;put=true}});if(put)S.chip();bjRender();bjBtns()};
+if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;if(CLOUD&&window.cloud&&cloud.me())seats[k].owner='me';S.chip();msg('');bjRender();bjBtns()}
+$('bjclear').onclick=()=>{if(phase!=='bet')return;let t=0;seats.forEach((s,k)=>{if(k===BOT)return;t+=s.bet;s.bet=0;if(s.owner==='me')s.owner=null});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
+$('bjrebet').onclick=()=>{if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(k!==BOT&&b>0&&chips>=b&&seats[k].bet===0&&!seats[k].owner){setChips(chips-b);seats[k].bet=b;if(CLOUD&&window.cloud&&cloud.me())seats[k].owner='me';put=true}});if(put)S.chip();bjRender();bjBtns()};
 function nextHand(){for(let k=0;k<seats.length;k++){const s=seats[k];for(let j=0;j<s.hands.length;j++)if(!s.hands[j].done)return{s:k,h:j}}return null}
 async function bjDeal(){if(phase!=='bet'||busy)return;const act=seats.map((s,k)=>k!==BOT&&s.bet>0?k:-1).filter(k=>k>=0);if(!act.length)return;
 phase='deal';live=true;msg('');lastBets=seats.map((s,k)=>k===BOT?0:s.bet);S.click();
@@ -1070,7 +1084,7 @@ cur=null;bjRender();bjBtns();
 /* çip animasyonu: kazanan koltuğa raftan çipler gelir, kaybeden bahis rafa gider */
 anim.forEach((a,i)=>{const sp=spotPos(a.k);if(a.win>0)flyChips(RACK,sp,Math.min(4,1+Math.floor(a.win/Math.max(1,maxBet))),i*150,fmtA(a.win));else if(a.lose)flyChips(sp,RACK,1,i*150,'')});
 if(anim.length)await wait(1250);
-setChips(chips+ret);saveBot();live=false;seats.forEach(s=>{s.bet=0;s.ins=0});bjRender();bjBtns();
+setChips(chips+ret);saveBot();live=false;seats.forEach(s=>{s.bet=0;s.ins=0;if(s.owner==='me')s.owner=null});bjRender();bjBtns();renderSeats();
 $('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'Krupiye '+d;
 msg(net>0?'Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));
 if(net===0&&seats.some((s,k)=>k!==BOT&&s.hands.length))say('push',200);
