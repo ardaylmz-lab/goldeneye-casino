@@ -193,8 +193,8 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .bchip span{position:relative;z-index:1}
 .hands{position:absolute;left:0;top:0;width:0;height:0}
 .hand{position:absolute;left:0;top:0;width:0;height:0}
-.cs{position:absolute;left:-16px;top:-22px}
-.hsum{position:absolute;left:-18px;width:36px;text-align:center;font-size:.58rem;font-weight:800;color:#fff;background:#000a;border-radius:8px;padding:1px 0;letter-spacing:.5px}
+.cs{position:absolute;left:0;top:0}
+.hsum{position:absolute;width:40px;text-align:center;font-size:.58rem;font-weight:800;color:#fff;background:#000a;border-radius:8px;padding:1px 0;letter-spacing:.5px}
 .hsum.on{background:var(--gold);color:#1a1000}.hsum.bust{background:#c40018;color:#fff}.hsum.bj{background:#ffd23f;color:#1a1000}
 .badge{position:absolute;left:-34px;top:31px;width:64px;text-align:center;font-size:.55rem;font-weight:900;letter-spacing:.3px;padding:2px 0;border-radius:8px;color:#fff;background:#000c;animation:rpop .35s cubic-bezier(.2,1.6,.4,1);white-space:nowrap}
 .bchip.bot{background:repeating-conic-gradient(from -11.25deg,#e8f0ff 0 22.5deg,#1e63d6 22.5deg 45deg);color:#fff}
@@ -954,7 +954,7 @@ SEATS.forEach(th=>{const d=document.createElement('div');d.className='stool';d.s
 {const d=document.createElement('div');d.className='stool dc';d.style.left=(9+BJC.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i>';$('stools').appendChild(d)}
 new ResizeObserver(bjFit).observe($('bjwrap'));bjFit();
 SEATS.forEach((th,k)=>{const d=document.createElement('div');d.className='seat';d.style.transform='translate('+(BJC.x+RS*Math.cos(th)).toFixed(1)+'px,'+(BJC.y+RS*Math.sin(th)).toFixed(1)+'px)';
-d.innerHTML='<div class="hands" style="transform:translate('+((RC-RS)*Math.cos(th)).toFixed(1)+'px,'+((RC-RS)*Math.sin(th)).toFixed(1)+'px) rotate('+(th*180/Math.PI-90).toFixed(1)+'deg)"></div><div class="spot"><small>'+(k+1)+'</small></div>'+(k===BOT?'<div class="btag"><i>M</i><span></span></div>':'')+'<div class="bd"></div>';if(k===BOT)d.classList.add('botseat');
+d.innerHTML='<div class="hands" style="transform:translateY(-49px)"></div><div class="spot"><small>'+(k+1)+'</small></div>'+(k===BOT?'<div class="btag"><i>M</i><span></span></div>':'')+'<div class="bd"></div>';if(k===BOT)d.classList.add('botseat');
 d.querySelector('.spot').onclick=()=>placeBet(k);$('seats').appendChild(d)});
 const spotPos=k=>({x:BJC.x+RS*Math.cos(SEATS[k]),y:BJC.y+RS*Math.sin(SEATS[k])});
 /* çip uçuşu: raftan koltuğa (ödeme) veya koltuktan rafa (kayıp) */
@@ -964,8 +964,9 @@ function card(c,hid,nw,fl){const cls='c'+(hid?' h':/[♥♦]/.test(c)?' r':'')+(
 function bjRender(){seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
 el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip'+(s.bot?' bot':'')+'"><span>'+fmtA(s.bet)+'</span></div>':'<small>'+(s.bot?BOTNAME:(k+1))+'</small>';
 if(s.bot)el.querySelector('.btag span').textContent=(cur&&cur.s===BOT&&phase==='play')?'düşünüyor…':fmtE(botBank);
-el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,v=val(h.cards),on=cur&&cur.s===k&&cur.h===j;
-return '<div class="hand" style="transform:translateX('+((j-(n-1)/2)*46)+'px)">'+h.cards.map((c,i)=>'<div class="cs" style="transform:translateY('+(-i*15)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(h.cards.length?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="top:-12px;left:'+((n===2&&j===1)?20:-56)+'px">'+(h.bj?'BJ':v.t)+(h.dbl?' ·2x':'')+'</div>':'')+'</div>'}).join('');
+/* her el kendi bahsinin üstünde, kartlar sağa-yukarı yelpaze (14px/-6px), bölünmüş eller yan yana (60px), toplam etiketi yelpazenin altında */
+el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,m=h.cards.length,v=val(h.cards),on=cur&&cur.s===k&&cur.h===j,st=m>=4?12:14,fw=32+st*(m-1),x0=-fw/2;
+return '<div class="hand" style="transform:translateX('+((j-(n-1)/2)*60)+'px)">'+h.cards.map((c,i)=>'<div class="cs" style="transform:translate('+(x0+i*st)+'px,'+(-44-i*6)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(m?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="left:-20px;top:3px">'+(h.bj?'BJ':v.t)+(h.dbl?'·2x':'')+'</div>':'')+'</div>'}).join('');
 s.hands.forEach(h=>h.shown=h.cards.length);
 el.querySelector('.bd').innerHTML=s.badge?'<div class="badge '+s.badge.c+'">'+s.badge.t+'</div>':(s.ins>0?'<div class="badge ins">SİGORTA '+fmtA(s.ins)+'</div>':'')});
 $('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&dflip)).join('');dshown=dealerH.length;dflip=false;
