@@ -67,3 +67,44 @@ do $$ begin
     alter publication supabase_realtime add table public.profiles;
   end if;
 end $$;
+
+-- ===== Faz 2a: ortak koltuklar (kim hangi masada nerede oturuyor) =====
+create table if not exists public.seats (
+  game text not null,
+  seat int not null,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null,
+  since timestamptz not null default now(),
+  primary key (game, seat),
+  unique (game, user_id)
+);
+alter table public.seats enable row level security;
+drop policy if exists "seats: herkes okur" on public.seats;
+create policy "seats: herkes okur" on public.seats for select to authenticated using (true);
+
+-- Koltuğa otur: aynı masadaki eski koltuğunu bırakır, boşsa yeni koltuğa oturur. true = oturdu
+create or replace function public.take_seat(p_game text, p_seat int)
+returns boolean language plpgsql security definer set search_path = public as $$
+declare n text;
+begin
+  if auth.uid() is null then raise exception 'oturum yok'; end if;
+  select name into n from public.profiles where id = auth.uid();
+  delete from public.seats where game = p_game and user_id = auth.uid();
+  insert into public.seats (game, seat, user_id, name) values (p_game, p_seat, auth.uid(), coalesce(n,'Oyuncu'))
+  on conflict (game, seat) do nothing;
+  return exists (select 1 from public.seats where game = p_game and seat = p_seat and user_id = auth.uid());
+end $$;
+grant execute on function public.take_seat(text, int) to authenticated;
+
+create or replace function public.leave_seat(p_game text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  delete from public.seats where game = p_game and user_id = auth.uid();
+end $$;
+grant execute on function public.leave_seat(text) to authenticated;
+
+do $$ begin
+  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='seats') then
+    alter publication supabase_realtime add table public.seats;
+  end if;
+end $$;

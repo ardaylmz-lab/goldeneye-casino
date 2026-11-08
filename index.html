@@ -202,6 +202,14 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .btag{position:absolute;left:-44px;top:31px;width:88px;text-align:center;font-size:.5rem;font-weight:800;color:#ffe9a8;letter-spacing:.3px;white-space:nowrap;text-shadow:0 1px 2px #000}
 .btag i{display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,#ff7ae6,#7b3fe4);color:#fff;font-style:normal;font-size:.48rem;margin-right:3px;vertical-align:-2px}
 .seat.botseat .badge{top:46px}
+.stool{pointer-events:auto;cursor:pointer}.stools{pointer-events:none}
+.stool .plate{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:6px;padding:2px 8px;border-radius:8px;background:#000b;color:#ffe9a8;font-size:.52rem;font-weight:800;letter-spacing:.5px;white-space:nowrap;text-shadow:0 1px 2px #000}
+.stool .plate small{display:block;font-size:.42rem;letter-spacing:2px;color:#ffd23f;opacity:.9}.stool .plate:empty{display:none}
+.stool.taken{box-shadow:0 0 0 3px #3a2a1a,0 0 0 5px #15100a,0 0 16px #ffd23f66,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
+.stool.mine{box-shadow:0 0 0 3px #ffd23f,0 0 0 5px #15100a,0 0 18px #ffd23f99,0 8px 14px #000b,inset 0 2px 5px #fff3,inset 0 -3px 6px #0008}
+.stool .dname{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-family:"Cinzel",Georgia,serif;font-size:.5rem;letter-spacing:2px;color:#ffe9a8;text-shadow:0 1px 2px #000;line-height:1.1}
+.stool .dname small{display:block;font-family:Montserrat,sans-serif;font-size:.36rem;letter-spacing:1.5px;color:#c9971a}
+.seat.taken .spot{border-style:solid;border-color:#ffd23f55;cursor:default}.seat.taken .spot small{font-size:.45rem;color:#ffd23fcc}
 .badge.win{background:#1a9a4a}.badge.lose{background:#8a0010}.badge.push{background:#444}.badge.bj{background:#ffd23f;color:#1a1000}
 .c{position:relative;width:32px;height:44px;border-radius:4px;background:linear-gradient(160deg,#fff,#eee9dc);color:#111;border:1px solid #cfc8b8;box-shadow:0 3px 6px #000a,inset 0 1px 0 #fff;font-weight:900;font-size:.72rem;line-height:1;backface-visibility:hidden}
 .c b{position:absolute;left:3px;top:3px}.c span{position:absolute;right:3px;bottom:2px;font-size:.85rem}.c i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-style:normal;font-size:1.05rem;opacity:.9}
@@ -622,7 +630,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="res" id="bjres"></div>
 <div class="insbar hide" id="insbar"><span>Krupiyede As. Sigorta? Bahsin yarısı, blackjack çıkarsa 2:1 öder.</span><button id="insyes" class="on">Sigorta al</button><button id="insno">Hayır</button></div>
 <div class="row" id="bjbtns"><button class="go" id="deal">🃏 DAĞIT</button><button id="hit">Çek</button><button id="stand">Dur</button><button id="dbl">2x</button><button id="spl">Böl</button><button id="bjrebet">Tekrarla</button><button id="bjclear">Bahisleri temizle</button></div>
-<div class="lbl">Seçili çipi 1. ve 2. koltuğa dokunarak koy; 3. koltukta sanal oyuncu Mira kendi kasasıyla oynar. Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
+<div class="lbl">Bir sandalyeye dokunup otur, sonra seçili çipi kendi koltuğuna koy. Krupiye: Mira. Blackjack 3:2 · Krupiye 17'de durur · 2x: bahsi ikiye katla, tek kart · Böl: aynı iki kartı iki ele ayır</div>
 </div>
 
 <div id="msg"></div>
@@ -967,11 +975,20 @@ const sum=h=>val(h).t,rk=c=>c.slice(0,-1);
 const SEATS=[52,90,128].map(d=>d*Math.PI/180),BJC={x:170,y:105},RS=152,RC=90,RACK={x:170,y:112};
 const seats=SEATS.map(()=>({bet:0,ins:0,hands:[],badge:null}));let dealerH=[],hole=true,phase='bet',cur=null,lastBets=null,dshown=0,dflip=false;
 /* sanal oyuncu: Mira, 3. koltuk, kendi kasası (sizin bakiyenizden bağımsız) */
-const BOT=2,BOTNAME='MİRA';let botBank=2500;try{const v=+localStorage.getItem('ge_bot');if(v>0)botBank=v}catch(e){}const saveBot=()=>{try{localStorage.setItem('ge_bot',botBank)}catch(e){}};seats[BOT].bot=true;
+const BOT=-1,BOTNAME='';let botBank=0;const saveBot=()=>{}; /* sanal oyuncu kaldırıldı; krupiye: Mira */
 function bjFit(){const w=$('bjwrap').clientWidth;if(w)$('bjwrap').style.setProperty('--s',w/340)}
 /* tabureler: korkuluğun dışında, rail'in altında kalır */
-SEATS.forEach(th=>{const d=document.createElement('div');d.className='stool';d.style.left=(9+BJC.x+228*Math.cos(th)).toFixed(1)+'px';d.style.top=(9+BJC.y+228*Math.sin(th)).toFixed(1)+'px';d.innerHTML='<i style="--a:'+(th*180/Math.PI-90).toFixed(1)+'deg"></i>';$('stools').appendChild(d)});
-{const d=document.createElement('div');d.className='stool dc';d.style.left=(9+BJC.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i>';$('stools').appendChild(d)}
+SEATS.forEach((th,k)=>{const d=document.createElement('div');d.className='stool';d.dataset.k=k;d.style.left=(9+BJC.x+228*Math.cos(th)).toFixed(1)+'px';d.style.top=(9+BJC.y+228*Math.sin(th)).toFixed(1)+'px';d.innerHTML='<i style="--a:'+(th*180/Math.PI-90).toFixed(1)+'deg"></i><b class="plate"></b>';d.onclick=()=>seatTap(k);$('stools').appendChild(d)});
+/* ortak koltuklar: bulutta kim nerede oturuyor (SEATMAP[k]={user_id,name}); bulut kapalıysa herkes her koltuğa oynar */
+let SEATMAP={},mySeat=-1;
+function seatAllowed(k){if(!CLOUD||!window.cloud||!cloud.me())return true;if(mySeat===k)return true;const o=SEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return false}msg('Önce bir sandalyeye dokunup otur');return false}
+function seatTap(k){if(!CLOUD||!window.cloud||!cloud.me()){msg('Koltuklar için giriş gerekli');return}if(phase!=='bet'&&phase!=='settle'){msg('El bitince');return}
+if(mySeat===k){cloud.leaveSeat('bj');return}const o=SEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return}cloud.takeSeat('bj',k)}
+function renderSeats(){const me=window.cloud&&cloud.me();mySeat=-1;Object.entries(SEATMAP).forEach(([k,o])=>{if(me&&o.user_id===me.id)mySeat=+k});
+document.querySelectorAll('#stools .stool[data-k]').forEach(d=>{const k=+d.dataset.k,o=SEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeat===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeat===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'')});
+$('seats').querySelectorAll('.seat').forEach((el,k)=>{const o=SEATMAP[k];el.classList.toggle('taken',!!o&&mySeat!==k);el.querySelector('.spot small').textContent=o&&mySeat!==k?o.name:(k+1)})}
+window.applySeats=rows=>{SEATMAP={};rows.forEach(r=>{if(r.game==='bj')SEATMAP[r.seat]=r});renderSeats()};renderSeats();
+{const d=document.createElement('div');d.className='stool dc';d.style.left=(9+BJC.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">MİRA<small>KRUPİYE</small></b>';$('stools').appendChild(d)}
 new ResizeObserver(bjFit).observe($('bjwrap'));bjFit();
 SEATS.forEach((th,k)=>{const d=document.createElement('div');d.className='seat';d.style.transform='translate('+(BJC.x+RS*Math.cos(th)).toFixed(1)+'px,'+(BJC.y+RS*Math.sin(th)).toFixed(1)+'px)';
 d.innerHTML='<div class="hands" style="transform:translateY(-49px)"></div><div class="spot"><small>'+(k+1)+'</small></div>'+(k===BOT?'<div class="btag"><i>M</i><span></span></div>':'')+'<div class="bd"></div>';if(k===BOT)d.classList.add('botseat');
@@ -996,15 +1013,14 @@ function canSplit(h,bank){if(bank===undefined)bank=chips;return !!h&&h.cards.len
 function bjBtns(){const h=curHand(),mine=h&&cur.s!==BOT,anyBet=seats.some((s,k)=>k!==BOT&&s.bet>0);$('deal').disabled=phase!=='bet'||!anyBet;$('insyes').disabled=$('insyes').disabled&&phase==='insure';$('hit').disabled=!mine;$('stand').disabled=!mine;$('dbl').disabled=!mine||h.cards.length!==2||chips<h.bet;$('spl').disabled=!mine||!canSplit(h);
 $('bjclear').disabled=phase!=='bet'||!anyBet;$('bjrebet').disabled=!(phase==='bet'||phase==='settle')||!lastBets||anyBet}
 function bjClearTable(){seats.forEach(s=>{s.hands=[];s.badge=null;s.ins=0});dealerH=[];hole=true;dshown=0;$('bjres').textContent='';if(phase==='settle')phase='bet'}
-function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(k===BOT){msg('Bu koltukta '+BOTNAME+' oturuyor');return}if(phase==='settle')bjClearTable();
+function placeBet(k){if(busy||phase==='deal'||phase==='play'||phase==='dealer'||phase==='insure')return;if(!seatAllowed(k))return;if(phase==='settle')bjClearTable();
 if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);seats[k].bet+=bet;S.chip();msg('');bjRender();bjBtns()}
 $('bjclear').onclick=()=>{if(phase!=='bet')return;let t=0;seats.forEach((s,k)=>{if(k===BOT)return;t+=s.bet;s.bet=0});if(t)S.chip();setChips(chips+t);bjRender();bjBtns()};
 $('bjrebet').onclick=()=>{if(!(phase==='bet'||phase==='settle')||!lastBets)return;if(phase==='settle')bjClearTable();let put=false;lastBets.forEach((b,k)=>{if(k!==BOT&&b>0&&chips>=b&&seats[k].bet===0){setChips(chips-b);seats[k].bet=b;put=true}});if(put)S.chip();bjRender();bjBtns()};
 function nextHand(){for(let k=0;k<seats.length;k++){const s=seats[k];for(let j=0;j<s.hands.length;j++)if(!s.hands[j].done)return{s:k,h:j}}return null}
 async function bjDeal(){if(phase!=='bet'||busy)return;const act=seats.map((s,k)=>k!==BOT&&s.bet>0?k:-1).filter(k=>k>=0);if(!act.length)return;
 phase='deal';live=true;msg('');lastBets=seats.map((s,k)=>k===BOT?0:s.bet);S.click();
-/* Mira da masaya oturur */
-if(botBank<10){botBank=1000;msg(BOTNAME+' kasasını yeniledi')}const bb=[10,25,50].filter(v=>v<=botBank);seats[BOT].bet=bb[rnd(bb.length)];botBank-=seats[BOT].bet;saveBot();act.push(BOT);S.chip();
+
 seats.forEach(s=>{s.hands=[];s.badge=null});act.forEach(k=>seats[k].hands=[{cards:[],bet:seats[k].bet,shown:0,done:false,dbl:false,split:false,bj:false}]);dealerH=[];hole=true;dshown=0;$('bjres').textContent='';bjBtns();bjRender();
 for(let r=0;r<2;r++){for(const k of act){seats[k].hands[0].cards.push(draw());S.card();bjRender();await wait(190)}dealerH.push(draw());S.card();bjRender();await wait(190)}
 act.forEach(k=>{const h=seats[k].hands[0];if(sum(h.cards)===21){h.bj=true;h.done=true}});bjRender();if(act.some(k=>seats[k].hands[0].bj))say('bj',200);
@@ -1115,8 +1131,14 @@ sb.channel('profile:'+me.id).on('postgres_changes',{event:'UPDATE',schema:'publi
 /* lobi: kim çevrimiçi */
 lobby=sb.channel('lobby',{config:{presence:{key:me.id}}});
 lobby.on('presence',{event:'sync'},()=>{const st=lobby.presenceState();const names=Object.values(st).map(a=>a[0]&&a[0].name).filter(Boolean);$('online').innerHTML='<i></i>Çevrimiçi: '+names.join(' · ')}).subscribe(async s=>{if(s==='SUBSCRIBED')await lobby.track({name:prof.name,at:Date.now()})});
-window.cloud={sb,me:()=>me,profile:()=>prof};entering=false}
-async function leave(){if(pushT){clearTimeout(pushT);pushT=null;await push(chips)}try{if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}}catch(e){}await sb.auth.signOut();me=null;prof=null;try{localStorage.removeItem('ge_chips')}catch(e){}location.reload()}
+/* ortak koltuklar */
+async function loadSeats(){const {data}=await sb.from('seats').select('*');if(data&&window.applySeats)applySeats(data)}
+sb.channel('seats').on('postgres_changes',{event:'*',schema:'public',table:'seats'},()=>loadSeats()).subscribe();loadSeats();
+const takeSeat=async(game,k)=>{const {data,error}=await sb.rpc('take_seat',{p_game:game,p_seat:k});if(error){msg(/schema cache|seats|take_seat/.test(error.message)?'Koltuk tablosu kurulmamış: schema.sql çalıştırın':error.message);return}if(data===false)msg('Koltuk az önce alındı');else S.click();loadSeats()};
+const leaveSeat=async game=>{await sb.rpc('leave_seat',{p_game:game});S.click();loadSeats()};
+addEventListener('pagehide',()=>{try{sb.auth.getSession().then(({data})=>{const tk=data.session&&data.session.access_token;if(!tk)return;fetch(SUPA.url+'/rest/v1/rpc/leave_seat',{method:'POST',keepalive:true,headers:{'apikey':SUPA.key,'Authorization':'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({p_game:'bj'})})})}catch(e){}});
+window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};entering=false}
+async function leave(){try{await sb.rpc('leave_seat',{p_game:'bj'})}catch(e){}if(pushT){clearTimeout(pushT);pushT=null;await push(chips)}try{if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}}catch(e){}await sb.auth.signOut();me=null;prof=null;try{localStorage.removeItem('ge_chips')}catch(e){}location.reload()}
 $('logout').onclick=()=>{leave()};
 $('reset').addEventListener('click',()=>{if(me)push(10000)});
 sb.auth.onAuthStateChange((ev,session)=>{if(session&&!me)enter(session);else if(!session&&me){me=null}});
