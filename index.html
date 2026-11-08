@@ -1078,7 +1078,7 @@ pokerHand();setInterval(()=>pokerHand(),7000);
 <script type="module">
 /* ===== BULUT: Supabase Auth + profiller + ortak bakiye + lobi varlığı ===== */
 if(CLOUD){
-const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/+esm');
+const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm');
 const sb=createClient(SUPA.url,SUPA.key,{auth:{persistSession:true,autoRefreshToken:true}});
 let me=null,prof=null,pushT=null,lastPushed=null,applying=false,lobby=null;
 const err=t=>{$('aerr').textContent=t||''};
