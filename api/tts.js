@@ -29,7 +29,7 @@ const PHRASES = {
 };
 // Blackjack el toplamları (4–21) ve rulet sonuçları (renk + sayı) — yine sabit liste, serbest metin yok
 const WORDS = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
-const word = n => n <= 20 ? WORDS[n] : 'twenty-' + WORDS[n - 20];
+const word = n => n <= 20 ? WORDS[n] : n < 30 ? 'twenty-' + WORDS[n - 20] : n === 30 ? 'thirty' : 'thirty-' + WORDS[n - 30];
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 for (let n = 4; n <= 21; n++) PHRASES['n' + n] = cap(word(n)) + '.';
 const REDS = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];

@@ -1001,7 +1001,7 @@ function seatTap(k){if(!CLOUD||!window.cloud||!cloud.me()){msg('Koltuklar için 
 if(mySeat===k){cloud.leaveSeat('bj');return}const o=SEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return}cloud.takeSeat('bj',k)}
 function renderSeats(){const me=window.cloud&&cloud.me();mySeat=-1;Object.entries(SEATMAP).forEach(([k,o])=>{if(me&&o.user_id===me.id)mySeat=+k});
 document.querySelectorAll('#stools .stool[data-k]').forEach(d=>{const k=+d.dataset.k,o=SEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeat===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeat===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'')});
-$('seats').querySelectorAll('.seat').forEach((el,k)=>{const o=seats[k].owner;el.classList.toggle('taken',!!o&&o!=='me');el.classList.toggle('mine',o==='me');el.querySelector('.spot small').textContent=o&&o!=='me'?o:(k+1)})}
+$('seats').querySelectorAll('.seat').forEach((el,k)=>{const o=seats[k].owner;el.classList.toggle('taken',!!o&&o!=='me');el.classList.toggle('mine',o==='me');const sm=el.querySelector('.spot small');if(sm)sm.textContent=o&&o!=='me'?o:(k+1)})}
 window.applySeats=rows=>{SEATMAP={};rows.forEach(r=>{if(r.game==='bj')SEATMAP[r.seat]=r});renderSeats()};renderSeats();
 {const d=document.createElement('div');d.className='stool dc';d.style.left=(9+RACK.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">KRUPİYE</b>';$('stools').appendChild(d)}
 new ResizeObserver(bjFit).observe($('bjwrap'));bjFit();
@@ -1150,7 +1150,8 @@ sb.channel('profile:'+me.id).on('postgres_changes',{event:'UPDATE',schema:'publi
 lobby=sb.channel('lobby',{config:{presence:{key:me.id}}});
 lobby.on('presence',{event:'sync'},()=>{const st=lobby.presenceState();const names=Object.values(st).map(a=>a[0]&&a[0].name).filter(Boolean);$('online').innerHTML='<i></i>Çevrimiçi: '+names.join(' · ')}).subscribe(async s=>{if(s==='SUBSCRIBED')await lobby.track({name:prof.name,at:Date.now()})});
 /* ortak koltuklar */
-async function loadSeats(){const {data}=await sb.from('seats').select('*');if(data&&window.applySeats)applySeats(data)}
+async function loadSeats(){const {data}=await sb.from('seats').select('*');if(data&&window.applySeats)applySeats(data.filter(r=>Date.now()-new Date(r.since).getTime()<120000))}
+setInterval(()=>{if(me&&!$('bj').classList.contains('hide')&&mySeat>=0)sb.rpc('seat_heartbeat',{p_game:'bj'}).then(()=>{})},30000);setInterval(loadSeats,45000);
 sb.channel('seats').on('postgres_changes',{event:'*',schema:'public',table:'seats'},()=>loadSeats()).subscribe();loadSeats();
 const takeSeat=async(game,k)=>{const {data,error}=await sb.rpc('take_seat',{p_game:game,p_seat:k});if(error){msg(/schema cache|seats|take_seat/.test(error.message)?'Koltuk tablosu kurulmamış: schema.sql çalıştırın':error.message);return}if(data===false)msg('Koltuk az önce alındı');else S.click();loadSeats()};
 const leaveSeat=async game=>{await sb.rpc('leave_seat',{p_game:game});S.click();loadSeats()};
@@ -1158,9 +1159,9 @@ addEventListener('pagehide',()=>{try{sb.auth.getSession().then(({data})=>{const 
 window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};
 /* ===== ORTAK BLACKJACK (sunucu motoru: supabase/bj_engine.sql) ===== */
 {const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|bj_/.test(error.message)&&/find|exist/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
-let ST=null,myLast=null,revealing=false,lastCurKey='',lastPhase='',shownDealer=0,tickT=null,cdT=null;
+let ST=null,myLast=null,revealing=false,lastCurKey='',lastPhase='',shownDealer=0,shownRes=-1,tickT=null,cdT=null;
 const isMe=o=>!!o&&me&&o===me.id;
-function applyState(st){if(!st||!st.phase)return;const prev=ST;ST=st;
+function applyState(st){if(!st||!st.phase)return;const prev=ST;ST=st;window.BJST=st;
 /* yerel görünüm nesnelerini doldur (bjRender bunları çizer) */
 phase=st.phase;cur=st.cur||null;
 st.spots.forEach((sp,k)=>{const s=seats[k];const old=s.hands;s.bet=+sp.bet||0;s.ins=+sp.ins||0;s.owner=sp.owner?(isMe(sp.owner)?'me':sp.name):null;
@@ -1170,8 +1171,8 @@ if(st.phase==='bet')s.badge=null});
 let newCards=0;seats.forEach(s=>s.hands.forEach(h=>{newCards+=Math.max(0,h.cards.length-(h.shown||0))}));if(newCards)S.card();
 /* krupiye: açılış ve ardışık kartlar animasyonlu */
 const d=st.dealer||[];
-if(!prev||prev.round!==st.round||st.phase==='bet'){dealerH=d.slice(0,2).map(c=>c==='??'?'??':c);hole=d[1]==='??';dshown=0;shownDealer=Math.min(2,d.length)}
-if(st.phase==='settle'&&!revealing&&(hole||shownDealer<d.length))revealDealer(d);
+if(!prev||prev.round!==st.round||st.phase==='bet'){if(st.phase==='settle'&&d.length>=2){dealerH=[d[0],'??'];hole=true;shownDealer=1}else{dealerH=d.slice(0,2);hole=d[1]==='??';shownDealer=Math.min(2,d.length)}dshown=0;if(st.phase==='bet')$('bjres').textContent=''}
+if(st.phase==='settle'&&!revealing&&shownRes!==st.round){$('bjres').textContent='';revealDealer(d)}
 bjRender();renderSeats();cloud.bj.btns();
 /* anonslar: sıradaki elin toplamı */
 const ck=cur?cur.s+'-'+cur.h+'-'+(seats[cur.s].hands[cur.h]||{cards:[]}).cards.length:'';
@@ -1184,7 +1185,7 @@ lastPhase=st.phase;countdown()}
 async function revealDealer(d){revealing=true;await wait(500);if(hole){hole=false;dealerH=[d[0],d[1]];dflip=true;S.card();bjRender();shownDealer=2;const t=sum(dealerH);say(t===21&&d.length===2?'dbj':'n'+Math.min(21,t),250);await wait(900)}
 while(shownDealer<d.length){dealerH=d.slice(0,shownDealer+1);shownDealer++;S.card();bjRender();const t=sum(dealerH);say(t>21?'dbust':'n'+t,250);await wait(900)}
 revealing=false;showResults()}
-function showResults(){const st=ST;if(!st||st.phase!=='settle'||!st.results)return;const d=sum(dealerH),dbj=!!st.dealer_bj;let net=0,maxBet=0;const anim=[];
+function showResults(){const st=ST;if(!st||st.phase!=='settle'||!st.results)return;shownRes=st.round;const d=sum(dealerH),dbj=!!st.dealer_bj;let net=0,maxBet=0;const anim=[];
 st.results.forEach(r=>{const s=seats[r.spot];const n=+r.net,ins=+r.ins;const base=n-ins;const insx=ins?(' · Sig '+(ins>0?'+':'-')+fmtA(Math.abs(ins))):'';
 s.badge=r.bj&&n>0?{c:'bj',t:'BJ +'+fmtA(n)+insx}:n>0?{c:'win',t:'+'+fmtA(n)+insx}:n<0?{c:'lose',t:'-'+fmtA(-n)+insx}:{c:'push',t:'PUSH'+insx};
 if(isMe(r.owner)){net+=n;s.hands.forEach(h=>maxBet=Math.max(maxBet,h.bet));anim.push({k:r.spot,win:Math.max(0,n),lose:n<0})}});

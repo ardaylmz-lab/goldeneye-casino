@@ -83,18 +83,27 @@ drop policy if exists "seats: herkes okur" on public.seats;
 create policy "seats: herkes okur" on public.seats for select to authenticated using (true);
 
 -- Koltuğa otur: aynı masadaki eski koltuğunu bırakır, boşsa yeni koltuğa oturur. true = oturdu
+-- Koltuğa otur. since = son nabız; 2 dakikadır nabız göndermeyen koltuk boş sayılır (telefon kapanmış olabilir)
 create or replace function public.take_seat(p_game text, p_seat int)
 returns boolean language plpgsql security definer set search_path = public as $$
 declare n text;
 begin
   if auth.uid() is null then raise exception 'oturum yok'; end if;
   select name into n from public.profiles where id = auth.uid();
+  delete from public.seats where game = p_game and seat = p_seat and since < now() - interval '2 minutes';
   delete from public.seats where game = p_game and user_id = auth.uid();
   insert into public.seats (game, seat, user_id, name) values (p_game, p_seat, auth.uid(), coalesce(n,'Oyuncu'))
   on conflict (game, seat) do nothing;
   return exists (select 1 from public.seats where game = p_game and seat = p_seat and user_id = auth.uid());
 end $$;
 grant execute on function public.take_seat(text, int) to authenticated;
+
+-- Nabız: masadayken 30 sn'de bir çağrılır
+create or replace function public.seat_heartbeat(p_game text)
+returns void language sql security definer set search_path = public as $$
+  update public.seats set since = now() where game = p_game and user_id = auth.uid();
+$$;
+grant execute on function public.seat_heartbeat(text) to authenticated;
 
 create or replace function public.leave_seat(p_game text)
 returns void language plpgsql security definer set search_path = public as $$
