@@ -75,7 +75,7 @@ background:linear-gradient(135deg,#3a0a0a,#160606 60%);border:2px solid var(--gd
 .wheelbox{--tilt:56deg;--d:4.2s;position:relative;z-index:2;width:300px;height:222px;margin:6px auto 12px;perspective:720px;perspective-origin:50% 8%}
 /* WebGL çark aktifken (.gl) CSS çark gizlenir */
 .wheelbox canvas{position:absolute;inset:0;width:100%;height:100%;display:none;z-index:1}
-.wheelbox.gl{width:100%;max-width:340px;height:auto;aspect-ratio:5/4}.wheelbox.gl canvas{display:block}.wheelbox.gl .w3d{display:none}
+.wheelbox.gl{width:100%;max-width:340px;height:auto;aspect-ratio:5/4;margin-bottom:16px}.wheelbox.gl::after{bottom:10px;height:30px}.wheelbox.gl canvas{display:block}.wheelbox.gl .w3d{display:none}
 .rres3d{position:absolute;right:6px;top:6px;z-index:3;width:44px;height:44px;border-radius:50%;display:none;place-items:center;font-size:1.15rem;font-weight:900;color:#fff;border:3px solid var(--gold);box-shadow:0 0 14px var(--gold),0 4px 10px #000c;text-shadow:0 1px 2px #000;animation:rpop .35s cubic-bezier(.2,1.6,.4,1)}
 .wheelbox.gl .rres3d.show{display:grid}
 @keyframes rpop{from{transform:scale(.4);opacity:0}}
@@ -814,7 +814,7 @@ renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();
 const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose();
-const cam=new THREE.PerspectiveCamera(34,5/4,.1,12);cam.position.set(0,2.1,1.92);cam.lookAt(0,-.09,0);
+const cam=new THREE.PerspectiveCamera(34,5/4,.1,12);cam.position.set(0,2.249,2.061);cam.lookAt(0,-0.28,0);
 let CW=0,CH=0;function fit(){const w=box.clientWidth,h=box.clientHeight;if(!w||!h||(w===CW&&h===CH))return;CW=w;CH=h;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
 const key=new THREE.DirectionalLight(0xfff1d6,2.3);key.position.set(1.2,2.8,1.6);key.castShadow=true;key.shadow.mapSize.set(1024,1024);
 {const c=key.shadow.camera;c.left=c.bottom=-1.2;c.right=c.top=1.2;c.near=.5;c.far=7;key.shadow.bias=-.0006;key.shadow.normalBias=.01}scene.add(key);
