@@ -1026,7 +1026,7 @@ d.querySelector('.spot').onclick=()=>placeBet(k);$('seats').appendChild(d)});
 const spotPos=k=>SPOTS[k];
 /* çip uçuşu: raftan koltuğa (ödeme) veya koltuktan rafa (kayıp) */
 function flyChips(from,to,n,delay,label){for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
-requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
+requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{if(!$('bj').classList.contains('hide'))S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
 function card(c,hid,nw,fl){const cls='c'+(hid?' h':/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':'');if(hid)return '<div class="'+cls+'"></div>';const r=c.slice(0,-1),su=c.slice(-1);return '<div class="'+cls+'"><b>'+r+'</b><i>'+su+'</i><span>'+su+'</span></div>'}
 function bjRender(){seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
 el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip'+(s.bot?' bot':'')+'"><span>'+fmtA(s.bet)+'</span></div>':'<small>'+(s.bot?BOTNAME:(k+1))+'</small>';
@@ -1175,6 +1175,7 @@ window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};
 /* ===== ORTAK BLACKJACK (sunucu motoru: supabase/bj_engine.sql) ===== */
 {const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|bj_/.test(error.message)&&/find|exist/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
 let ST=null,myLast=null,revealing=false,lastCurKey='',lastPhase='',shownDealer=0,shownRes=-1,tickT=null,cdT=null;
+const onBJ=()=>!$('bj').classList.contains('hide'); /* masa sesleri yalnız blackjack sayfası açıkken */
 const isMe=o=>!!o&&me&&o===me.id;
 function applyState(st){if(!st||!st.phase)return;const prev=ST;ST=st;window.BJST=st;
 /* yerel görünüm nesnelerini doldur (bjRender bunları çizer) */
@@ -1183,7 +1184,7 @@ st.spots.forEach((sp,k)=>{const s=seats[k];const old=s.hands;s.bet=+sp.bet||0;s.
 s.hands=(sp.hands||[]).map((h,j)=>({cards:h.cards.slice(),bet:+h.bet,done:!!h.done,dbl:!!h.dbl,split:!!h.split,bj:!!h.bj,shown:(old[j]&&old[j].cards.length<=h.cards.length)?old[j].shown:0}));
 if(st.phase==='bet')s.badge=null});
 /* yeni kart sesi */
-let newCards=0;seats.forEach(s=>s.hands.forEach(h=>{newCards+=Math.max(0,h.cards.length-(h.shown||0))}));if(newCards)S.card();
+let newCards=0;seats.forEach(s=>s.hands.forEach(h=>{newCards+=Math.max(0,h.cards.length-(h.shown||0))}));if(newCards&&onBJ())S.card();
 /* krupiye: açılış ve ardışık kartlar animasyonlu */
 const d=st.dealer||[];
 if(!prev||prev.round!==st.round||st.phase==='bet'){if(st.phase==='settle'&&d.length>=2){dealerH=[d[0],'??'];hole=true;shownDealer=1}else{dealerH=d.slice(0,2);hole=d[1]==='??';shownDealer=Math.min(2,d.length)}dshown=0;if(st.phase==='bet')$('bjres').textContent=''}
@@ -1191,22 +1192,22 @@ if(st.phase==='settle'&&!revealing&&shownRes!==st.round){$('bjres').textContent=
 bjRender();renderSeats();cloud.bj.btns();
 /* anonslar: sıradaki elin toplamı */
 const ck=cur?cur.s+'-'+cur.h+'-'+(seats[cur.s].hands[cur.h]||{cards:[]}).cards.length:'';
-if(st.phase==='play'&&ck!==lastCurKey){const h=cur&&seats[cur.s].hands[cur.h];if(h)sayHand(h,350)}lastCurKey=ck;
+if(onBJ()){if(st.phase==='play'&&ck!==lastCurKey){const h=cur&&seats[cur.s].hands[cur.h];if(h)sayHand(h,350)}
 if(st.phase==='insure'&&lastPhase!=='insure')say('ins',300);
-if(st.phase==='play'&&lastPhase!=='play'&&lastPhase!==''&&seats.some(s=>s.hands.some(h=>h.bj)))say('bj',100);
+if(st.phase==='play'&&lastPhase!=='play'&&lastPhase!==''&&seats.some(s=>s.hands.some(h=>h.bj)))say('bj',100)}lastCurKey=ck;
 if(st.phase==='insure'&&(st.ins_pending||[]).some(isMe))$('insbar').classList.remove('hide');else $('insbar').classList.add('hide');
 if(st.phase==='bet'&&lastPhase==='settle'){$('bjres').textContent=''}
 lastPhase=st.phase;countdown()}
-async function revealDealer(d){revealing=true;await wait(500);if(hole){hole=false;dealerH=[d[0],d[1]];dflip=true;S.card();bjRender();shownDealer=2;const t=sum(dealerH);say(t===21&&d.length===2?'dbj':'n'+Math.min(21,t),250);await wait(900)}
-while(shownDealer<d.length){dealerH=d.slice(0,shownDealer+1);shownDealer++;S.card();bjRender();const t=sum(dealerH);say(t>21?'dbust':'n'+t,250);await wait(900)}
+async function revealDealer(d){revealing=true;await wait(500);if(hole){hole=false;dealerH=[d[0],d[1]];dflip=true;if(onBJ())S.card();bjRender();shownDealer=2;const t=sum(dealerH);if(onBJ())say(t===21&&d.length===2?'dbj':'n'+Math.min(21,t),250);await wait(900)}
+while(shownDealer<d.length){dealerH=d.slice(0,shownDealer+1);shownDealer++;if(onBJ())S.card();bjRender();const t=sum(dealerH);if(onBJ())say(t>21?'dbust':'n'+t,250);await wait(900)}
 revealing=false;showResults()}
 function showResults(){const st=ST;if(!st||st.phase!=='settle'||!st.results)return;shownRes=st.round;const d=sum(dealerH),dbj=!!st.dealer_bj;let net=0,maxBet=0;const anim=[];
 st.results.forEach(r=>{const s=seats[r.spot];const n=+r.net,ins=+r.ins;const base=n-ins;const insx=ins?(' · Sig '+(ins>0?'+':'-')+fmtA(Math.abs(ins))):'';
 s.badge=r.bj&&n>0?{c:'bj',t:'BJ +'+fmtA(n)+insx}:n>0?{c:'win',t:'+'+fmtA(n)+insx}:n<0?{c:'lose',t:'-'+fmtA(-n)+insx}:{c:'push',t:'PUSH'+insx};
 if(isMe(r.owner)){net+=n;s.hands.forEach(h=>maxBet=Math.max(maxBet,h.bet));anim.push({k:r.spot,win:Math.max(0,n),lose:n<0})}});
-bjRender();anim.forEach((a,i)=>{const sp=spotPos(a.k);if(a.win>0)flyChips(RACK,sp,Math.min(4,1+Math.floor(a.win/Math.max(1,maxBet))),i*150,fmtA(a.win));else if(a.lose)flyChips(sp,RACK,1,i*150,'')});
+bjRender();if(onBJ())anim.forEach((a,i)=>{const sp=spotPos(a.k);if(a.win>0)flyChips(RACK,sp,Math.min(4,1+Math.floor(a.win/Math.max(1,maxBet))),i*150,fmtA(a.win));else if(a.lose)flyChips(sp,RACK,1,i*150,'')});
 $('bjres').textContent=dbj?'Krupiyede Blackjack':d>21?'Krupiye battı ('+d+')':'Krupiye '+d;
-if(anim.length){msg(net>0?'Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));if(net===0)say('push',200);if(net>0){if(net/Math.max(1,maxBet)>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}}
+if(anim.length){msg(net>0?'Kazandın +'+fmtE(net):net===0?'Başa baş':'Kaybettin -'+fmtE(-net));if(onBJ()){if(net===0)say('push',200);if(net>0){if(net/Math.max(1,maxBet)>=1.5)S.big();else S.win(4);celebrate(net)}else if(net<0)S.lose()}}}
 /* geri sayım ve zaman aşımı tetikleyici */
 function countdown(){clearInterval(cdT);cdT=setInterval(()=>{if(!ST||$('bj').classList.contains('hide'))return;const dl=ST.deadline?new Date(ST.deadline).getTime():0;const left=dl?Math.max(0,Math.ceil((dl-Date.now())/1000)):0;
 if(ST.phase==='bet'&&dl)$('bjres').textContent='Bahisler kapanıyor: '+left+' sn';
@@ -1224,7 +1225,7 @@ unbet:()=>rpc('bj_unbet').then(st=>{S.chip();applyState(st)}).catch(()=>{}),
 deal:()=>{myLast=seats.map(s=>s.owner==='me'?s.bet:0);rpc('bj_deal').then(st=>{S.click();applyState(st)}).catch(()=>{})},
 rebet:async()=>{if(!myLast)return;for(let k=0;k<6;k++)if(myLast[k]>0){try{applyState(await rpc('bj_bet',{p_spot:k,p_amount:myLast[k]}))}catch(e){break}}S.chip()},
 act:a=>rpc('bj_action',{p_act:a}).then(st=>{if(a==='stand')S.click();else S.chip();applyState(st)}).catch(()=>{}),
-insure:t=>{$('insbar').classList.add('hide');rpc('bj_insure',{p_take:t}).then(st=>{if(t)S.chip();applyState(st)}).catch(()=>{})}};
+insure:t=>{$('insbar').classList.add('hide');rpc('bj_insure',{p_take:t}).then(st=>{if(t)S.chip();applyState(st)}).catch(()=>{})},_apply:applyState};
 /* masa durumunu al ve dinle */
 sb.from('bj_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Blackjack motoru kurulmamış: supabase/bj_engine.sql çalıştırın');return}if(data&&data.state&&data.state.phase)applyState(data.state);else rpc('bj_tick').then(applyState).catch(()=>{})});
 sb.channel('bj_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'bj_table'},p=>applyState(p.new.state)).subscribe();
