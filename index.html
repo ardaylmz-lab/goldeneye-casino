@@ -176,11 +176,6 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .ln{display:inline-grid;place-items:center;min-width:30px;padding:2px 6px;margin:2px 3px;border-radius:7px;color:#fff;font-weight:900;line-height:1;box-shadow:0 0 0 1.5px #bfe6ff,0 0 10px #4fa8ff;animation:pop .4s cubic-bezier(.2,1.5,.4,1);vertical-align:middle}
 .ln.red{background:#c40018}.ln.black{background:#1b1b1f}.ln.green{background:#0a9d4a}
 .ln small{font-size:.48rem;color:#dff4ff;letter-spacing:.5px}
- /* dolly: kazanan sayının üstüne inen altın işaret */
-.dolly{position:absolute;left:50%;top:50%;width:14px;height:30px;margin:-24px 0 0 -7px;z-index:5;pointer-events:none;border-radius:7px 7px 3px 3px;background:linear-gradient(90deg,#7a5200,#d9a92a 35%,#fff0a8 50%,#d9a92a 65%,#7a5200);box-shadow:0 6px 6px #000b,inset 0 1px 0 #fff8;animation:dollyin .55s cubic-bezier(.2,1.4,.4,1)}
-.dolly::before{content:"";position:absolute;left:50%;top:-6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff6c0,#d9a92a 55%,#7a5200)}
-.dolly::after{content:"";position:absolute;left:50%;bottom:-3px;width:22px;height:6px;margin-left:-11px;border-radius:50%;background:radial-gradient(ellipse,#000a,#0000 70%)}
-@keyframes dollyin{0%{transform:translateY(-40px) scale(1.3);opacity:0}100%{transform:none;opacity:1}}
 #rlight.on{border-color:#4fa8ff;color:#dff4ff;box-shadow:0 3px 0 #0a2a5a,0 0 14px #4fa8ff88;background:linear-gradient(180deg,#1c3f7a,#0a1a3a)}
 #rlight svg{width:11px;height:13px;vertical-align:-2px;margin-right:4px}
 .rboard{position:relative;z-index:1;margin:4px 0 8px;padding:8px 10px 9px;border-radius:12px;text-align:left;background:linear-gradient(180deg,#0f4d2e,#083321 55%,#072a1a);border:2px solid #c9971a99;box-shadow:inset 0 2px 12px #000a,inset 0 0 0 1px #1d6b41,0 1px 0 #ffffff14,0 4px 14px #0008,0 0 16px #ffd23f22;overflow:hidden}
@@ -1308,10 +1303,7 @@ let LIGHT=true;try{LIGHT=localStorage.getItem('ge_light')!=='0'}catch(e){}
 let RL_L=null,noMoreSaid=false; /* bu turun şimşek sayıları {n:çarpan} (yerel mod) */
 function lightDraw(){const r=Math.random()*100,cnt=r<15?1:r<45?2:r<75?3:r<90?4:5,out={};while(Object.keys(out).length<cnt){const n=rnd(37);if(out[n])continue;const q=Math.random()*100;out[n]=q<55?50:q<79?100:q<90?200:q<96?300:q<99?400:500}return out}
 function payMult(k,n,L,on){if(k[0]==='n'&&k[1]===':'){if(!on)return 36;const m=L&&L[+k.slice(2)];return m?m+1:30}return mult(k)}
-function clearLight(){document.querySelectorAll('.tc.zap').forEach(e=>{e.classList.remove('zap');const b=e.querySelector('.zm');if(b)b.remove()});clearDolly()}
-/* dolly: krupiyenin kazanan sayıya koyduğu işaret; yeni tur başlayınca kalkar */
-function clearDolly(){document.querySelectorAll('.dolly').forEach(e=>e.remove())}
-function placeDolly(n){clearDolly();const c=document.querySelector('.tc[data-k="n:'+n+'"]');if(!c)return;const d=document.createElement('i');d.className='dolly';c.appendChild(d);if(onRL())try{S.hit()}catch(e){}}
+function clearLight(){document.querySelectorAll('.tc.zap').forEach(e=>{e.classList.remove('zap');const b=e.querySelector('.zm');if(b)b.remove()})}
 function markLight(n,m){const c=document.querySelector('.tc[data-k="n:'+n+'"]');if(!c||c.querySelector('.zm'))return;c.classList.add('zap');const b=document.createElement('b');b.className='zm';b.textContent='x'+m;c.appendChild(b)}
 const lightHtml=L=>L&&Object.keys(L).length?'<span class="lhead">ŞİMŞEK SAYILAR</span>'+Object.keys(L).map(Number).sort((a,b)=>L[a]-L[b]).map(n=>'<b class="ln '+rcol(n)+'">'+n+'<small>x'+L[n]+'</small></b>').join(''):'';
 function bolt(c){const r=c.getBoundingClientRect(),x=r.left+r.width/2,y1=Math.max(0,r.top-170),y2=r.top+r.height/2;const pts=[[x+(Math.random()*50-25),y1]];let y=y1;while(y<y2-16){y+=12+Math.random()*16;pts.push([x+(Math.random()*34-17),y])}pts.push([x,y2]);const P=pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
@@ -1344,7 +1336,7 @@ const fin=()=>{S.wheelStop();show(n);if(onRL())say('r'+n,250);busy=false;onDone(
 if(gl)RW.spin(i).then(fin);else setTimeout(fin,4200)}
 $('rspin').onclick=()=>{if(RLO())return cloud.rl.spin();if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya çip koy');return}
 msg('');lastRB=Object.assign({},RB);const n=rnd(37);busy=true;rBtns();RL_L=LIGHT?lightDraw():null;
-const finish=()=>{let w=0,ws=[];clearWon();placeDolly(n);const lm=RL_L&&RL_L[n],myStraight=RB['n:'+n]||0;for(const k in RB)if(wins(k,n)){const a=RB[k]*payMult(k,n,RL_L,LIGHT);w+=a;ws.push([k,a])}
+const finish=()=>{let w=0,ws=[];clearWon();const lm=RL_L&&RL_L[n],myStraight=RB['n:'+n]||0;for(const k in RB)if(wins(k,n)){const a=RB[k]*payMult(k,n,RL_L,LIGHT);w+=a;ws.push([k,a])}
 hist.unshift(n);hist=hist.slice(0,100);try{localStorage.setItem('ge_rh',JSON.stringify(hist))}catch(e){}lastNet=w-tot;
 clearBets();renderBoard();setChips(chips+w);rBtns();
 ws.forEach(x=>{const c=document.querySelector('.tc[data-k="'+x[0]+'"]');c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(x[1])+'</span>'});
@@ -1550,7 +1542,7 @@ if(st.phase==='spin'&&shownRound===st.round&&st.result!=null){const n=st.result;
 renderBoard();btns()}
 function showRL(st){shownRound=st.round;const n=st.result,res=st.results||[],mine=res.find(r=>isMe(r.user));lastNet=mine?+mine.net:null;const lm=st.lightning&&st.lightning[n];
 $('rres').innerHTML=lightHtml(st.lightning)+(res.length?'<div class="rres-list">'+res.map(r=>'<span>'+r.name+' <b class="'+(+r.net>0?'pos':+r.net<0?'neg':'')+'">'+(+r.net>0?'+':'')+fmtE(+r.net)+'</b></span>').join('')+'</div>':'Bu turda bahis yoktu');
-redraw();placeDolly(n);const myStraight=RB['n:'+n]||0;
+redraw();const myStraight=RB['n:'+n]||0;
 if(mine){const w=+mine.won,t=+mine.bet;msg((lm?'ŞİMŞEK x'+lm+' · ':'')+(w>t?'Sayı '+n+' · Kazandın +'+fmtE(w-t):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(t)));
 if(onRL()){if(lm&&myStraight){S.big();say(lm>=200?'epicwin':'megawin',900);celebrate(w-t);overlay('<h2 class="wt t5">ŞİMŞEK x'+lm+'</h2><div class="n">+'+fmtE(myStraight*(lm+1))+'</div><p>Sayı '+n+' şimşek sayısıydı</p>',3600,true)}else if(w>t){const x=(w-t)/Math.max(1,bet);if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-t)}else if(w===0)S.lose()}}else msg((lm?'ŞİMŞEK x'+lm+' · ':'')+'Sayı '+n)}
 function applyRL(st){if(!st||!st.phase)return;const prev=RST;RST=st;window.RLST=st;hist=(st.history||[]).slice();
@@ -1732,23 +1724,6 @@ for(let k=0;k<2;k++){const a=new THREE.Mesh(new THREE.CylinderGeometry(.011,.011
 tur.add(sph(.028,.18,.215,0));tur.add(sph(.028,-.18,.215,0));tur.add(sph(.028,0,.215,.18));tur.add(sph(.028,0,.215,-.18));tur.add(sph(.03,0,.235,0));
 /* --- masa düzlemi: görünmez, yalnız gölge alır (çanak ve çipler yeşil çuhaya gölge düşürür) --- */
 {const fl=new THREE.Mesh(new THREE.PlaneGeometry(8,8),new THREE.ShadowMaterial({opacity:.3}));fl.rotation.x=-Math.PI/2;fl.position.y=-.207;fl.receiveShadow=true;scene.add(fl)}
-/* --- çip yığınları: üstteki seçiciyle aynı renkler (CHIPCOL); seçili değerin yığını parlar, üst çipi hafifçe kalkar --- */
-function chipTex(v){const c=CHIPCOL[v]||CHIPCOL[5],S=256,cv=document.createElement('canvas');cv.width=S;cv.height=S;const x=cv.getContext('2d');
-x.fillStyle=c[0];x.beginPath();x.arc(S/2,S/2,S/2,0,Math.PI*2);x.fill();
-x.fillStyle=c[2];for(let i=0;i<8;i++){x.save();x.translate(S/2,S/2);x.rotate(i*Math.PI/4);x.fillRect(-17,-S/2,34,36);x.restore()}
-x.strokeStyle='rgba(0,0,0,.28)';x.lineWidth=3;x.beginPath();x.arc(S/2,S/2,S/2-38,0,Math.PI*2);x.stroke();
-x.fillStyle=c[2];x.beginPath();x.arc(S/2,S/2,S*.34,0,Math.PI*2);x.fill();x.strokeStyle=c[1];x.lineWidth=5;x.beginPath();x.arc(S/2,S/2,S*.34,0,Math.PI*2);x.stroke();
-x.fillStyle=c[1];x.font='900 '+(String(v).length>2?60:78)+'px Montserrat, Arial, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(v).replace('.',','),S/2,S/2+5);
-const top=new THREE.CanvasTexture(cv);top.colorSpace=THREE.SRGBColorSpace;top.anisotropy=4;
-const sc=document.createElement('canvas');sc.width=512;sc.height=32;const y=sc.getContext('2d');y.fillStyle=c[0];y.fillRect(0,0,512,32);y.fillStyle=c[2];for(let i=0;i<8;i++)y.fillRect(i*64+20,0,24,32);
-const side=new THREE.CanvasTexture(sc);side.colorSpace=THREE.SRGBColorSpace;return{top,side}}
-const CHR=.06,CHH=.011,chipGeo=new THREE.CylinderGeometry(CHR,CHR,CHH,48),stacks=[],MATC={};
-function matsFor(v){if(MATC[v])return MATC[v];const tx=chipTex(v),side=new THREE.MeshStandardMaterial({map:tx.side,roughness:.45}),top=new THREE.MeshStandardMaterial({map:tx.top,roughness:.4});return MATC[v]={side,top,arr:[side,top,top]}}
-function mkChip(v){const m=new THREE.Mesh(chipGeo,matsFor(v).arr);m.castShadow=true;m.receiveShadow=true;return m}
-[[2.5,-.74,.82,6],[5,-.6,.93,9],[10,-.47,.97,4],[25,.47,.97,7],[50,.6,.93,5],[100,.74,.82,8]].forEach(([v,x,z,n])=>{const g=new THREE.Group();g.position.set(x,-.207,z);const rot=Math.random()*Math.PI*2,chips=[];
-for(let k=0;k<n;k++){const m=mkChip(v);m.position.set((Math.random()-.5)*.007,CHH/2+k*CHH,(Math.random()-.5)*.007);m.rotation.y=rot+(Math.random()-.5)*.7;g.add(m);chips.push(m)}
-scene.add(g);stacks.push({v,g,chips,lift:0,m:matsFor(v)})});
-[[-.35,.99,5,.3],[.35,1.0,25,-.5]].forEach(([x,z,v,ry])=>{const m=mkChip(v);m.position.set(x,-.207+CHH/2,z);m.rotation.y=ry;scene.add(m)});
 /* --- top --- */
 const ball=new THREE.Mesh(new THREE.SphereGeometry(BR,32,24),ivory);ball.castShadow=true;scene.add(ball);
 const ghosts=[],trail=[];for(let q=0;q<6;q++){const g=new THREE.Mesh(new THREE.SphereGeometry(BR*(.92-q*.1),16,12),new THREE.MeshBasicMaterial({color:0xfff3d6,transparent:true,opacity:0,depthWrite:false}));scene.add(g);ghosts.push(g)}
@@ -1794,9 +1769,6 @@ ball.position.set(r*Math.sin(phi),surfY(r)+BR+hop,r*Math.cos(phi));
 /* iz: hızlıyken geride sönen hayaletler */
 {trail.push(ball.position.clone());if(trail.length>14)trail.shift();const sp=trail.length>2?trail[trail.length-1].distanceTo(trail[trail.length-2])/Math.max(dt,.001):0;const f=Math.min(1,Math.max(0,(sp-1.2)/3.5));
 ghosts.forEach((g,q)=>{const idx=trail.length-2-q*2;if(idx>=0&&f>0){g.position.copy(trail[idx]);g.material.opacity=f*(.32-q*.05)}else g.material.opacity=0})}
-/* seçili çip yığını: altın parıltı, üst çip hafifçe kalkıp iner */
-{const cur=(typeof bet!=='undefined')?bet:10;stacks.forEach(s=>{const on=s.v===cur,em=on?.2:0;if(s.m.top.emissiveIntensity!==em){s.m.top.emissive.set(0xffd23f);s.m.top.emissiveIntensity=em;s.m.side.emissive.set(0xffd23f);s.m.side.emissiveIntensity=em*.5}
-const want=on?.02+.006*Math.sin(now*2.4):0;s.lift+=(want-s.lift)*(1-Math.exp(-dt*6));const tp=s.chips[s.chips.length-1];tp.position.y=CHH/2+(s.chips.length-1)*CHH+s.lift})}
 /* kazanan cep ışığı */
 {const a=now-glowT;glow.material.opacity=a<4.5?Math.max(0,(.5+.25*Math.sin(now*7))*(1-a/4.5)):0}
 /* kamera hedefi ve mesafesi */
