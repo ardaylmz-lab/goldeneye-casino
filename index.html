@@ -163,6 +163,21 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc .om span{position:relative}
 .rres-list{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;font-size:.8rem}
 .rres-list b.pos{color:#4de08a}.rres-list b.neg{color:#ff5a6a}
+/* ===== ŞİMŞEK RULET: masa kararır, şimşek seçilen sayılara düşer, çarpan rozeti kalır ===== */
+.tbl.storm{filter:brightness(.6) saturate(.8);transition:filter .35s}
+.tbl.storm .tc.zap{filter:brightness(1.75)}
+.tc.zap{border-color:#dff4ff;box-shadow:0 0 0 2px #bfe6ff,0 0 18px #4fa8ff,0 0 30px #4fa8ff88,inset 0 0 12px #bfe6ff66;z-index:3;animation:zapin .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes zapin{0%{transform:scale(1.25);box-shadow:0 0 0 6px #fff,0 0 40px #fff}100%{transform:none}}
+.tc .zm{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);z-index:3;font-size:.5rem;font-weight:900;letter-spacing:.3px;color:#06101f;padding:1px 5px;border-radius:6px;background:linear-gradient(180deg,#ffffff,#bfe6ff 50%,#4fa8ff);box-shadow:0 0 8px #4fa8ff,0 1px 2px #000a;white-space:nowrap;text-shadow:none}
+.tc.zap.won{border-color:#fff;box-shadow:0 0 0 2px var(--gold),0 0 22px #fff,0 0 44px #4fa8ff;animation:pl .4s ease-in-out infinite alternate}
+.bolt{animation:boltf .48s ease-out forwards}@keyframes boltf{0%{opacity:0}8%{opacity:1}55%{opacity:1}100%{opacity:0}}
+.lflash{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#dff4ff,#4fa8ff66 60%,#0000);pointer-events:none;z-index:69;animation:lflash .42s ease-out forwards}@keyframes lflash{0%{opacity:.7}100%{opacity:0}}
+.lhead{display:block;font-size:.6rem;letter-spacing:3px;color:#bfe6ff;text-shadow:0 0 8px #4fa8ff;margin-bottom:4px}
+.ln{display:inline-grid;place-items:center;min-width:30px;padding:2px 6px;margin:2px 3px;border-radius:7px;color:#fff;font-weight:900;line-height:1;box-shadow:0 0 0 1.5px #bfe6ff,0 0 10px #4fa8ff;animation:pop .4s cubic-bezier(.2,1.5,.4,1);vertical-align:middle}
+.ln.red{background:#c40018}.ln.black{background:#1b1b1f}.ln.green{background:#0a9d4a}
+.ln small{font-size:.48rem;color:#dff4ff;letter-spacing:.5px}
+#rlight.on{border-color:#4fa8ff;color:#dff4ff;box-shadow:0 3px 0 #0a2a5a,0 0 14px #4fa8ff88;background:linear-gradient(180deg,#1c3f7a,#0a1a3a)}
+#rlight svg{width:11px;height:13px;vertical-align:-2px;margin-right:4px}
 .rboard{position:relative;z-index:1;margin:4px 0 8px;padding:8px 10px 9px;border-radius:12px;text-align:left;background:linear-gradient(180deg,#0f4d2e,#083321 55%,#072a1a);border:2px solid #c9971a99;box-shadow:inset 0 2px 12px #000a,inset 0 0 0 1px #1d6b41,0 1px 0 #ffffff14,0 4px 14px #0008,0 0 16px #ffd23f22;overflow:hidden}
 .rboard::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0 2px,#ffffff04 2px 3px),radial-gradient(ellipse at 50% 0,#ffffff10,#fff0 60%);pointer-events:none}
 .rboard small{font-size:.5rem;letter-spacing:2px;color:#ffd23f;opacity:.85;font-weight:700;white-space:nowrap}
@@ -852,8 +867,8 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="rboard" id="rhist"></div>
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
-<div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button></div>
-<div class="lbl">Bir sandalyeye dokunup otur; seçili çipi kutulara, iki sayının arasına (ikili 17:1) ya da dört sayının köşesine (dörtlü 8:1) koy. İlk bahisle 15 sn geri sayım başlar, ÇEVİR hemen çevirir. Sayı 35:1 · 12'li ve sütun 2:1 · diğerleri 1:1</div>
+<div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button><button id="rlight">ŞİMŞEK</button></div>
+<div class="lbl">Bir sandalyeye dokunup otur; seçili çipi kutulara, iki sayının arasına (ikili 17:1) ya da dört sayının köşesine (dörtlü 8:1) koy. İlk bahisle 15 sn geri sayım başlar, ÇEVİR hemen çevirir. <span id="rlbl"></span></div>
 </div>
 
 <div class="panel hide" id="bj">
@@ -1279,34 +1294,57 @@ if(c<5&&n<=33)mz('co:'+n+'-'+(n+1)+'-'+(n+3)+'-'+(n+4),[n,n+1,n+3,n+4],r,c,2,2)}
 [1,2,3].forEach(n=>mz('sp:0-'+n,[0,n],1,2+n,2,0));
 function mark(k){const e=document.querySelector('[data-k="'+k+'"] em');if(e)e.innerHTML=RB[k]?'<span>'+fmtA(RB[k])+'</span>':''}
 const RLO=()=>!!(window.cloud&&cloud.me&&cloud.me()&&cloud.rl); /* ortak rulet masası aktif mi */
-function pbet(k){if(RLO()){if(mySeatR<0){msg('Önce bir sandalyeye dokunup otur');return}cloud.rl.bet(k,bet);return}if(busy)return;clearWon();if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('');renderBoard();S.chip();rBtns()}
+function pbet(k){if(RLO()){if(mySeatR<0){msg('Önce bir sandalyeye dokunup otur');return}cloud.rl.bet(k,bet);return}if(busy)return;clearWon();clearLight();if(chips<bet){msg('Yetersiz bakiye, bahsi düşür!');return}setChips(chips-bet);RB[k]=(RB[k]||0)+bet;mark(k);msg('');renderBoard();S.chip();rBtns()}
 function wins(k,n){if(k.startsWith('sp:')||k.startsWith('co:'))return k.slice(3).split('-').map(Number).includes(n);if(n===0)return k==='n:0';if(k[0]==='n')return +k.slice(2)===n;
 return {red:REDS.includes(n),black:!REDS.includes(n),odd:n%2===1,even:n%2===0,low:n<=18,high:n>=19,d1:n<=12,d2:n>12&&n<=24,d3:n>24,c1:n%3===1,c2:n%3===2,c3:n%3===0}[k]}
 function mult(k){return k.startsWith('sp:')?18:k.startsWith('co:')?9:k[0]==='n'?36:/^[dc]/.test(k)?3:2}
+/* ===== ŞİMŞEK RULET: her turda 1–5 sayıya 50x–500x çarpan düşer; şimşek modunda sayı bahsi 29:1, şimşek sayısı çarpanını öder (RTP ≈ %97) ===== */
+let LIGHT=true;try{LIGHT=localStorage.getItem('ge_light')!=='0'}catch(e){}
+let RL_L=null,noMoreSaid=false; /* bu turun şimşek sayıları {n:çarpan} (yerel mod) */
+function lightDraw(){const r=Math.random()*100,cnt=r<15?1:r<45?2:r<75?3:r<90?4:5,out={};while(Object.keys(out).length<cnt){const n=rnd(37);if(out[n])continue;const q=Math.random()*100;out[n]=q<55?50:q<79?100:q<90?200:q<96?300:q<99?400:500}return out}
+function payMult(k,n,L,on){if(k[0]==='n'&&k[1]===':'){if(!on)return 36;const m=L&&L[+k.slice(2)];return m?m+1:30}return mult(k)}
+function clearLight(){document.querySelectorAll('.tc.zap').forEach(e=>{e.classList.remove('zap');const b=e.querySelector('.zm');if(b)b.remove()})}
+function markLight(n,m){const c=document.querySelector('.tc[data-k="n:'+n+'"]');if(!c||c.querySelector('.zm'))return;c.classList.add('zap');const b=document.createElement('b');b.className='zm';b.textContent='x'+m;c.appendChild(b)}
+const lightHtml=L=>L&&Object.keys(L).length?'<span class="lhead">ŞİMŞEK SAYILAR</span>'+Object.keys(L).map(Number).sort((a,b)=>L[a]-L[b]).map(n=>'<b class="ln '+rcol(n)+'">'+n+'<small>x'+L[n]+'</small></b>').join(''):'';
+function bolt(c){const r=c.getBoundingClientRect(),x=r.left+r.width/2,y1=Math.max(0,r.top-170),y2=r.top+r.height/2;const pts=[[x+(Math.random()*50-25),y1]];let y=y1;while(y<y2-16){y+=12+Math.random()*16;pts.push([x+(Math.random()*34-17),y])}pts.push([x,y2]);const P=pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
+const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('class','bolt');s.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:70';
+s.innerHTML='<polyline points="'+P+'" fill="none" stroke="#4fa8ff" stroke-width="9" opacity=".35" stroke-linejoin="round"/><polyline points="'+P+'" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #bfe6ff) drop-shadow(0 0 14px #4fa8ff)"/>';document.body.appendChild(s);
+const f=document.createElement('div');f.className='lflash';document.body.appendChild(f);setTimeout(()=>{s.remove();f.remove()},500)}
+function thunder(){noise(0,.45,.4,600);tone(65,0,.55,'sine',.35,38);tone(2400,0,.05,'square',.08)}
+async function lightningShow(L){const tbl=$('tbl');clearLight();tbl.classList.add('storm');if(onRL()){say('nomore',0);noMoreSaid=true}const nums=Object.keys(L).map(Number).sort((a,b)=>L[a]-L[b]);
+$('rres').innerHTML='<span class="lhead">ŞİMŞEK SAYILAR</span>';await wait(500);
+for(const n of nums){const c=document.querySelector('.tc[data-k="n:'+n+'"]');if(onRL()){bolt(c);thunder()}markLight(n,L[n]);$('rres').innerHTML+='<b class="ln '+rcol(n)+'">'+n+'<small>x'+L[n]+'</small></b>';await wait(460)}
+await wait(700);tbl.classList.remove('storm')}
+const LBOLT='<svg viewBox="0 0 12 14"><path d="M7 0 L1 8 L5.5 8 L4 14 L11 5.5 L6.5 5.5Z" fill="currentColor"/></svg>';
+function lightBtn(){const sh=RLO(),on=sh?!!(window.RLST&&RLST.light!==false):LIGHT,b=$('rlight');b.classList.toggle('on',on);b.innerHTML=LBOLT+'ŞİMŞEK '+(on?'AÇIK':'KAPALI');
+b.disabled=busy||(sh?!(window.RLST&&RLST.phase==='bet'&&!(RLST.bets||[]).length):rTot(RB)>0);
+$('rlbl').textContent=on?'Şimşek modu: her turda 1–5 sayıya 50x–500x çarpan düşer; sayı bahsi 29:1, şimşek sayısı çarpanını öder. Diğer bahisler aynı.':'Klasik: sayı 35:1 · ikili 17:1 · dörtlü 8:1 · 12\'li ve sütun 2:1 · diğerleri 1:1'}
+$('rlight').onclick=()=>{if($('rlight').disabled)return;S.click();if(RLO()){cloud.rl.light(!(window.RLST&&RLST.light!==false));return}LIGHT=!LIGHT;try{localStorage.setItem('ge_light',LIGHT?'1':'0')}catch(e){}lightBtn()};
 function clearWon(){document.querySelectorAll('.tc.won').forEach(e=>{e.classList.remove('won');e.querySelector('em').innerHTML=''});document.querySelectorAll('.tc .om').forEach(e=>e.remove())}
 function clearBets(){Object.keys(RB).forEach(k=>{delete RB[k];mark(k)})}
 let lastRB=null;const rTot=o=>Object.values(o||{}).reduce((a,b)=>a+b,0);
-function rBtns(){if(RLO())return cloud.rl.btns();const tot=rTot(RB);$('rclear').disabled=busy||!tot;$('rdbl').disabled=busy||!tot||chips<tot;$('rrebet').disabled=busy||tot>0||!lastRB||!rTot(lastRB)||chips<rTot(lastRB)}
+function rBtns(){if(RLO())return cloud.rl.btns();const tot=rTot(RB);$('rclear').disabled=busy||!tot;$('rdbl').disabled=busy||!tot||chips<tot;$('rrebet').disabled=busy||tot>0||!lastRB||!rTot(lastRB)||chips<rTot(lastRB);lightBtn()}
 $('rrebet').onclick=()=>{if(RLO())return cloud.rl.rebet();if(busy||!lastRB)return;const tot=rTot(lastRB);if(!tot||chips<tot){msg('Yetersiz bakiye');return}clearWon();setChips(chips-tot);for(const k in lastRB){RB[k]=(RB[k]||0)+lastRB[k];mark(k)}S.chip();msg('');renderBoard();rBtns()};
 $('rdbl').onclick=()=>{if(RLO())return cloud.rl.double();if(busy)return;const tot=rTot(RB);if(!tot)return;if(chips<tot){msg('Yetersiz bakiye, x2 için '+fmtA(tot)+' gerekir');return}clearWon();setChips(chips-tot);for(const k in RB){RB[k]*=2;mark(k)}S.chip();msg('');renderBoard();rBtns()};
 const onRL=()=>!$('rulet').classList.contains('hide');
 /* çarkı n sonucuna döndür; bitince onDone. skipAnim: geç katılan doğrudan sonucu görür */
 function rlRun(n,onDone,skipAnim){busy=true;const gl=!!(window.RW&&RW.ok),dur=gl?RW.dur:4.2,i=WO.indexOf(n);
 if(skipAnim){show(n);busy=false;onDone();return}
-ac();if(onRL()){S.click();S.wheelStart(dur);setTimeout(()=>S.drop(),dur*1000-1500);say('nomore',150)}voEnsure('r'+n);
+ac();if(onRL()){S.click();S.wheelStart(dur);setTimeout(()=>S.drop(),dur*1000-1500);if(!noMoreSaid)say('nomore',150)}noMoreSaid=false;voEnsure('r'+n);
 if(!gl){$('orb').classList.remove('run');void $('orb').offsetWidth;$('orb').classList.add('run');const cur=rot%360,delta=(((-(i+.5)*SG-cur)%360)+360)%360;rot+=1800+delta;$('wheel').style.transform='translateZ(2px) rotate('+rot+'deg)'}
 const fin=()=>{S.wheelStop();show(n);if(onRL())say('r'+n,250);busy=false;onDone()};
 if(gl)RW.spin(i).then(fin);else setTimeout(fin,4200)}
 $('rspin').onclick=()=>{if(RLO())return cloud.rl.spin();if(busy||live)return;const tot=Object.values(RB).reduce((a,b)=>a+b,0);if(!tot){msg('Önce masaya çip koy');return}
-msg('');lastRB=Object.assign({},RB);const n=rnd(37);rBtns();
-const finish=()=>{let w=0,ws=[];clearWon();for(const k in RB)if(wins(k,n)){const a=RB[k]*mult(k);w+=a;ws.push([k,a])}
+msg('');lastRB=Object.assign({},RB);const n=rnd(37);busy=true;rBtns();RL_L=LIGHT?lightDraw():null;
+const finish=()=>{let w=0,ws=[];clearWon();const lm=RL_L&&RL_L[n],myStraight=RB['n:'+n]||0;for(const k in RB)if(wins(k,n)){const a=RB[k]*payMult(k,n,RL_L,LIGHT);w+=a;ws.push([k,a])}
 hist.unshift(n);hist=hist.slice(0,100);try{localStorage.setItem('ge_rh',JSON.stringify(hist))}catch(e){}lastNet=w-tot;
 clearBets();renderBoard();setChips(chips+w);rBtns();
 ws.forEach(x=>{const c=document.querySelector('.tc[data-k="'+x[0]+'"]');c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(x[1])+'</span>'});
-$('rres').innerHTML=ws.length?'Kazanan bahisler: '+ws.map(x=>document.querySelector('.tc[data-k="'+x[0]+'"]').dataset.n+' <b>+'+fmtA(x[1])+'</b>').join(' · '):'Bu el kazanan bahis yok';
-msg(w>tot?'Sayı '+n+' · Kazandın +'+fmtE(w-tot):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(tot));
-if(w>tot){const x=(w-tot)/bet;if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-tot)}else if(w===0)S.lose();setTimeout(()=>{if(!busy&&!$('rulet').classList.contains('hide'))say('place')},3200)};
-rlRun(n,finish)};
+$('rres').innerHTML=lightHtml(RL_L)+(ws.length?'Kazanan bahisler: '+ws.map(x=>document.querySelector('.tc[data-k="'+x[0]+'"]').dataset.n+' <b>+'+fmtA(x[1])+'</b>').join(' · '):'Bu el kazanan bahis yok');
+msg((lm?'ŞİMŞEK x'+lm+' · ':'')+(w>tot?'Sayı '+n+' · Kazandın +'+fmtE(w-tot):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(tot)));
+if(lm&&myStraight){S.big();say(lm>=200?'epicwin':'megawin',900);celebrate(w-tot);overlay('<h2 class="wt t5">ŞİMŞEK x'+lm+'</h2><div class="n">+'+fmtE(myStraight*(lm+1))+'</div><p>Sayı '+n+' şimşek sayısıydı</p>',3600,true)}
+else if(w>tot){const x=(w-tot)/bet;if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-tot)}else if(w===0)S.lose();setTimeout(()=>{if(!busy&&!$('rulet').classList.contains('hide'))say('place')},3200)};
+(async()=>{if(RL_L)await lightningShow(RL_L);rlRun(n,finish)})()};
 $('rclear').onclick=()=>{if(RLO())return cloud.rl.unbet();if(busy)return;let t=0;for(const k in RB)t+=RB[k];if(t)S.chip();clearBets();setChips(chips+t);renderBoard();rBtns()};rBtns();
 
 /* ===== BLACKJACK: 6 koltuklu masa ===== */
@@ -1500,28 +1538,31 @@ let RST=null,spunRound=-1,shownRound=-1,myLastRL=null,tickT=null,cdT=null;
 const isMe=u=>!!u&&me&&u===me.id;
 function redraw(){const st=RST;if(!st)return;clearWon();RB={};
 (st.bets||[]).forEach(b=>{if(isMe(b.user)){RB[b.key]=(RB[b.key]||0)+(+b.amt);mark(b.key)}else{const el=document.querySelector('[data-k="'+b.key+'"]');if(!el)return;const k=rSeatOf(b.user);const i=document.createElement('i');i.className='om c'+(k>=0?k:1);i.title=b.name;i.innerHTML='<span>'+fmtA(+b.amt)+'</span>';const n=el.querySelectorAll('.om').length;i.style.left=(2+n*8)+'px';i.style.bottom=(2+n*4)+'px';el.appendChild(i)}});
-if(st.phase==='spin'&&shownRound===st.round&&st.result!=null){const n=st.result;(st.bets||[]).forEach(b=>{if(isMe(b.user)&&wins(b.key,n)){const c=document.querySelector('[data-k="'+b.key+'"]');if(c){c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(+b.amt*mult(b.key))+'</span>'}}})}
+if(st.phase==='spin'&&shownRound===st.round&&st.result!=null){const n=st.result;(st.bets||[]).forEach(b=>{if(isMe(b.user)&&wins(b.key,n)){const c=document.querySelector('[data-k="'+b.key+'"]');if(c){c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(+b.amt*payMult(b.key,n,st.lightning,st.light!==false))+'</span>'}}})}
 renderBoard();btns()}
-function showRL(st){shownRound=st.round;const n=st.result,res=st.results||[],mine=res.find(r=>isMe(r.user));lastNet=mine?+mine.net:null;
-$('rres').innerHTML=res.length?'<div class="rres-list">'+res.map(r=>'<span>'+r.name+' <b class="'+(+r.net>0?'pos':+r.net<0?'neg':'')+'">'+(+r.net>0?'+':'')+fmtE(+r.net)+'</b></span>').join('')+'</div>':'Bu turda bahis yoktu';
-redraw();
-if(mine){const w=+mine.won,t=+mine.bet;msg(w>t?'Sayı '+n+' · Kazandın +'+fmtE(w-t):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(t));
-if(onRL()){if(w>t){const x=(w-t)/Math.max(1,bet);if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-t)}else if(w===0)S.lose()}}else msg('Sayı '+n)}
+function showRL(st){shownRound=st.round;const n=st.result,res=st.results||[],mine=res.find(r=>isMe(r.user));lastNet=mine?+mine.net:null;const lm=st.lightning&&st.lightning[n];
+$('rres').innerHTML=lightHtml(st.lightning)+(res.length?'<div class="rres-list">'+res.map(r=>'<span>'+r.name+' <b class="'+(+r.net>0?'pos':+r.net<0?'neg':'')+'">'+(+r.net>0?'+':'')+fmtE(+r.net)+'</b></span>').join('')+'</div>':'Bu turda bahis yoktu');
+redraw();const myStraight=RB['n:'+n]||0;
+if(mine){const w=+mine.won,t=+mine.bet;msg((lm?'ŞİMŞEK x'+lm+' · ':'')+(w>t?'Sayı '+n+' · Kazandın +'+fmtE(w-t):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(t)));
+if(onRL()){if(lm&&myStraight){S.big();say(lm>=200?'epicwin':'megawin',900);celebrate(w-t);overlay('<h2 class="wt t5">ŞİMŞEK x'+lm+'</h2><div class="n">+'+fmtE(myStraight*(lm+1))+'</div><p>Sayı '+n+' şimşek sayısıydı</p>',3600,true)}else if(w>t){const x=(w-t)/Math.max(1,bet);if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-t)}else if(w===0)S.lose()}}else msg((lm?'ŞİMŞEK x'+lm+' · ':'')+'Sayı '+n)}
 function applyRL(st){if(!st||!st.phase)return;const prev=RST;RST=st;window.RLST=st;hist=(st.history||[]).slice();
 if(st.phase==='spin'&&spunRound!==st.round){spunRound=st.round;const el=(Date.now()-new Date(st.spin_at).getTime())/1000;const dur=(window.RW&&RW.ok)?RW.dur:4.2;
-if(onRL()){$('rres').textContent='';}redraw();rlRun(st.result,()=>showRL(RST&&RST.round===st.round?RST:st),el>dur+.5);return}
-if(st.phase==='bet'&&prev&&prev.phase==='spin'){lastNet=lastNet;$('rres').textContent='';if(onRL()&&!busy)say('place',200)}
+const L=st.lightning&&Object.keys(st.lightning).length?st.lightning:null,LT=L?1.3+.46*Object.keys(L).length:0;
+if(onRL()){$('rres').textContent='';}redraw();
+(async()=>{if(L){if(el<1.5)await lightningShow(L);else{clearLight();Object.keys(L).forEach(k=>markLight(+k,L[k]))}}rlRun(st.result,()=>showRL(RST&&RST.round===st.round?RST:st),el>dur+LT+.5)})();return}
+if(st.phase==='bet'&&prev&&prev.phase==='spin'){lastNet=lastNet;$('rres').textContent='';clearLight();if(onRL()&&!busy)say('place',200)}
 redraw();countdown()}
 function countdown(){clearInterval(cdT);cdT=setInterval(()=>{if(!RST||!onRL())return;const dl=RST.deadline?new Date(RST.deadline).getTime():0;const left=dl?Math.max(0,Math.ceil((dl-Date.now())/1000)):0;
 if(RST.phase==='bet'){if(dl)$('rres').textContent='Bahisler kapanıyor: '+left+' sn';else if(!$('rres').textContent||/kapanıyor/.test($('rres').textContent))$('rres').textContent=(RST.bets&&RST.bets.length)?'':'Bahisleri koyun'}
 if(dl&&Date.now()>dl+400&&!tickT){tickT=setTimeout(()=>{tickT=null},2500);rpc('rl_tick').catch(()=>{})}},500)}
-function btns(){const st=RST,myTot=rTot(RB),betting=st&&st.phase==='bet'&&!busy;$('rspin').disabled=!betting||!myTot;$('rclear').disabled=!betting||!myTot;$('rdbl').disabled=!betting||!myTot||chips<myTot;$('rrebet').disabled=!betting||myTot>0||!myLastRL||!rTot(myLastRL)}
+function btns(){const st=RST,myTot=rTot(RB),betting=st&&st.phase==='bet'&&!busy;$('rspin').disabled=!betting||!myTot;$('rclear').disabled=!betting||!myTot;$('rdbl').disabled=!betting||!myTot||chips<myTot;$('rrebet').disabled=!betting||myTot>0||!myLastRL||!rTot(myLastRL);lightBtn()}
 const rlApi={redraw,btns,
 bet:(k,amt)=>rpc('rl_bet',{p_key:k,p_amount:amt}).then(st=>{if(onRL())S.chip();applyRL(st)}).catch(()=>{}),
 unbet:()=>rpc('rl_unbet').then(st=>{if(onRL())S.chip();applyRL(st)}).catch(()=>{}),
 double:()=>rpc('rl_double').then(st=>{if(onRL())S.chip();applyRL(st)}).catch(()=>{}),
 rebet:async()=>{if(!myLastRL)return;for(const k in myLastRL){try{applyRL(await rpc('rl_bet',{p_key:k,p_amount:myLastRL[k]}))}catch(e){break}}if(onRL())S.chip()},
 spin:()=>{myLastRL=Object.assign({},RB);rpc('rl_spin').then(applyRL).catch(()=>{})},
+light:on=>rpc('rl_light',{p_on:on}).then(applyRL).catch(()=>{}),
 _apply:applyRL};
 sb.from('rl_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message)){msg('Ortak rulet henüz kurulu değil (rl_engine.sql). Rulet şimdilik tek kişilik.');}return}cloud.rl=rlApi;rBtns();if(data&&data.state&&data.state.phase){spunRound=data.state.phase==='spin'?-1:data.state.round;applyRL(data.state)}else rpc('rl_tick').then(applyRL).catch(()=>{});
 sb.channel('rl_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'rl_table'},p=>applyRL(p.new.state)).subscribe();countdown()})}

@@ -6,7 +6,7 @@ Arkadaşlar arası eğlence oyunu. **Sanal euro bakiyesi kullanılır, gerçek p
 Vercel projesi: `arda-5509s-projects/ardaylmz-lab-goldeneye-casino`. Sesli sürüm budur; API fonksiyonları burada çalışır.
 GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.vercel.app` ayrı ve eski bir projedir, key tanımlı değildir.
 
-- Slot: Burning Fruits ve Jade Dragon (5x5, 20 hat, wild/scatter, free spin) ve Diamond Heist (free spin yerine bonus oyunlar: 3+ kasa kapısı → Kasa Odası seçme oyunu, içinden Soygun Çarkı çıkabilir; 6+ altın külçe → Kasayı Doldur tut-kazan turu; MINI/MINOR/MAJOR/GRAND jackpot külçeleri bahsin sabit katları). Rulet (3D çark), Blackjack (6 koltuklu masa, birden fazla el, böl/2x, 3:2, 3D krupiye)
+- Slot: Burning Fruits ve Jade Dragon (5x5, 20 hat, wild/scatter, free spin) ve Diamond Heist (free spin yerine bonus oyunlar: 3+ kasa kapısı → Kasa Odası seçme oyunu, içinden Soygun Çarkı çıkabilir; 6+ altın külçe → Kasayı Doldur tut-kazan turu; MINI/MINOR/MAJOR/GRAND jackpot külçeleri bahsin sabit katları). Rulet (3D çark; Şimşek modu: her turda 1–5 sayıya 50x–500x çarpan, sayı bahsi 29:1, açılıp kapatılabilir), Blackjack (6 koltuklu masa, birden fazla el, böl/2x, 3:2, 3D krupiye)
 - `index.html` — oyunun tamamı (tek dosya). Rulet çarkı WebGL ile 3D (three.js, CDN'den yüklenir); WebGL ya da CDN yoksa CSS çark devreye girer.
 - Blackjack krupiyesi (sarışın kadın krupiye) de three.js ile tamamen kod içinde (prosedürel) çizilir: dış model/dosya yok; saç dokusu bile çalışma anında tuvale çizilir. Nefes alır, göz kırpar, sıradaki oyuncuya bakar; kart dağıtırken kolunu uzatır, ödeme yaparken çipleri iter, anons sırasında konuşur. WebGL yoksa yalnız krupiye koltuğu ve etiketi görünür.
 - `audio/music/*.mp3` — ElevenLabs Music ile üretilmiş üç lounge parçası; ilk dokunuşla kısık sesle başlar, parçalar çapraz geçişle döner (🎵 ile kapatılır).
@@ -20,7 +20,7 @@ GitHub Pages kopyasında API olmadığı için ses yoktur. `goldeneye-casino.ver
 1. supabase.com → New project. Authentication → Providers → Email açık; "Confirm email" kapatılırsa kayıt tek adımda olur.
 2. SQL Editor → `supabase/schema.sql` dosyasının içeriğini yapıştır → Run (profiller, otomatik profil, bakiye RPC'si, koltuklar, Realtime).
    Ardından `supabase/bj_engine.sql` → Run (ortak blackjack masası: dağıtım, hamleler, krupiye, ödeme sunucuda; herkes aynı eli izler)
-   ve `supabase/rl_engine.sql` → Run (ortak rulet masası: bahisler, tek sonuç, ödemeler sunucuda; çark herkeste aynı anda döner).
+   ve `supabase/rl_engine.sql` → Run (ortak rulet masası: bahisler, tek sonuç, ödemeler ve şimşek sayıları sunucuda; çark herkeste aynı anda döner; şimşek modu masa ayarıdır, `rl_light` ile açılıp kapanır).
 3. Project Settings → API → **Project URL** ve **anon public** anahtarını `index.html` içindeki `SUPA` sabitine yaz. anon anahtarı tarayıcıda durmak için tasarlanmıştır; **service_role** anahtarını asla koyma.
 4. `SUPA.key` boşsa oyun eski PIN girişiyle ve yerel bakiyeyle çalışmaya devam eder.
 

@@ -1,6 +1,8 @@
 -- ===== Faz 2c: ortak rulet masası (sunucu taraflı) =====
 -- Tek ortak masa. Bahisler, sonuç ve ödemeler burada; istemciler yalnız bahis/çevir gönderir ve
 -- rl_table.state değişikliklerini Realtime ile alır. Tekrar çalıştırmak güvenlidir.
+-- Şimşek modu (state.light, varsayılan açık): her turda 1–5 sayıya 50x–500x çarpan düşer (state.lightning);
+-- sayı bahsi 29:1 öder, şimşek sayısı çarpanını öder; diğer bahisler değişmez.
 
 create table if not exists public.rl_table (
   id int primary key default 1 check (id = 1),
@@ -14,7 +16,7 @@ drop policy if exists "rl_table: herkes okur" on public.rl_table;
 create policy "rl_table: herkes okur" on public.rl_table for select to authenticated using (true);
 
 create or replace function public.rl_empty_state() returns jsonb language sql immutable as $$
-  select jsonb_build_object('phase','bet','round',0,'deadline',null,'bets','[]'::jsonb,'result',null,'spin_at',null,'results',null,'history','[]'::jsonb)
+  select jsonb_build_object('phase','bet','round',0,'deadline',null,'bets','[]'::jsonb,'result',null,'spin_at',null,'results',null,'history','[]'::jsonb,'light',true,'lightning',null)
 $$;
 
 -- bahis anahtarı geçerli mi
@@ -41,6 +43,31 @@ end $$;
 create or replace function public.rl_mult(k text) returns int language sql immutable as $$
   select case when k like 'n:%' then 36 when k like 'sp:%' then 18 when k like 'co:%' then 9 when k ~ '^[dc][123]$' then 3 else 2 end
 $$;
+
+-- şimşek çekilişi: 1–5 sayı (ağırlık 15/30/30/15/10), çarpan 50/100/200/300/400/500 (ağırlık 55/24/11/6/3/1)
+create or replace function public.rl_lightning() returns jsonb language plpgsql as $$
+declare cnt int; r numeric; n int; m int; res jsonb := '{}'::jsonb; i int := 0;
+begin
+  r := random()*100; cnt := case when r < 15 then 1 when r < 45 then 2 when r < 75 then 3 when r < 90 then 4 else 5 end;
+  while i < cnt loop
+    n := floor(random()*37)::int; if n > 36 then n := 36; end if;
+    if res ? n::text then continue; end if;
+    r := random()*100; m := case when r < 55 then 50 when r < 79 then 100 when r < 90 then 200 when r < 96 then 300 when r < 99 then 400 else 500 end;
+    res := res || jsonb_build_object(n::text, m); i := i + 1;
+  end loop;
+  return res;
+end $$;
+
+-- ödeme katı: şimşek modunda sayı bahsi 30 (29:1), şimşek sayısı çarpan+1; diğerleri rl_mult
+create or replace function public.rl_pay(k text, n int, light boolean, lt jsonb) returns int language plpgsql immutable as $$
+begin
+  if k like 'n:%' then
+    if not coalesce(light, true) then return 36; end if;
+    if lt is not null and lt ? split_part(k, ':', 2) then return (lt ->> split_part(k, ':', 2))::int + 1; end if;
+    return 30;
+  end if;
+  return public.rl_mult(k);
+end $$;
 
 create or replace function public.rl_wins(k text, n int) returns boolean language plpgsql immutable as $$
 declare reds int[] := array[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
@@ -136,13 +163,15 @@ grant execute on function public.rl_double() to authenticated;
 
 -- çevir: sonuç üret, öde, çark aşamasına geç (istemciler aynı sonuca döner)
 create or replace function public.rl_spin_internal(st jsonb) returns jsonb language plpgsql as $$
-declare n int; b jsonb; u uuid; tot numeric; ret numeric; res jsonb := '[]'::jsonb; hist jsonb; r record;
+declare n int; b jsonb; u uuid; tot numeric; ret numeric; res jsonb := '[]'::jsonb; hist jsonb; r record; light boolean; lt jsonb;
 begin
   if coalesce(jsonb_array_length(st->'bets'),0) = 0 then raise exception 'Masada bahis yok'; end if;
   n := floor(random() * 37)::int; if n > 36 then n := 36; end if;
+  light := coalesce((st->>'light')::boolean, true);
+  lt := case when light then public.rl_lightning() else null end;
   for r in select (e->>'user')::uuid as usr, max(e->>'name') as nm,
                   sum((e->>'amt')::numeric) as t,
-                  sum(case when public.rl_wins(e->>'key', n) then (e->>'amt')::numeric * public.rl_mult(e->>'key') else 0 end) as w
+                  sum(case when public.rl_wins(e->>'key', n) then (e->>'amt')::numeric * public.rl_pay(e->>'key', n, light, lt) else 0 end) as w
              from jsonb_array_elements(st->'bets') e group by 1 loop
     if r.w > 0 then perform public.bj_pay(r.usr, r.w); end if;
     res := res || jsonb_build_object('user', r.usr::text, 'name', r.nm, 'bet', round(r.t,2), 'won', round(r.w,2), 'net', round(r.w - r.t, 2));
@@ -154,8 +183,9 @@ begin
   st := jsonb_set(st, '{result}', to_jsonb(n));
   st := jsonb_set(st, '{results}', res);
   st := jsonb_set(st, '{history}', hist);
+  st := jsonb_set(st, '{lightning}', coalesce(lt, 'null'::jsonb));
   st := jsonb_set(st, '{spin_at}', to_jsonb(now()));
-  st := jsonb_set(st, '{deadline}', to_jsonb(now() + interval '14 seconds'));
+  st := jsonb_set(st, '{deadline}', to_jsonb(now() + case when light then interval '17 seconds' else interval '14 seconds' end));
   return st;
 end $$;
 
@@ -194,11 +224,29 @@ begin
     st := jsonb_set(st, '{results}', 'null');
     st := jsonb_set(st, '{result}', 'null');
     st := jsonb_set(st, '{spin_at}', 'null');
+    st := jsonb_set(st, '{lightning}', 'null');
   end if;
   perform public.rl_save(st);
   return st;
 end $$;
 grant execute on function public.rl_tick() to authenticated;
+
+-- şimşek modunu aç/kapat: oturan oyuncu, bahis aşamasında ve masada bahis yokken
+create or replace function public.rl_light(p_on boolean) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare uid uuid := auth.uid(); st jsonb;
+begin
+  if uid is null then raise exception 'oturum yok'; end if;
+  if not public.rl_seated(uid) then raise exception 'Önce bir sandalyeye otur'; end if;
+  select state into st from public.rl_table where id = 1 for update;
+  if st = '{}'::jsonb then st := public.rl_empty_state(); end if;
+  if st->>'phase' <> 'bet' then raise exception 'Çark dönüyor'; end if;
+  if coalesce(jsonb_array_length(st->'bets'),0) > 0 then raise exception 'Masada bahis varken mod değişmez'; end if;
+  st := jsonb_set(st, '{light}', to_jsonb(coalesce(p_on, true)));
+  perform public.rl_save(st);
+  return st;
+end $$;
+grant execute on function public.rl_light(boolean) to authenticated;
 
 do $$ begin
   if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='rl_table') then
