@@ -449,30 +449,64 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .cell.rs{animation:sp .1s linear infinite;filter:blur(1.5px)}
 .cell.land{animation:ld .38s cubic-bezier(.2,1.4,.4,1)}
 .fsbar.hw{background:linear-gradient(90deg,#1c3f7a,#0a1a3a);border-color:#4fa8ff;box-shadow:0 0 16px #4fa8ff77}
-.hbonus{border-radius:12px;padding:6px;background:linear-gradient(180deg,#0f1a2e,#060b16);border:1.5px solid var(--gd);box-shadow:inset 0 0 20px #000}
+.hbonus{position:relative;border-radius:12px;padding:6px;background:linear-gradient(180deg,#0f1a2e,#060b16);border:1.5px solid var(--gd);box-shadow:inset 0 0 20px #000;overflow:hidden}
 .hbonus.hide{display:none}
-.bhead{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;font-weight:800;font-size:.78rem;letter-spacing:1.5px;color:#bfe6ff}
-.bhead b{color:var(--gold);font-size:1rem;font-variant-numeric:tabular-nums}.bhead .mm{background:var(--gold);color:#1a1000;border-radius:6px;padding:0 6px;font-size:.8rem;margin-left:4px}
+.bhead{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:6px 8px;font-weight:800;font-size:.7rem;letter-spacing:1.2px;color:#bfe6ff}
+.bhead b{color:var(--gold);font-size:.95rem;font-variant-numeric:tabular-nums}.bhead .mm{background:var(--gold);color:#1a1000;border-radius:6px;padding:0 6px;font-size:.75rem;margin-left:4px}
+/* alarm riski göstergesi */
+.risk{display:flex;align-items:center;gap:2px}.risk small{font-size:.45rem;letter-spacing:1px;color:#8fb8e0;margin-right:4px}
+.risk i{width:7px;height:12px;border-radius:2px;background:#1c2436;box-shadow:inset 0 0 3px #000}.risk i.on{background:#ffd23f;box-shadow:0 0 6px #ffd23f}.risk i.on.hi{background:#ff3b3b;box-shadow:0 0 6px #ff3b3b}
+/* kasalar: kapak (kadran + kol + perçinler) açılınca içi görünür */
 .vaults{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px}
-.vault{position:relative;aspect-ratio:1;margin:0;padding:0;border-radius:10px;background:linear-gradient(145deg,#6a7384,#2c3340 50%,#161b24);border:2px solid #c9971a88;box-shadow:0 4px 8px #000a,inset 0 1px 0 #ffffff40,inset 0 -3px 6px #0008;cursor:pointer;display:grid;place-items:center;transition:transform .15s;color:#fff}
-.vault:active:not(:disabled){transform:scale(.95);box-shadow:0 2px 6px #000a}
-.vault i{width:46%;height:46%;border-radius:50%;background:radial-gradient(circle,#ffd23f 0 18%,#2a1a00 19% 30%,#c9971a 31% 42%,#4a3a1a 43%);box-shadow:0 0 0 2px #0008,0 2px 4px #000a;transition:transform .5s}
-.vault.open{background:linear-gradient(180deg,#0a0f1a,#1c2436);animation:vopen .45s cubic-bezier(.2,1.4,.4,1)}
-.vault.open i{display:none}
-.vault b{font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:.95rem;line-height:1;text-align:center}
-.vault b small{display:block;font-family:Montserrat,sans-serif;font-size:.48rem;letter-spacing:.5px;margin-top:3px;color:#bfe6ff}
+.vault{position:relative;aspect-ratio:1;margin:0;padding:0;border-radius:10px;border:0;background:none;box-shadow:none;cursor:pointer;perspective:320px;color:#fff}
+.vault:active:not(:disabled){transform:none;box-shadow:none}
+.vault .door,.vault .inside{position:absolute;inset:0;border-radius:10px}
+.vault .door{background:repeating-linear-gradient(90deg,#ffffff00 0 3px,#ffffff08 3px 4px),linear-gradient(145deg,#7d8798,#3a4150 48%,#1e232d);border:2px solid #c9971a88;box-shadow:0 4px 8px #000a,inset 0 1px 0 #ffffff50,inset 0 -3px 6px #0008;transform-origin:left center;transition:transform .55s cubic-bezier(.4,0,.2,1);backface-visibility:hidden}
+.vault .door::before{content:"";position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 10% 12%,#fff9 0 1.3px,#0000 2.2px),radial-gradient(circle at 90% 12%,#fff9 0 1.3px,#0000 2.2px),radial-gradient(circle at 10% 88%,#fff9 0 1.3px,#0000 2.2px),radial-gradient(circle at 90% 88%,#fff9 0 1.3px,#0000 2.2px)}
+.vault .dial{position:absolute;left:28%;top:30%;width:40%;height:40%;border-radius:50%;background:repeating-conic-gradient(#fff6c0 0 5deg,#7a4e00 5deg 30deg);box-shadow:0 0 0 2px #2a1a00,0 0 0 4px #c9971a,0 2px 5px #000a;transition:transform .5s}
+.vault .dial::after{content:"";position:absolute;inset:22%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff0a8,#d9a92a 55%,#7a4e00)}
+.vault.turn .dial{transform:rotate(200deg)}
+.vault .hdl{position:absolute;right:9%;top:30%;width:7%;height:40%;border-radius:3px;background:linear-gradient(90deg,#fff0a8,#c58e0a);box-shadow:0 1px 3px #000a}
+.vault.open .door{transform:rotateY(-105deg)}
+.vault .inside{background:radial-gradient(circle at 50% 35%,#2a3650,#0a0f1a 75%);box-shadow:inset 0 0 14px #000,inset 0 0 0 1px #c9971a44;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;overflow:hidden}
+.vault.open .inside{animation:inglow .6s ease-out}
+@keyframes inglow{from{box-shadow:inset 0 0 40px #ffd23f}to{box-shadow:inset 0 0 14px #000,inset 0 0 0 1px #c9971a44}}
+.vault .sym.pz{position:static;inset:auto;width:38%;height:38%;animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+.vault b{font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:.85rem;line-height:1;text-align:center;animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+.vault b small{display:block;font-family:Montserrat,sans-serif;font-size:.45rem;letter-spacing:.4px;margin-top:2px;color:#bfe6ff}
 .vault b.mult{color:var(--gold);text-shadow:0 0 10px var(--gold)}
 .vault b.wh{color:#19f0ff;text-shadow:0 0 10px #19f0ff}.vault b.dbl{color:#ff7ae6;text-shadow:0 0 10px #ff7ae6}
 .vault b.alarm{color:#ff3b3b;text-shadow:0 0 12px #ff3b3b;animation:pl .25s ease-in-out infinite alternate}
-.hbonus.alarm{animation:alarmbg .3s ease-in-out 5 alternate}
-@keyframes alarmbg{to{box-shadow:inset 0 0 40px #e0202c,0 0 20px #e0202c}}
-@keyframes vopen{from{transform:rotateY(90deg)}to{transform:none}}
+.vault .siren{width:36%;height:26%;border-radius:50% 50% 8% 8%/60% 60% 8% 8%;background:radial-gradient(circle at 50% 40%,#ff9a9a,#e0202c 50%,#7a0010);box-shadow:0 0 16px #ff3b3b;animation:pl .25s ease-in-out infinite alternate}
+.vault .mwheel{width:40%;height:40%;border-radius:50%;background:conic-gradient(#ffd23f 0 60deg,#e0202c 60deg 120deg,#1c3f7a 120deg 180deg,#ffd23f 180deg 240deg,#e0202c 240deg 300deg,#1c3f7a 300deg);box-shadow:0 0 0 2px #c9971a,0 0 12px #19f0ff;animation:spinw 1.6s linear infinite}
+@keyframes spinw{to{transform:rotate(360deg)}}
+.hbonus.alarm::after{content:"";position:absolute;inset:0;background:#e0202c33;animation:alarmfl .3s ease-in-out 6 alternate;pointer-events:none}
+@keyframes alarmfl{from{opacity:0}to{opacity:1}}
 .bhint{text-align:center;color:#bfe6ff;font-size:.8rem;padding:6px;min-height:20px}
-.wheelb{position:relative;width:240px;height:240px;margin:14px auto 6px}
-.wheelb .disc{position:absolute;inset:0;border-radius:50%;border:6px solid #c9971a;box-shadow:0 0 0 3px #1a1108,0 0 30px #4fa8ff66,0 10px 20px #000c,inset 0 0 20px #0008;transform:rotate(0deg)}
-.wheelb .disc span{position:absolute;left:50%;top:50%;width:44px;margin:-11px -22px;text-align:center;line-height:22px;font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:.9rem;color:#fff;text-shadow:0 1px 2px #000}
-.wheelb .hub{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff0a8,#d9a92a 50%,#7a4e00);box-shadow:0 2px 6px #000a}
-.wheelb .ptr{position:absolute;left:50%;top:-12px;width:0;height:0;margin-left:-12px;border-left:12px solid transparent;border-right:12px solid transparent;border-top:28px solid #ffd23f;filter:drop-shadow(0 2px 2px #000a);z-index:2}
+.bhint .wres{display:inline-block;font-family:"Orbitron",Montserrat,monospace;color:var(--gold);font-size:1.5rem;text-shadow:0 0 14px var(--gold);animation:pop .5s cubic-bezier(.2,1.5,.4,1);margin-right:8px;vertical-align:middle}
+.bhint span b{color:var(--gold)}
+/* Soygun Çarkı: ampullü çerçeve, dilim çivileri, elmas göbek, kazanan dilim parlaması */
+.wheelb{position:relative;width:272px;height:272px;margin:8px auto 4px}
+.wheelb .bulbs i{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:#fff6c0;box-shadow:0 0 8px #ffd23f,0 0 2px #fff;animation:bulb 1s steps(1) infinite}
+.wheelb .bulbs i:nth-child(odd){animation-delay:.5s}
+@keyframes bulb{0%,49%{opacity:1}50%,100%{opacity:.22}}
+.wheelb .disc{position:absolute;inset:16px;border-radius:50%;border:6px solid #c9971a;box-shadow:0 0 0 3px #1a1108,0 0 0 5px #6b4a1a,0 0 30px #4fa8ff66,0 10px 20px #000c,inset 0 0 20px #0008;transform:rotate(0deg)}
+.wheelb .disc::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#0000 52%,#00000066 100%),radial-gradient(circle at 50% 30%,#ffffff22,#0000 55%);pointer-events:none}
+.wheelb .disc span{position:absolute;left:50%;top:50%;width:44px;margin:-11px -22px;text-align:center;line-height:22px;font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:.95rem;text-shadow:0 1px 2px #0008}
+.wheelb .disc em{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff0a8,#c58e0a);box-shadow:0 1px 2px #000a}
+.wheelb .hub{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff0a8,#d9a92a 50%,#7a4e00);box-shadow:0 2px 6px #000a,inset 0 1px 0 #fff8;display:grid;place-items:center;font-style:normal}
+.wheelb .hub .sym{position:static;inset:auto;width:34px;height:34px}
+.wheelb .hl{position:absolute;inset:16px;border-radius:50%;opacity:0;pointer-events:none}.wheelb .hl.on{animation:hlp .5s ease-in-out infinite alternate}
+@keyframes hlp{from{opacity:.35}to{opacity:1}}
+.wheelb .ptr{position:absolute;left:50%;top:2px;width:0;height:0;margin-left:-13px;border-left:13px solid transparent;border-right:13px solid transparent;border-top:30px solid #ffd23f;filter:drop-shadow(0 2px 2px #000a) drop-shadow(0 0 1px #7a4e00);z-index:2;transform-origin:50% 20%}
+.wheelb .ptr.tick{animation:pwob .14s ease-in-out infinite}
+@keyframes pwob{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg)}}
+/* Kasayı Doldur: ışıklı çevirme sayacı, parlayan kilitli külçeler, uçan kazanç yazısı */
+.hwst{display:flex;align-items:center;gap:3px}.lt{display:inline-block;width:10px;height:10px;border-radius:50%;background:#1c2436;box-shadow:inset 0 0 3px #000;margin-right:2px}.lt.on{background:#4de08a;box-shadow:0 0 8px #4de08a}
+.cell.hwc{background:radial-gradient(circle at 50% 40%,#ffd23f33,transparent 70%);box-shadow:inset 0 0 0 1.5px #ffd23f55}
+.cell.hwe{background:radial-gradient(circle at 12% 14%,#fff5 0 1px,#0000 2px),radial-gradient(circle at 88% 14%,#fff5 0 1px,#0000 2px),linear-gradient(180deg,#1c2436,#0a0f1a);box-shadow:inset 0 0 0 1px #ffffff10,inset 0 2px 6px #000}
+.cell .fl{position:absolute;left:50%;top:40%;transform:translateX(-50%);font-family:"Orbitron",Montserrat,monospace;font-size:.6rem;font-weight:900;color:#fff;text-shadow:0 0 8px var(--gold),0 1px 2px #000;animation:flup 1.2s ease-out forwards;pointer-events:none;z-index:3;white-space:nowrap}
+@keyframes flup{0%{opacity:0;transform:translate(-50%,10px)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-40px)}}
 #gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--bg)}
 #gate .box{text-align:center;padding:28px 30px;border-radius:22px;background:linear-gradient(180deg,#2a0a0a,#120404);border:3px solid var(--gd);box-shadow:0 0 0 3px #3a1a00,0 10px 30px #000c;width:min(92vw,340px)}
 #gate h2{font-family:"Cinzel",Georgia,serif;color:#ffe27a;letter-spacing:4px;margin:0 0 6px;text-shadow:0 2px 0 #8a6208,0 0 20px #ffd23f66}
@@ -661,31 +695,35 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </g></symbol>
 
 <!-- ===== DIAMOND HEIST ===== -->
-<symbol id="s-key" viewBox="0 0 100 100"><g filter="url(#sh)">
-<circle cx="50" cy="28" r="17" fill="none" stroke="url(#au)" stroke-width="10"/>
-<circle cx="50" cy="28" r="17" fill="none" stroke="url(#hl)" stroke-width="10" opacity=".45"/>
-<rect x="44" y="42" width="12" height="50" rx="4" fill="url(#au2)"/>
-<rect x="54" y="66" width="14" height="8" rx="2" fill="url(#au2)"/><rect x="54" y="80" width="18" height="8" rx="2" fill="url(#au2)"/>
-<path d="M47 46 L47 86" stroke="#fff6c0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+<symbol id="s-hkey" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="27" r="15" fill="none" stroke="url(#au)" stroke-width="9"/>
+<circle cx="50" cy="27" r="15" fill="none" stroke="url(#hl)" stroke-width="9" opacity=".45"/>
+<circle cx="50" cy="9" r="6" fill="url(#au2)"/><circle cx="33" cy="19" r="6" fill="url(#au2)"/><circle cx="67" cy="19" r="6" fill="url(#au2)"/>
+<circle cx="50" cy="27" r="5" fill="#2a1a00" opacity=".55"/>
+<rect x="44" y="41" width="12" height="52" rx="4" fill="url(#au2)"/>
+<rect x="56" y="67" width="14" height="8" rx="2" fill="url(#au2)"/><rect x="56" y="81" width="20" height="8" rx="2" fill="url(#au2)"/>
+<path d="M47 45 L47 88" stroke="#fff6c0" stroke-width="2" opacity=".55" stroke-linecap="round"/>
 </g></symbol>
 
-<symbol id="s-torch" viewBox="0 0 100 100"><g filter="url(#sh)" transform="rotate(-35 50 50)">
-<path d="M50 2 L18 30 L82 30Z" fill="#fff2a0" opacity=".35"/>
-<rect x="30" y="26" width="40" height="20" rx="4" fill="url(#steel)"/>
-<rect x="34" y="26" width="32" height="6" rx="2" fill="#fff6c0" opacity=".9"/>
-<rect x="37" y="44" width="26" height="48" rx="7" fill="#1c1c22"/>
-<rect x="37" y="44" width="26" height="48" rx="7" fill="url(#hl)" opacity=".5"/>
-<rect x="42" y="52" width="16" height="4" rx="2" fill="#e0202c"/>
-<path d="M41 62 L41 86" stroke="#ffffff30" stroke-width="3" stroke-linecap="round"/>
+<symbol id="s-watch" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="45" y="14" width="10" height="10" rx="2" fill="url(#au2)"/><circle cx="50" cy="11" r="5" fill="none" stroke="url(#au)" stroke-width="3"/>
+<circle cx="50" cy="57" r="32" fill="url(#au)"/><circle cx="50" cy="57" r="32" fill="url(#hl)" opacity=".5"/>
+<circle cx="50" cy="57" r="25" fill="#fdf6e3"/>
+<circle cx="50" cy="57" r="21" fill="none" stroke="#5a3a00" stroke-width="3" stroke-dasharray="1.5 9.5" stroke-dashoffset=".75" opacity=".8"/>
+<path d="M50 57 L50 41" stroke="#2a1a00" stroke-width="3" stroke-linecap="round"/><path d="M50 57 L62 51" stroke="#2a1a00" stroke-width="3" stroke-linecap="round"/>
+<circle cx="50" cy="57" r="2.5" fill="#8a0010"/>
+<path d="M28 41 Q36 31 48 30" stroke="#fff8d0" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
 </g></symbol>
 
-<symbol id="s-glove" viewBox="0 0 100 100"><g filter="url(#sh)">
-<rect x="30" y="40" width="46" height="50" rx="14" fill="#1c1c24"/>
-<rect x="30" y="18" width="10" height="34" rx="5" fill="#1c1c24"/><rect x="42" y="10" width="10" height="42" rx="5" fill="#1c1c24"/><rect x="54" y="12" width="10" height="40" rx="5" fill="#1c1c24"/><rect x="66" y="20" width="10" height="32" rx="5" fill="#1c1c24"/>
-<rect x="12" y="44" width="12" height="30" rx="6" fill="#1c1c24" transform="rotate(-30 18 59)"/>
-<rect x="30" y="40" width="46" height="50" rx="14" fill="url(#hl)" opacity=".35"/>
-<path d="M36 70 Q53 64 70 70" stroke="#ffffff30" stroke-width="2" fill="none" stroke-dasharray="3 3"/>
-<rect x="28" y="80" width="50" height="10" rx="4" fill="url(#au)"/>
+<symbol id="s-brief" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M38 34 L38 26 Q38 20 44 20 L56 20 Q62 20 62 26 L62 34" fill="none" stroke="#2c2c36" stroke-width="7" stroke-linecap="round"/>
+<path d="M38 34 L38 26 Q38 20 44 20 L56 20 Q62 20 62 26 L62 34" fill="none" stroke="url(#au)" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+<rect x="12" y="34" width="76" height="52" rx="7" fill="#1c1c24"/>
+<rect x="12" y="34" width="76" height="52" rx="7" fill="url(#hl)" opacity=".35"/>
+<path d="M12 48 L88 48" stroke="#ffffff22" stroke-width="2"/>
+<rect x="22" y="40" width="12" height="9" rx="2" fill="url(#au2)"/><rect x="66" y="40" width="12" height="9" rx="2" fill="url(#au2)"/>
+<rect x="43" y="52" width="14" height="14" rx="3" fill="url(#au)"/><circle cx="50" cy="57" r="2.2" fill="#2a1a00"/><rect x="48.8" y="58" width="2.4" height="5" fill="#2a1a00"/>
+<path d="M14 36 L86 36" stroke="url(#au)" stroke-width="1.5" opacity=".6"/>
 </g></symbol>
 
 <symbol id="s-dyn" viewBox="0 0 100 100"><g filter="url(#sh)">
@@ -695,23 +733,22 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <path d="M62 12 L66 4 L68 12 L76 10 L70 16 L76 20 L68 18 L64 24 L62 16 L54 14Z" fill="url(#fire)" filter="url(#glow)"/>
 </g></symbol>
 
-<symbol id="s-cash" viewBox="0 0 100 100"><g filter="url(#sh)">
-<rect x="14" y="58" width="72" height="20" rx="3" fill="#1f6a3a"/><rect x="14" y="48" width="72" height="20" rx="3" fill="#2a8a4a"/>
-<rect x="12" y="36" width="76" height="22" rx="3" fill="url(#grn)"/>
-<rect x="12" y="36" width="76" height="22" rx="3" fill="url(#hl)" opacity=".3"/>
-<rect x="18" y="40" width="64" height="14" rx="2" fill="none" stroke="#dfffd0" stroke-width="1.5" opacity=".7"/>
-<rect x="42" y="30" width="16" height="34" rx="2" fill="#f4ecd0"/>
-<text x="50" y="52" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="15" fill="#1f6a3a">€</text>
+<symbol id="s-sack" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M36 30 L30 14 L44 26 L50 10 L56 26 L70 14 L64 30Z" fill="#8a5a2a"/>
+<path d="M32 42 Q18 60 20 76 Q22 94 50 94 Q78 94 80 76 Q82 60 68 42Z" fill="#a8743a"/>
+<path d="M32 42 Q18 60 20 76 Q22 94 50 94 Q78 94 80 76 Q82 60 68 42Z" fill="url(#hl)" opacity=".45"/>
+<rect x="36" y="30" width="28" height="14" rx="5" fill="#8a5a2a"/>
+<path d="M34 40 Q50 46 66 40" stroke="url(#au)" stroke-width="4" fill="none" stroke-linecap="round"/>
+<text x="50" y="81" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="30" fill="url(#au)">€</text>
 </g></symbol>
 
-<symbol id="s-ruby" viewBox="0 0 100 100"><g filter="url(#sh)">
-<path d="M30 20 L70 20 L88 44 L50 88 L12 44Z" fill="url(#red)"/>
-<path d="M30 20 L50 44 L70 20Z" fill="#ffb0b0" opacity=".7"/>
-<path d="M12 44 L50 44 L50 88Z" fill="#5a0010" opacity=".4"/>
-<path d="M50 44 L88 44 L50 88Z" fill="#ff6a6a" opacity=".3"/>
-<path d="M30 20 L12 44 L50 44Z" fill="#ff8a8a" opacity=".5"/>
-<path d="M70 20 L88 44 L50 44Z" fill="#ff3b3b" opacity=".5"/>
-<circle cx="38" cy="30" r="3" fill="#fff"/>
+<symbol id="s-ring" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="62" r="23" fill="none" stroke="url(#au)" stroke-width="9"/>
+<circle cx="50" cy="62" r="23" fill="none" stroke="url(#hl)" stroke-width="9" opacity=".45"/>
+<path d="M38 36 L50 18 L62 36 L50 50Z" fill="url(#ice)"/>
+<path d="M38 36 L50 36 L50 18Z" fill="#fff" opacity=".8"/><path d="M50 36 L62 36 L50 50Z" fill="#19a0ff" opacity=".3"/>
+<path d="M40 38 L35 43 L45 41Z" fill="url(#au2)"/><path d="M60 38 L65 43 L55 41Z" fill="url(#au2)"/>
+<path d="M64 12 L66 18 L72 20 L66 22 L64 28 L62 22 L56 20 L62 18Z" fill="#fff"/>
 </g></symbol>
 
 <symbol id="s-bdia" viewBox="0 0 100 100"><g filter="url(#sh)">
@@ -726,28 +763,33 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </g></symbol>
 
 <symbol id="s-bar" viewBox="0 0 100 100"><g filter="url(#sh)">
-<path d="M24 36 L76 36 L86 54 L14 54Z" fill="url(#au)"/>
-<path d="M24 36 L76 36 L86 54 L14 54Z" fill="url(#hl)" opacity=".5"/>
-<rect x="14" y="54" width="72" height="24" rx="2" fill="url(#au2)"/>
-<path d="M30 42 L70 42" stroke="#fff6c0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
-<text x="50" y="71" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="11" fill="#5a3a00" letter-spacing="1">999.9</text>
+<path d="M30 28 L74 28 L82 42 L22 42Z" fill="url(#au)" opacity=".92"/><rect x="22" y="42" width="60" height="14" rx="2" fill="url(#au2)" opacity=".92"/>
+<path d="M22 50 L78 50 L88 68 L12 68Z" fill="url(#au)"/>
+<path d="M22 50 L78 50 L88 68 L12 68Z" fill="url(#hl)" opacity=".5"/>
+<rect x="12" y="68" width="76" height="22" rx="2" fill="url(#au2)"/>
+<path d="M30 55 L70 55" stroke="#fff6c0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+<text x="50" y="65" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="8.5" fill="#5a3a00" letter-spacing="1.5">GOLD 999.9</text>
 </g></symbol>
 
 <symbol id="s-mask" viewBox="0 0 100 100"><g filter="url(#sh)">
-<path d="M6 34 Q28 14 50 32 Q72 14 94 34 Q90 62 66 60 Q52 48 34 60 Q10 62 6 34Z" fill="#1c1c24"/>
-<path d="M6 34 Q28 14 50 32 Q72 14 94 34 Q90 62 66 60 Q52 48 34 60 Q10 62 6 34Z" fill="url(#hl)" opacity=".35"/>
-<ellipse cx="30" cy="38" rx="11" ry="7" fill="#5a5a66"/><ellipse cx="70" cy="38" rx="11" ry="7" fill="#5a5a66"/>
+<path d="M6 34 Q28 14 50 32 Q72 14 94 34 Q90 62 66 60 Q52 48 34 60 Q10 62 6 34Z" fill="#15151c" stroke="url(#au)" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M6 34 Q28 14 50 32 Q72 14 94 34 Q90 62 66 60 Q52 48 34 60 Q10 62 6 34Z" fill="url(#hl)" opacity=".3"/>
+<ellipse cx="30" cy="38" rx="11" ry="6.5" fill="#0a0a0e" stroke="url(#au)" stroke-width="1.5"/><ellipse cx="70" cy="38" rx="11" ry="6.5" fill="#0a0a0e" stroke="url(#au)" stroke-width="1.5"/>
+<ellipse cx="30" cy="38" rx="6" ry="3" fill="#ffd23f" opacity=".6" filter="url(#glow)"/><ellipse cx="70" cy="38" rx="6" ry="3" fill="#ffd23f" opacity=".6" filter="url(#glow)"/>
 <rect x="12" y="66" width="76" height="22" rx="6" fill="#06101f" stroke="url(#au)" stroke-width="3"/>
 <text x="50" y="83" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="18" fill="url(#au)" letter-spacing="2">WILD</text>
 </g></symbol>
 
 <symbol id="s-vault" viewBox="0 0 100 100"><g filter="url(#sh)">
-<circle cx="50" cy="50" r="42" fill="url(#steel)" filter="url(#glow)"/>
-<circle cx="50" cy="50" r="34" fill="none" stroke="#2a3140" stroke-width="3"/>
-<circle cx="50" cy="50" r="30" fill="#3a4150"/><circle cx="50" cy="50" r="30" fill="url(#hl)" opacity=".4"/>
-<g stroke="url(#au)" stroke-width="6" stroke-linecap="round"><path d="M50 24 L50 76"/><path d="M24 50 L76 50"/><path d="M32 32 L68 68"/><path d="M68 32 L32 68"/></g>
-<circle cx="50" cy="50" r="9" fill="url(#au2)"/>
-<g fill="#1a1f2a"><circle cx="50" cy="12" r="3"/><circle cx="50" cy="88" r="3"/><circle cx="12" cy="50" r="3"/><circle cx="88" cy="50" r="3"/><circle cx="23" cy="23" r="3"/><circle cx="77" cy="23" r="3"/><circle cx="23" cy="77" r="3"/><circle cx="77" cy="77" r="3"/></g>
+<circle cx="50" cy="50" r="44" fill="url(#steel)"/>
+<circle cx="50" cy="50" r="44" fill="none" stroke="url(#au)" stroke-width="3" filter="url(#glow)"/>
+<circle cx="50" cy="50" r="35" fill="#3a4150"/><circle cx="50" cy="50" r="35" fill="url(#hl)" opacity=".35"/>
+<circle cx="50" cy="50" r="35" fill="none" stroke="#1a1f2a" stroke-width="2"/>
+<g fill="url(#au2)"><circle cx="50" cy="11" r="3.2"/><circle cx="50" cy="89" r="3.2"/><circle cx="11" cy="50" r="3.2"/><circle cx="89" cy="50" r="3.2"/><circle cx="22.4" cy="22.4" r="3.2"/><circle cx="77.6" cy="22.4" r="3.2"/><circle cx="22.4" cy="77.6" r="3.2"/><circle cx="77.6" cy="77.6" r="3.2"/></g>
+<circle cx="50" cy="50" r="22" fill="none" stroke="url(#au)" stroke-width="5"/>
+<g stroke="url(#au)" stroke-width="5" stroke-linecap="round"><path d="M50 28 L50 72"/><path d="M28 50 L72 50"/><path d="M34.4 34.4 L65.6 65.6"/><path d="M65.6 34.4 L34.4 65.6"/></g>
+<circle cx="50" cy="50" r="8" fill="url(#au2)"/><circle cx="47" cy="47" r="2.5" fill="#fff8d0" opacity=".8"/>
+<rect x="69" y="44" width="10" height="12" rx="2" fill="#1a1f2a"/>
 </g></symbol>
 </svg>
 
@@ -1016,7 +1058,7 @@ const THEMES={
 slot:slotTheme('BURNING FRUITS',['cherry','lemon','orange','plum','melon','bell','diamond','seven','wild','star'],WGT,PAY),
 slot2:Object.assign(slotTheme('JADE DRAGON',['clover','lantern','bamboo','coin','lotus','fan','koi','dragon','mahjong','envelope'],WGT,PAY),{jade:true}),
 /* Diamond Heist: 7 ödeyen sembol + külçe (hat ödemez, 6+ = Kasayı Doldur) + wild + kasa kapısı (3+ = Kasa Odası). RTP ≈ %96 (simülasyon) */
-slot3:Object.assign(slotTheme('DIAMOND HEIST',['key','torch','glove','dyn','cash','ruby','bdia','bar','mask','vault'],[14,14,13,12,10,7,5,5.8,2,1.65],PAY.slice(0,7).concat([[0,0,0]])),{heist:true,C:7})};
+slot3:Object.assign(slotTheme('DIAMOND HEIST',['hkey','watch','brief','dyn','sack','ring','bdia','bar','mask','vault'],[14,14,13,12,10,7,5,5.8,2,1.65],PAY.slice(0,7).concat([[0,0,0]])),{heist:true,C:7})};
 const ico=(id,cls)=>'<svg class="sym'+(cls?' '+cls:'')+'"><use href="#s-'+id+'"/></svg>';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function overlay(html,ms,rays){return new Promise(res=>{const o=document.createElement('div');o.className='ovl';o.innerHTML=(rays?'<div class="rays"></div>':'')+'<div class="box">'+html+'</div>';document.body.appendChild(o);
@@ -1115,46 +1157,50 @@ drawLines([it.scat?{cells:it.cells,scat:true}:{cells:it.cells,line:it.line}]);wb
 setTimeout(()=>{show();cycle=setInterval(show,1100)},1200)}
 /* ===== DIAMOND HEIST bonus oyunları (makeSlot içinde; p, grid, cells, cv, g, wsum, wb, fsbar kapanımları) ===== */
 /* Kasa Odası: alarm çalana dek kasa aç (ilk 3 güvenli); ÇARK çıkarsa sonunda Soygun Çarkı toplamı katlar */
+const riskHtml=k=>{const n=Math.round(HEIST.pick.alarm(k)/.65*6);return '<span class="risk"><small>RİSK</small>'+Array.from({length:6},(_,i)=>'<i class="'+(i<n?'on':'')+(i>=4?' hi':'')+'"></i>').join('')+'</span>'};
 async function vaultPick(sc){const m=sc>=5?3:sc===4?2:1,stage=p.querySelector('.stage'),bx=p.querySelector('.hbonus');
 S.fs();say('bonus',300);
 await overlay('<div class="ic">'+ico(T.sym[T.S],'big').repeat(Math.min(sc,5))+'</div><h2>KASA ODASI</h2><p>Kasaları aç, alarm çalmadan topla</p>'+(m>1?'<p>Tüm ödüller <b style="color:var(--gold)">x'+m+'</b></p>':'')+'<p class="tiny">Başlamak için dokun</p>',4000);
 stage.classList.add('hide');bx.classList.remove('hide');
-bx.innerHTML='<div class="bhead"><span>KASA ODASI'+(m>1?'<b class="mm">x'+m+'</b>':'')+'</span><span>TOPLAM <b class="btot">0,00</b></span></div><div class="vaults">'+Array.from({length:12},(_,i)=>'<button class="vault" data-i="'+i+'"><i></i></button>').join('')+'</div><div class="bhint">Bir kasaya dokun · ilk 3 kasa güvenli</div>';
-let tot=0,k=1,wheel=false,ended=false;const totEl=bx.querySelector('.btot'),hint=bx.querySelector('.bhint');
-await new Promise(res=>{bx.querySelectorAll('.vault').forEach(v=>v.onclick=async()=>{if(ended||v.classList.contains('open'))return;v.classList.add('open');S.click();const pk=heistPickGen(k,wheel,Math.random);k++;
-if(pk.t==='alarm'){v.innerHTML='<b class="alarm">ALARM</b>';bx.classList.add('alarm');S.lose();hint.textContent='Alarm çaldı, soygun bitti';ended=true;await wait(1700);res();return}
-if(pk.t==='wheel'){wheel=true;v.innerHTML='<b class="wh">ÇARK</b>';S.scat();hint.textContent='Soygun Çarkı kazanıldı: sonunda toplamı katlar'}
-else if(pk.t==='dbl'){tot*=2;v.innerHTML='<b class="dbl">x2<small>HEPSİ</small></b>';S.big();hint.textContent='Toplam ikiye katlandı'}
-else{const a=pk.v*m*sbet();tot+=a;v.innerHTML='<b class="mult">'+fmtA(pk.v*m)+'x<small>+'+fmt(a)+'</small></b>';S.win(Math.min(6,1+Math.floor(pk.v/3)));hint.textContent=k<=4?'Güvenli, devam et':'Devam et: alarm riski artıyor'}
-totEl.textContent=fmt(tot);wsum.textContent=fmt(tot);
+bx.innerHTML='<div class="bhead"><span>KASA ODASI'+(m>1?'<b class="mm">x'+m+'</b>':'')+'</span><span class="rk"></span><span>TOPLAM <b class="btot">0,00</b></span></div><div class="vaults">'+Array.from({length:12},(_,i)=>'<button class="vault" data-i="'+i+'"><span class="inside"></span><span class="door"><i class="dial"></i><i class="hdl"></i></span></button>').join('')+'</div><div class="bhint">Bir kasaya dokun · ilk 3 kasa güvenli</div>';
+let tot=0,k=1,wheel=false,ended=false,opening=false;const totEl=bx.querySelector('.btot'),hint=bx.querySelector('.bhint'),rk=bx.querySelector('.rk');rk.innerHTML=riskHtml(k);
+await new Promise(res=>{bx.querySelectorAll('.vault').forEach(v=>v.onclick=async()=>{if(ended||opening||v.classList.contains('open'))return;opening=true;v.classList.add('turn');S.click();S.tick();await wait(150);S.tick();await wait(150);v.classList.add('open');const pk=heistPickGen(k,wheel,Math.random);k++;const ins=v.querySelector('.inside');
+if(pk.t==='alarm'){ins.innerHTML='<i class="siren"></i><b class="alarm">ALARM</b>';bx.classList.add('alarm');S.lose();for(let i=0;i<6;i++)tone(i%2?660:880,i*.17,.12,'square',.12);hint.textContent='Alarm çaldı, soygun bitti';ended=true;rk.innerHTML='';await wait(1900);res();return}
+if(pk.t==='wheel'){wheel=true;ins.innerHTML='<i class="mwheel"></i><b class="wh">ÇARK</b>';S.scat();hint.textContent='Soygun Çarkı kazanıldı: sonunda toplamı katlar'}
+else if(pk.t==='dbl'){tot*=2;ins.innerHTML=ico('bdia','pz')+'<b class="dbl">x2<small>HEPSİ</small></b>';S.big();hint.textContent='Toplam ikiye katlandı'}
+else{const a=pk.v*m*sbet();tot+=a;ins.innerHTML=ico(pk.v>=8?'bar':'sack','pz')+'<b class="mult">'+fmtA(pk.v*m)+'x<small>+'+fmt(a)+'</small></b>';S.win(Math.min(6,1+Math.floor(pk.v/3)));hint.textContent=k<=4?'Güvenli, devam et':'Devam et: alarm riski artıyor'}
+totEl.textContent=fmt(tot);wsum.textContent=fmt(tot);rk.innerHTML=riskHtml(k);opening=false;
 if(k>12){ended=true;if(!wheel){wheel=true;hint.textContent='Tüm kasalar açıldı: Soygun Çarkı!'}await wait(1300);res()}})});
-let mult=1;if(wheel&&tot>0){mult=await heistWheel();tot*=mult}
+let mult=1;if(wheel&&tot>0){mult=await heistWheel(tot);tot*=mult}
 bx.classList.add('hide');bx.classList.remove('alarm');stage.classList.remove('hide');
 setChips(chips+tot);wsum.textContent=fmt(tot);
 if(tot>10)slotWinFx(tot/sbet(),tot,p);if(tot/sbet()>=100)say('jackpot',200);else if(tot/sbet()>=20)say('bigwin',200);
 await overlay('<h2 class="wt">KASA ODASI BİTTİ</h2><div class="n">+'+fmtE(tot)+'</div><p>'+(tot/sbet()).toFixed(1)+'x bahis'+(mult>1?' · çark x'+mult:'')+'</p>',3200,tot>10)}
 /* Soygun Çarkı: 12 dilim, toplamı katlar */
-function heistWheel(){return new Promise(res=>{const bx=p.querySelector('.hbonus'),segs=HEIST.wheel,n=segs.length,seg=360/n;
-bx.innerHTML='<div class="bhead"><span>SOYGUN ÇARKI</span><span>Toplamı katlar</span></div><div class="wheelb"><div class="ptr"></div><div class="disc">'+segs.map((v,i)=>'<span style="transform:rotate('+((i+.5)*seg)+'deg) translateY(-88px)">x'+v+'</span>').join('')+'<i class="hub"></i></div></div><div class="bhint">Çevirmek için çarka dokun</div>';
-const disc=bx.querySelector('.disc');disc.style.background='conic-gradient('+segs.map((v,i)=>(v>=10?'#ffd23f':v>=5?'#e0202c':i%2?'#1c3f7a':'#0f2a55')+' '+(i*seg)+'deg '+((i+1)*seg)+'deg').join(',')+')';
-const idx=rnd(n),target=360*5+(360-(idx+.5)*seg)+(Math.random()*seg*.6-seg*.3);
-bx.onclick=async()=>{bx.onclick=null;bx.querySelector('.bhint').textContent='';S.click();S.wheelStart(4.2);disc.style.transition='transform 4.4s cubic-bezier(.12,.75,.08,1)';disc.style.transform='rotate('+target+'deg)';await wait(4500);S.wheelStop();S.big();
-bx.querySelector('.bhint').innerHTML='<b style="color:var(--gold);font-size:1.3rem">x'+segs[idx]+'</b>';await wait(1500);res(segs[idx])}})}
+function heistWheel(base){return new Promise(res=>{const bx=p.querySelector('.hbonus'),segs=HEIST.wheel,n=segs.length,seg=360/n;
+bx.innerHTML='<div class="bhead"><span>SOYGUN ÇARKI</span><span>TOPLAM <b>'+fmt(base)+'</b></span></div><div class="wheelb"><div class="bulbs">'+Array.from({length:16},(_,i)=>'<i style="transform:rotate('+(i*22.5)+'deg) translateY(-128px)"></i>').join('')+'</div><div class="ptr"></div><div class="disc">'+segs.map((v,i)=>'<span style="transform:rotate('+((i+.5)*seg)+'deg) translateY(-82px);color:'+(v>=10?'#1a1000':'#fff')+'">x'+v+'</span>').join('')+segs.map((v,i)=>'<em style="transform:rotate('+(i*seg)+'deg) translateY(-106px)"></em>').join('')+'<i class="hub">'+ico('bdia')+'</i></div><div class="hl"></div></div><div class="bhint">Çevirmek için çarka dokun</div>';
+const disc=bx.querySelector('.disc'),ptr=bx.querySelector('.ptr'),hl=bx.querySelector('.hl');disc.style.background='conic-gradient('+segs.map((v,i)=>(v>=10?'#ffd23f':v>=5?'#e0202c':i%2?'#1c3f7a':'#0f2a55')+' '+(i*seg)+'deg '+((i+1)*seg)+'deg').join(',')+')';
+const idx=rnd(n),target=360*5+(360-(idx+.5)*seg)+(Math.random()*seg*.5-seg*.25);
+bx.onclick=async()=>{bx.onclick=null;bx.querySelector('.bhint').textContent='';S.click();S.wheelStart(4.2);ptr.classList.add('tick');disc.style.transition='transform 4.4s cubic-bezier(.12,.75,.08,1)';disc.style.transform='rotate('+target+'deg)';await wait(3600);ptr.classList.remove('tick');await wait(900);S.wheelStop();S.big();
+hl.style.background='conic-gradient(from '+(-seg/2)+'deg,#ffffff66 0 '+seg+'deg,#0000 '+seg+'deg)';hl.classList.add('on');
+bx.querySelector('.bhint').innerHTML='<b class="wres">x'+segs[idx]+'</b><span>'+fmt(base)+' → <b>'+fmt(base*segs[idx])+'</b></span>';await wait(2200);res(segs[idx])}})}
 /* Kasayı Doldur: külçeler kilitlenir, boş hücreler 3 çevirme döner; yeni külçe hakkı yeniler; 25 külçe = GRAND */
 async function holdWin(){S.fs();say('bonus',300);
 await overlay('<div class="ic">'+ico('bar','big').repeat(3)+'</div><h2>KASAYI DOLDUR</h2><p>Külçeler kilitlendi · 3 çevirme hakkı</p><p>Her yeni külçe hakkı yeniler</p><p class="tiny">Başlamak için dokun</p>',4000);
 clearFx();grid.classList.add('hw');fsbar.classList.add('hw');fsbar.classList.remove('hide');
 const locked=g.map(col=>col.map(s=>s===T.C));let count=locked.flat().filter(Boolean).length;
 const res=heistHoldWin(cv,Math.random); /* adımlar önceden belirlenir, sırayla oynatılır */
-for(let c=0;c<5;c++)for(let r=0;r<5;r++){const e=cells[c][r];if(locked[c][r]){e.innerHTML=ico('bar')+cvLabel(cv[c][r]);e.className='cell hwc'}else{e.innerHTML='';e.className='cell hwe'}}
-let spins=3;const bar=t=>fsbar.innerHTML='<span>KASAYI DOLDUR</span><span>'+(t||'<b class="fsn">'+spins+'</b> çevirme · <b>'+count+'</b>/25')+'</span>';bar();
+const coinCell=(c,r)=>{const e=cells[c][r];e.innerHTML=ico('bar')+cvLabel(cv[c][r]);e.className='cell hwc'};
+for(let c=0;c<5;c++)for(let r=0;r<5;r++){if(locked[c][r])coinCell(c,r);else{const e=cells[c][r];e.innerHTML='';e.className='cell hwe'}}
+let spins=3;const bar=t=>fsbar.innerHTML='<span>KASAYI DOLDUR</span><span class="hwst">'+(t||[0,1,2].map(i=>'<i class="lt'+(i<spins?' on':'')+'"></i>').join('')+' <b>'+count+'</b>/25')+'</span>';bar();
 for(const st of res.steps){await wait(600);const emp=[];for(let c=0;c<5;c++)for(let r=0;r<5;r++)if(!locked[c][r])emp.push([c,r]);
 emp.forEach(([c,r])=>cells[c][r].classList.add('rs'));S.spinStart();
 await new Promise(done=>{let t=0;const iv=setInterval(()=>{t+=70;emp.forEach(([c,r])=>{cells[c][r].innerHTML=Math.random()<.25?ico('bar'):''});if(t>=900){clearInterval(iv);done()}},70)});
 S.spinStop();S.stop();emp.forEach(([c,r])=>{cells[c][r].classList.remove('rs');cells[c][r].innerHTML=''});
-st.added.forEach(([c,r])=>{locked[c][r]=true;count++;const e=cells[c][r];e.innerHTML=ico('bar')+cvLabel(cv[c][r]);e.className='cell hwc land'});
-if(st.added.length){S.coin();S.win(3)}else S.lose();spins=st.spins;bar();await wait(st.added.length?900:600)}
-const total=res.total*sbet();cells.flat().forEach(e=>{if(e.classList.contains('hwc'))e.classList.add('win')});
+st.added.forEach(([c,r])=>{locked[c][r]=true;count++;coinCell(c,r);const e=cells[c][r];e.classList.add('land');const f=document.createElement('b');f.className='fl';f.textContent='+'+(typeof cv[c][r]==='number'?fmt(cv[c][r]*sbet()):cv[c][r]);e.appendChild(f);setTimeout(()=>f.remove(),1300)});
+if(st.added.length){S.coin();S.win(3)}else S.lose();spins=st.spins;bar();await wait(st.added.length?1000:600)}
+/* final: külçeler sırayla parlar, toplam sayılır */
+const total=res.total*sbet();for(let c=0;c<5;c++)for(let r=0;r<5;r++)if(locked[c][r]){cells[c][r].classList.add('win');S.coin();await wait(60)}
 bar((res.full?'KASA DOLDU · GRAND! ':'Toplam ')+'<b>'+fmt(total)+'</b>');await countUp(total,1500);setChips(chips+total);
 if(res.full||total/sbet()>=100)say('jackpot',200);else if(total/sbet()>=40)say('megawin',200);else say('bigwin',200);
 if(total>10)slotWinFx(total/sbet(),total,p);
