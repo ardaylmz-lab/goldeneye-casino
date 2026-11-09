@@ -488,17 +488,41 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 #slot3.panel{padding:8px;border-color:#0a1a33;background:#04070e}
 /* ===== TEXAS HOLD'EM MASASI: oval espresso ray, zümrüt çuha, 3 koltuk, ortak kartlar, pot, dealer düğmesi ===== */
 #holdem.panel{padding:8px;border-color:#0a1a33;background:#04070e}
-.pkwrap{position:relative;width:100%;max-width:440px;margin:4px auto 6px;aspect-ratio:440/300}
-.pkrail{position:absolute;left:0;top:0;width:440px;height:300px;transform-origin:0 0;transform:scale(var(--s,1));border-radius:150px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
+.pkwrap{position:relative;width:100%;max-width:440px;margin:4px auto 6px;aspect-ratio:440/384}
+.pkrail{position:absolute;left:0;top:0;width:440px;height:300px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(32px);border-radius:150px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
 .pkrail::before{content:"";position:absolute;inset:3px;border-radius:147px;border:1px dashed #c9971a55;pointer-events:none;z-index:1}
 .pktable{position:relative;width:100%;height:100%;border-radius:140px;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 3px),radial-gradient(ellipse at 50% 40%,#1c8a52,#0f5f38 55%,#083a24 100%);box-shadow:0 0 0 2px #c9971acc,0 0 0 3px #00000088,inset 0 0 46px #000a,inset 0 0 0 1.5px #c9971a55}
 .pktable::before{content:"";position:absolute;inset:14px;border-radius:126px;border:1px solid #c9971a33;pointer-events:none}
-.pklogo{position:absolute;left:50%;top:74px;transform:translateX(-50%);font-family:"Cinzel",Georgia,serif;font-size:.6rem;letter-spacing:4px;color:#ffffff22;white-space:nowrap;pointer-events:none}
+.pklogo{position:absolute;left:50%;top:142px;width:92px;height:92px;margin:-46px;border-radius:50%;border:1.5px solid #ffffff14;box-shadow:inset 0 0 0 5px #0000,inset 0 0 0 6px #ffffff0e;display:grid;place-items:center;pointer-events:none}
+.pklogo span{font-family:"Cinzel",Georgia,serif;font-weight:800;font-size:2.1rem;letter-spacing:2px;color:#ffffff12;text-shadow:0 0 1px #ffffff10}
+/* krupiye alanı: çip rafı ve deste (üst orta) */
+.pkdealer{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;pointer-events:none}
+.pkrack{width:104px;height:18px;border-radius:5px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:3px 6px;box-sizing:border-box}
+.pkrack b{position:relative;flex:1;border-radius:3px 3px 1px 1px;background:repeating-linear-gradient(180deg,var(--c) 0 2.5px,#ffffff66 2.5px 3.5px);box-shadow:inset 0 1px 0 #fff6,inset 0 -1px 0 #0008,0 1px 2px #000a}
+.pkrack b::before{content:"";position:absolute;left:0;right:0;top:-2px;height:4px;border-radius:50%;background:var(--c);box-shadow:inset 0 1px 1px #fff8}
+.pkdeck{position:relative;width:26px;height:22px;border-radius:3px;background:linear-gradient(160deg,#17305a,#0a1a3a 60%,#060b16);box-shadow:0 0 0 1.5px #f3e6c4,0 0 0 2.5px #c9971a,1px 1px 0 #0a1a3a,2px 2px 0 #c9971a66,3px 3px 0 #0a1a3a,4px 4px 0 #c9971a66,0 5px 6px #000a}
+/* koltuklar: masanın dışında, ray arkasında; siyah kapitone deri, altın biye, altın başlıklı kolçaklar */
+.pkchairs{position:absolute;left:0;top:0;width:440px;height:384px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
+.pkchair{position:absolute;width:78px;height:72px;margin:-36px -39px;transform:rotate(var(--a,0deg))}
+.pkchair .bk{position:absolute;left:4px;right:4px;top:0;height:28px;border-radius:36px 36px 10px 10px;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .7px,#0000 1.4px) 6px 6px/12px 12px,repeating-linear-gradient(45deg,#0000 0 11.3px,#ffffff10 11.3px 12.3px),repeating-linear-gradient(-45deg,#0000 0 11.3px,#ffffff10 11.3px 12.3px),linear-gradient(180deg,#2c2c34,#141418 60%,#0a0a0c);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #0a0a0c,inset 0 2px 4px #ffffff2a,inset 0 -3px 6px #000a,0 8px 14px #000b}
+.pkchair .st{position:absolute;left:10px;right:10px;top:24px;height:46px;border-radius:10px 10px 18px 18px;background:linear-gradient(90deg,#101014,#222228 45%,#2c2c34 50%,#222228 55%,#101014);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #0a0a0c,inset 0 2px 4px #ffffff22,inset 0 -3px 5px #000a,0 6px 10px #000a}
+.pkchair .al,.pkchair .ar{position:absolute;top:26px;width:10px;height:38px;border-radius:6px;background:linear-gradient(180deg,#fff0a8 0,#d9a92a 16%,#1a1108 26%,#0e0a06 100%);box-shadow:0 3px 5px #000a}
+.pkchair .al{left:-3px}.pkchair .ar{right:-3px}
+.pkchair.dealer{width:86px;height:78px;margin:-39px -43px}.pkchair.dealer .bk{height:34px;border-radius:40px 40px 10px 10px}
+.pkchair.dealer .bk::after{content:"GE";position:absolute;left:50%;top:7px;width:18px;height:18px;margin-left:-9px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 35%,#fff0a8,#d9a92a 55%,#7a4e00);color:#1a1000;font-family:"Cinzel",Georgia,serif;font-size:6.5px;font-weight:800;box-shadow:0 1px 2px #000a}
+.pkchair.dealer .st{top:30px;height:48px}.pkchair.dealer .al,.pkchair.dealer .ar{top:32px;height:40px}
+/* poker kartları: daha büyük; arka yüz lacivert üstüne altın gilyoş ve madalyon, ön yüz ince altın çerçeve */
+.pktable .c{width:38px;height:54px}.pktable .c .ix{font-size:.86rem;left:3px;top:3px}.pktable .c .ix i{font-size:.66rem}.pktable .c .ix.b2{right:3px;bottom:3px}.pktable .c .pp>i{font-size:1.25rem}
+.pktable .c .cf{box-shadow:0 3px 6px #000a,inset 0 0 0 1px #d8d0bc,inset 0 0 0 2px #fffdf7,inset 0 0 0 3px #c9971a55}
+.pktable .c .cb{background:radial-gradient(circle at 50% 50%,#ffffff12,#0000 55%),repeating-radial-gradient(circle at 50% 50%,#c9971a2e 0 1px,#0000 1px 4px),repeating-linear-gradient(45deg,#c9971a26 0 1px,#0000 1px 4px),repeating-linear-gradient(-45deg,#c9971a26 0 1px,#0000 1px 4px),linear-gradient(160deg,#17305a,#0a1a3a 60%,#060b16);box-shadow:0 3px 6px #000a,inset 0 0 0 2px #f3e6c4,inset 0 0 0 3px #c9971a,inset 0 0 0 5px #0a1a3a,inset 0 0 0 6px #c9971a77}
+.pktable .c .cb::before{inset:8px;border-color:#c9971a99}
+.pktable .c .cb::after{content:"GE";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 35%,#2f5a90,#0a1a3a 70%);border:1px solid #ffd23f;color:#ffd23f;font-family:"Cinzel",Georgia,serif;font-size:6.5px;font-weight:800;letter-spacing:.5px}
+.pkseat .pkcards{height:54px;left:-36px;top:-70px}
 .pkpot{position:absolute;left:50%;top:92px;transform:translateX(-50%);font-family:"Orbitron",Montserrat,monospace;font-size:.6rem;font-weight:900;color:#ffe9a8;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;border-radius:8px;padding:3px 10px 2px;box-shadow:0 2px 4px #000a;white-space:nowrap;z-index:2}
 .pkpot:empty{display:none}
-.pkboard{position:absolute;left:50%;top:118px;transform:translateX(-50%);display:flex;gap:6px;perspective:500px;min-height:48px}
+.pkboard{position:absolute;left:50%;top:116px;transform:translateX(-50%);display:flex;gap:6px;perspective:500px;min-height:54px}
 .pkseat{position:absolute;left:0;top:0;width:0;height:0}
-.pkseat .pkcards{position:absolute;left:-33px;top:-62px;display:flex;perspective:500px;height:48px}
+.pkseat .pkcards{position:absolute;display:flex;perspective:500px}
 .pkseat .pkcards .c+.c{margin-left:-8px}
 .pkname{position:absolute;left:50%;top:-10px;transform:translateX(-50%);min-width:86px;text-align:center;padding:3px 8px 2px;border-radius:7px;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;box-shadow:0 3px 6px #000a;color:#ffe9a8;font-size:.55rem;font-weight:800;white-space:nowrap;line-height:1.15;z-index:2}
 .pkname b{display:block;font-family:"Orbitron",Montserrat,monospace;font-size:.6rem;color:#ffd23f}
@@ -506,12 +530,12 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .pkseat.on .pkname{border-color:#ffd23f;box-shadow:0 0 12px #ffd23f88,0 3px 6px #000a}
 .pkseat.fold .pkcards{opacity:.35;filter:grayscale(.6)}
 .pkseat.winner .pkname{background:linear-gradient(180deg,#fff0a8,#ffd23f 50%,#c58e0a);color:#1a1000;border-color:#fff6c0;box-shadow:0 0 16px #ffd23f,0 3px 6px #000a}.pkseat.winner .pkname b{color:#1a1000}
-.pkhand{position:absolute;left:50%;top:20px;transform:translateX(-50%);font-size:.5rem;color:#bfe6ff;white-space:nowrap;letter-spacing:.3px;font-weight:700}
+.pkhand{position:absolute;left:50%;top:28px;transform:translateX(-50%);font-size:.5rem;color:#bfe6ff;white-space:nowrap;letter-spacing:.3px;font-weight:700}
 .pkseat.winner .pkhand{color:#ffd23f}
-.pkstat{position:absolute;left:50%;top:-84px;transform:translateX(-50%);padding:2px 7px;border-radius:6px;font-size:.5rem;font-weight:900;letter-spacing:.5px;color:#fff;background:#000c;border:1px solid #ffffff22;white-space:nowrap;animation:rpop .3s cubic-bezier(.2,1.6,.4,1);z-index:3}
+.pkstat{position:absolute;left:50%;top:-92px;transform:translateX(-50%);padding:2px 7px;border-radius:6px;font-size:.5rem;font-weight:900;letter-spacing:.5px;color:#fff;background:#000c;border:1px solid #ffffff22;white-space:nowrap;animation:rpop .3s cubic-bezier(.2,1.6,.4,1);z-index:3}
 .pkseat:first-child .pkstat{left:-96px;top:-50px;transform:none}
 .pkstat.fold{background:#6a0010}.pkstat.raise{background:#b8860b;color:#1a1000}.pkstat.allin{background:#e0202c}.pkstat.check{background:#1a3a6a}.pkstat.call{background:#1a9a4a}
-.pktimer{position:absolute;left:50%;top:23px;width:86px;height:3px;margin-left:-43px;z-index:3;background:#0006;border-radius:2px;overflow:hidden;display:none}
+.pktimer{position:absolute;left:50%;top:21px;width:86px;height:3px;margin-left:-43px;z-index:3;background:#0006;border-radius:2px;overflow:hidden;display:none}
 .pkseat.on .pktimer{display:block}.pktimer i{display:block;height:100%;width:var(--w,100%);background:linear-gradient(90deg,#ffd23f,#ff7a00);transition:width .25s linear}
 .pkbet{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;align-items:center;gap:3px;z-index:2}
 .pkbet .bchip{width:26px;height:26px;font-size:.46rem}
@@ -940,7 +964,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="holdem">
-<div class="pkwrap" id="pkwrap"><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">GOLDEN EYE · HOLD'EM</div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div></div>
+<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo"><span>GE</span></div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div></div>
 <div class="res" id="pkres"></div>
 <div class="pkact hide" id="pkact"><div class="pkrow1"><button id="pkfold">PAS</button><button id="pkcheck" class="go">ÇEK</button></div><div class="pkrow2"><button class="pkpre" data-f="min">Min</button><button class="pkpre" data-f=".5">½ Pot</button><button class="pkpre" data-f="1">Pot</button><button class="pkpre" data-f="all">Rest</button></div><div class="pkrow3"><button class="bb minus" id="pkminus" aria-label="Azalt">−</button><button id="pkraise" class="go">YÜKSELT <b>20</b></button><button class="bb plus" id="pkplus" aria-label="Artır">+</button></div></div>
 <div class="row"><button class="go" id="pksit">MASAYA OTUR · 500 €</button><button id="pkleave" class="hide">Masadan kalk</button></div>
@@ -1663,6 +1687,8 @@ function pkFit(){const w=$('pkwrap').clientWidth;if(w)$('pkwrap').style.setPrope
 new ResizeObserver(pkFit).observe($('pkwrap'));pkFit();
 PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';$('pkseats').appendChild(d)});
 const pkScale=()=>parseFloat(getComputedStyle($('pkwrap')).getPropertyValue('--s'))||1;
+/* koltuklar (sarmal koordinatı): sen altta sırtı sana dönük, botlar üst köşelerde masaya dönük, krupiye üst ortada */
+[[220,346,180,''],[60,72,-28,''],[380,72,28,''],[220,30,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
 /* kart listesini DOM ile eşle: yeni kart eklenir (uçar), kapalı kart yerinde çevrilir, fazlalık silinir */
 function syncCards(box,want,pre){let els=[...box.children];let k=0;while(k<els.length&&k<want.length&&(els[k].dataset.c===want[k].c||els[k].classList.contains('h')))k++;
 for(let q=els.length-1;q>=k;q--)els[q].remove();
