@@ -1661,16 +1661,26 @@ const cam=new THREE.PerspectiveCamera(34,5/4,.1,12);cam.position.set(0,2.249,2.0
 /* sinematik kamera: boşta genel plan; çevirince yaklaşır, topu izler, cebe oturunca yakın çekimde durur, sonra geri açılır */
 const C0=new THREE.Vector3(0,-.28,0),CS=new THREE.Vector3(0,-.12,0),DIR=new THREE.Vector3(0,2.529,2.061).normalize(),D0=3.262,camT=C0.clone(),wantT=new THREE.Vector3();let camD=D0;
 let CW=0,CH=0;function fit(){const w=box.clientWidth,h=box.clientHeight;if(!w||!h||(w===CW&&h===CH))return;CW=w;CH=h;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
-const key=new THREE.DirectionalLight(0xfff1d6,2.3);key.position.set(1.2,2.8,1.6);key.castShadow=true;key.shadow.mapSize.set(1024,1024);
-{const c=key.shadow.camera;c.left=c.bottom=-1.2;c.right=c.top=1.2;c.near=.5;c.far=7;key.shadow.bias=-.0006;key.shadow.normalBias=.01}scene.add(key);
-scene.add(new THREE.HemisphereLight(0xfff6e6,0x10361f,.6));
-const rimL=new THREE.DirectionalLight(0xffe2a8,.7);rimL.position.set(-2,1.4,-1.6);scene.add(rimL);
+/* ışık: tepeden masa lambası gibi yumuşak kenarlı, gölge düşüren spot; sıcak dolgu; arkadan altın kontur */
+const spot=new THREE.SpotLight(0xffeccf,42,9,.6,.75,2);spot.position.set(.7,3.4,1.5);spot.target.position.set(0,-.1,0);scene.add(spot.target);
+spot.castShadow=true;spot.shadow.mapSize.set(1024,1024);spot.shadow.bias=-.0004;spot.shadow.normalBias=.02;spot.shadow.camera.near=.6;spot.shadow.camera.far=8;spot.shadow.radius=4;scene.add(spot);
+const key=new THREE.DirectionalLight(0xfff1d6,.8);key.position.set(1.2,2.8,1.6);scene.add(key);
+scene.add(new THREE.HemisphereLight(0xfff6e6,0x10361f,.45));
+const rimL=new THREE.DirectionalLight(0xffe2a8,.9);rimL.position.set(-2,1.4,-1.6);scene.add(rimL);
 /* --- dokular --- */
-function woodTex(){const c=document.createElement('canvas');c.width=1024;c.height=256;const x=c.getContext('2d');
-const g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,'#5e2f12');g.addColorStop(.5,'#74401a');g.addColorStop(1,'#4b240e');x.fillStyle=g;x.fillRect(0,0,1024,256);
-for(let i=0;i<160;i++){x.strokeStyle='rgba('+(18+Math.random()*30|0)+','+(6+Math.random()*12|0)+',0,'+(.1+Math.random()*.28)+')';x.lineWidth=.6+Math.random()*2.2;x.beginPath();const y=Math.random()*256;x.moveTo(0,y);for(let px=0;px<=1024;px+=48)x.lineTo(px,y+Math.sin(px/90+i)*3+Math.sin(px/23+i*2)*1.3);x.stroke()}
-for(let i=0;i<70;i++){x.strokeStyle='rgba(255,205,150,'+(.04+Math.random()*.09)+')';x.lineWidth=.5+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);for(let px=0;px<=1024;px+=48)x.lineTo(px,y+Math.sin(px/70+i)*2.5);x.stroke()}
-const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,1);t.anisotropy=4;return t}
+function woodTex(){const W=1024,H=256,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),img=x.createImageData(W,H),d=img.data;
+const b=document.createElement('canvas');b.width=W;b.height=H;const bx=b.getContext('2d'),bimg=bx.createImageData(W,H),bd=bimg.data;
+/* maun: geniş katedral damarı + ince gözenek çizgileri + hafif rastgele leke; aynı değerden kabartma */
+for(let y=0;y<H;y++)for(let px=0;px<W;px++){const wob=18*Math.sin(px*.0061+1.3)+7*Math.sin(px*.019+.4)+3*Math.sin(px*.047);
+const g=.5+.5*Math.sin((y+wob)*.26),f=.5+.5*Math.sin((y*3.6+4*Math.sin(px*.05)+2*Math.sin(px*.11))*1.9),s=.5+.5*Math.sin(px*.013+y*.021);
+let v=g*.46+f*.36+s*.18;v=Math.min(1,Math.max(0,v+(Math.random()-.5)*.05));
+const r=50+v*66,gg=20+v*28,bb=7+v*13,o=(y*W+px)*4;d[o]=r;d[o+1]=gg;d[o+2]=bb;d[o+3]=255;const k=90+v*110;bd[o]=k;bd[o+1]=k;bd[o+2]=k;bd[o+3]=255}
+x.putImageData(img,0,0);bx.putImageData(bimg,0,0);
+const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,1);t.anisotropy=8;
+const bt=new THREE.CanvasTexture(b);bt.wrapS=bt.wrapT=THREE.RepeatWrapping;bt.repeat.set(3,1);return{map:t,bump:bt}}
+function brushTex(){const W=512,H=64,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#4a4a4a';x.fillRect(0,0,W,H);
+for(let i=0;i<900;i++){x.strokeStyle='rgba('+(i%2?30:90)+','+(i%2?30:90)+','+(i%2?30:90)+','+(.15+Math.random()*.35)+')';x.lineWidth=.5+Math.random()*1.2;const y=Math.random()*H;x.beginPath();x.moveTo(0,y);x.lineTo(W,y+(Math.random()-.5)*2);x.stroke()}
+const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(4,1);return t}
 async function pocketTex(){try{await document.fonts.ready}catch(e){}
 const N=37,cw=96,HH=384,c=document.createElement('canvas');c.width=cw*N;c.height=HH;const x=c.getContext('2d');
 for(let i=0;i<N;i++){const j=36-i,n=WO[i],col=n===0?'#0e8a44':REDS.includes(n)?'#d0132f':'#1c1c20',dark=n===0?'#064a23':REDS.includes(n)?'#6e0616':'#060607',X=j*cw;
@@ -1682,10 +1692,11 @@ x.scale(str.length>1?.7:.88,1);const adv=x.measureText('0').width*.92;const gl=(
 x.fillStyle='rgba(0,0,0,.45)';x.fillRect(X,0,2,HH);x.fillRect(X+cw-2,0,2,HH)}
 const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
 /* --- malzemeler --- */
-const wood=new THREE.MeshStandardMaterial({map:woodTex(),roughness:.36,metalness:.05,envMapIntensity:.9});
-const brass=new THREE.MeshStandardMaterial({color:0xd8ad45,metalness:.95,roughness:.22,envMapIntensity:1.3});
-const lacq=new THREE.MeshStandardMaterial({color:0x150c06,roughness:.28,metalness:.12,envMapIntensity:1});
-const ivory=new THREE.MeshStandardMaterial({color:0xf6f1e6,roughness:.28,metalness:0,envMapIntensity:1});
+const WT=woodTex(),BR_T=brushTex();
+const wood=new THREE.MeshPhysicalMaterial({map:WT.map,bumpMap:WT.bump,bumpScale:.003,roughness:.48,metalness:0,clearcoat:.65,clearcoatRoughness:.24,envMapIntensity:.8});
+const brass=new THREE.MeshStandardMaterial({color:0xd8ad45,metalness:.96,roughness:1,roughnessMap:BR_T,envMapIntensity:1.4});
+const lacq=new THREE.MeshPhysicalMaterial({color:0x150c06,roughness:.3,metalness:.1,clearcoat:.8,clearcoatRoughness:.2,envMapIntensity:1});
+const ivory=new THREE.MeshPhysicalMaterial({color:0xf6f1e6,roughness:.22,metalness:0,clearcoat:.7,clearcoatRoughness:.15,envMapIntensity:1.1});
 /* --- ölçüler: rotor R2..R1, kase 1.0 --- */
 const R1=.74,R2=.50,Y1=-.07,Y2=-.16,TRK=.91,PR=.60,BR=.034;
 const prof=[[.735,-.22],[.735,-.10],[.755,-.065],[.78,-.058],[.87,.012],[.89,.03],[.94,.045],[.955,.06],[.98,.07],[1.0,.055],[1.0,-.16],[.92,-.2],[.735,-.22]].map(p=>new THREE.Vector2(p[0],p[1]));
@@ -1702,6 +1713,9 @@ const slopeA=Math.atan2(Y1-Y2,R1-R2),frets=new THREE.InstancedMesh(new THREE.Box
 {const m=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),v=new THREE.Vector3(),one=new THREE.Vector3(1,1,1),rm=(R1+R2)/2,ym=(Y1+Y2)/2+.009;
 for(let k=0;k<37;k++){const th=k*2*Math.PI/37;e.set(-slopeA,th,0,'YXZ');q.setFromEuler(e);v.set(rm*Math.sin(th),ym,rm*Math.cos(th));m.compose(v,q,one);frets.setMatrixAt(k,m)}}
 frets.castShadow=true;frets.receiveShadow=true;rotor.add(frets);
+/* kazanan cep ışığı: top oturunca cep altın parlar, birkaç saniyede söner */
+const glow=new THREE.Mesh(new THREE.BoxGeometry(.078,.05,.245),new THREE.MeshBasicMaterial({color:0xffd23f,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));rotor.add(glow);let glowT=-1e9;
+function glowAt(i){const a=((36-i)+.5)*2*Math.PI/37,rm=(R1+R2)/2,ym=(Y1+Y2)/2+.012;glow.position.set(rm*Math.sin(a),ym,rm*Math.cos(a));glow.rotation.set(-slopeA,a,0,'YXZ');glowT=performance.now()/1000}
 const tur=new THREE.Group();tur.position.y=-.03;rotor.add(tur);
 const cyl=(r1,r2,h,y,mat)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,48),mat||brass);m.position.y=y;m.castShadow=true;return m};
 tur.add(cyl(.105,.125,.11,.055));tur.add(ring(.11,.012,.11));tur.add(cyl(.02,.095,.06,.14));tur.add(cyl(.028,.028,.05,.19));
@@ -1710,6 +1724,7 @@ for(let k=0;k<2;k++){const a=new THREE.Mesh(new THREE.CylinderGeometry(.011,.011
 tur.add(sph(.028,.18,.215,0));tur.add(sph(.028,-.18,.215,0));tur.add(sph(.028,0,.215,.18));tur.add(sph(.028,0,.215,-.18));tur.add(sph(.03,0,.235,0));
 /* --- top --- */
 const ball=new THREE.Mesh(new THREE.SphereGeometry(BR,32,24),ivory);ball.castShadow=true;scene.add(ball);
+const ghosts=[],trail=[];for(let q=0;q<6;q++){const g=new THREE.Mesh(new THREE.SphereGeometry(BR*(.92-q*.1),16,12),new THREE.MeshBasicMaterial({color:0xfff3d6,transparent:true,opacity:0,depthWrite:false}));scene.add(g);ghosts.push(g)}
 const TWO=Math.PI*2,ang=i=>((36-i)+.5)*TWO/37;
 function surfY(r){if(r>=.89)return .045;if(r>=.78)return -.058+(r-.78)/.11*.088;if(r>=.755)return -.062;return Y2+(r-R2)/(R1-R2)*(Y1-Y2)}
 const wrapA=a=>Math.atan2(Math.sin(a),Math.cos(a)),smooth=x=>x<=0?0:x>=1?1:x*x*(3-2*x),E=x=>1-Math.pow(1-Math.min(1,x),3);
@@ -1721,8 +1736,11 @@ function planHops(D){const pat=[[.42,.034,.30],[.27,.027,.26],[-.07,.018,.19],[.
 const sum=use.reduce((a,h)=>a+h[0],0);return use.map(h=>({d:-D*h[0]/sum,h:h[1]*(0.85+Math.random()*.3),t:h[2]}))}
 function spin(i){return new Promise(res=>{const now=performance.now()/1000;st={t0:now,ry0:ry,phi0:phi,i,res,done:false,hops:null,entry:0,relAt:0,settleT:0,hopIdx:-1};
 const D0=.55+Math.random()*.45; /* rotora girişte hedefin ne kadar ilerisinde (rad) */
-const need=(((phi-ang(i)-D0-ryAt(T2))%TWO)+TWO)%TWO,E2=E(T2/DUR),base=TWO*8.5,k=Math.ceil((base*E2-need)/TWO);st.Phi=(need+TWO*k)/E2;hitPlayed=false})}
-let last=performance.now()/1000,frame=0;
+const need=(((phi-ang(i)-D0-ryAt(T2))%TWO)+TWO)%TWO,E2=E(T2/DUR),base=TWO*8.5,k=Math.ceil((base*E2-need)/TWO);st.Phi=(need+TWO*k)/E2;hitPlayed=false;st.defl=planDefl(st)})}
+/* elmas çarpması: top yamaçta elmas halkasını (r≈.80–.85) geçerken bir elmasın açısına denk gelirse sekme anı */
+function planDefl(s){const hits=[];for(let u=T1+.25;u<T2-.12;u+=.005){const k=smooth((u-T1)/(T2-T1)),r=TRK-(TRK-.76)*k;if(r>.85||r<.80)continue;const ph=s.phi0-s.Phi*E(u/DUR);
+for(let q=0;q<8;q++){const th=q*Math.PI/4+Math.PI/8;if(Math.abs(wrapA(ph-th))<.05){if(!hits.length||u-hits[hits.length-1]>.3)hits.push(u);break}}if(hits.length>=2)break}return hits}
+let last=performance.now()/1000,frame=0,sway=0;const YAX=new THREE.Vector3(0,1,0);
 function loop(){requestAnimationFrame(loop);fit();const now=performance.now()/1000,dt=Math.min(.05,now-last);last=now;
 /* dönüş sırasında rotor açısı zamana bağlı analitik: kare takılması hizalamayı bozmaz */
 if(st&&now-st.t0<=DUR){const u=now-st.t0;wr=W0-(W0-W1)*u/DUR;ry=ryAt(u)}else{if(st)wr+=(.25-wr)*Math.min(1,dt*1.1);ry+=wr*dt}rotor.rotation.y=ry;
@@ -1731,25 +1749,34 @@ if(st){const s=st,u=now-s.t0;
 if(u<T2){ /* pist + eğim: serbest hareket */
 phi=s.phi0-s.Phi*E(u/DUR);
 if(u<T1)r=TRK;else{const k=smooth((u-T1)/(T2-T1));r=TRK-(TRK-.76)*k}
-if(u>=Th&&u<Th+.22){hop=.03*Math.sin(Math.PI*(u-Th)/.22);if(!hitPlayed){hitPlayed=true;try{S.hit()}catch(e){}}}
+/* elmasa çarpma: yüksek sekme + dışa tekme, ardından küçük ikinci sekme; elmas yoksa dudakta hafif tümsek */
+let hitAny=false;for(const th of s.defl){if(u>=th&&u<th+.5){hitAny=true;const a=(u-th);if(a<.24){hop+=.05*Math.sin(Math.PI*a/.24);r+=.022*Math.sin(Math.PI*a/.24)}else if(a<.46){hop+=.016*Math.sin(Math.PI*(a-.24)/.22)}
+if(s.lastDefl!==th){s.lastDefl=th;try{S.hit()}catch(e){}}}}
+if(!hitAny&&!s.defl.length&&u>=Th&&u<Th+.22){hop=.03*Math.sin(Math.PI*(u-Th)/.22);if(!hitPlayed){hitPlayed=true;try{S.hit()}catch(e){}}}
 }else{ /* rotorda: ayırıcılara çarpa çarpa sekerek kazanan cebe */
 if(!s.hops){s.entry=wrapA((s.phi0-s.Phi*E(T2/DUR))-ryAt(T2));let D=wrapA(s.entry-ang(s.i));if(D<0)D+=TWO;s.hops=planHops(D);s.relAt=s.entry;let tt=T2;s.hops.forEach(h=>{h.t0=tt;tt+=h.t;h.r0=.74;});s.settleT=tt;
 let rr=.74;s.hops.forEach((h,q)=>{h.r0=rr;rr=q===s.hops.length-1?PR:rr-(rr-PR)*.45;h.r1=rr})}
 let rel=ang(s.i),done=true;
 for(let q=0;q<s.hops.length;q++){const h=s.hops[q];if(u<h.t0+h.t){const k=(u-h.t0)/h.t;rel=s.relAt+h.d*k;hop=h.h*Math.sin(Math.PI*k);r=h.r0+(h.r1-h.r0)*k;done=false;
 if(s.hopIdx!==q){s.hopIdx=q;if(q>0)try{S.hit()}catch(e){}}break}else{s.relAt+=0;}}
-if(done){rel=ang(s.i);r=PR;hop=0;if(!s.done){s.done=true;pocket=s.i;try{S.hit()}catch(e){};s.res()}}
+if(done){rel=ang(s.i);r=PR;hop=0;if(!s.done){s.done=true;pocket=s.i;glowAt(s.i);try{S.hit()}catch(e){};s.res()}}
 else{let acc=s.entry;for(let q=0;q<s.hopIdx;q++)acc+=s.hops[q].d;const h=s.hops[s.hopIdx];rel=acc+h.d*Math.min(1,(u-h.t0)/h.t)}
 phi=rel+ry}
 if(u>=DUR+3)st=null}else phi=ang(pocket)+ry;
 ball.position.set(r*Math.sin(phi),surfY(r)+BR+hop,r*Math.cos(phi));
+/* iz: hızlıyken geride sönen hayaletler */
+{trail.push(ball.position.clone());if(trail.length>14)trail.shift();const sp=trail.length>2?trail[trail.length-1].distanceTo(trail[trail.length-2])/Math.max(dt,.001):0;const f=Math.min(1,Math.max(0,(sp-1.2)/3.5));
+ghosts.forEach((g,q)=>{const idx=trail.length-2-q*2;if(idx>=0&&f>0){g.position.copy(trail[idx]);g.material.opacity=f*(.32-q*.05)}else g.material.opacity=0})}
+/* kazanan cep ışığı */
+{const a=now-glowT;glow.material.opacity=a<4.5?Math.max(0,(.5+.25*Math.sin(now*7))*(1-a/4.5)):0}
 /* kamera hedefi ve mesafesi */
 let wantD=D0;wantT.copy(C0);
 if(st){const u=now-st.t0,se=st.settleT||T2+1.1;
 if(u<T1){wantT.copy(CS);wantD=D0*.8}
 else if(u<se+1.4){const k=smooth((u-T1)/(T2-T1))*.8;wantT.copy(CS).multiplyScalar(1-k).addScaledVector(ball.position,k);wantD=D0*(.8-.32*smooth((u-T1)/(se-T1)))}}
 const ka=1-Math.exp(-dt*3);camT.lerp(wantT,ka);camD+=(wantD-camD)*(1-Math.exp(-dt*2.2));
-cam.position.copy(camT).addScaledVector(DIR,camD);cam.lookAt(camT);
+/* boşta kamera çarkın çevresinde ağır ağır salınır; çevirince sabitlenir */
+const swayT=st?0:.11*Math.sin(now*.21);sway+=(swayT-sway)*(1-Math.exp(-dt*.9));cam.position.copy(camT).addScaledVector(DIR.clone().applyAxisAngle(YAX,sway),camD);cam.lookAt(camT);
 const vis=!document.hidden&&!document.getElementById('rulet').classList.contains('hide');if(!vis)return;
 frame++;if(!st&&(frame&1))return;renderer.render(scene,cam)}
 fit();loop();box.classList.add('gl');
