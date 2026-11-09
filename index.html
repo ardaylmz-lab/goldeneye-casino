@@ -967,7 +967,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="res" id="pkres"></div>
 <div class="pkact hide" id="pkact"><div class="pkrow1"><button id="pkfold">PAS</button><button id="pkcheck" class="go">ÇEK</button></div><div class="pkrow2"><button class="pkpre" data-f="min">Min</button><button class="pkpre" data-f=".5">½ Pot</button><button class="pkpre" data-f="1">Pot</button><button class="pkpre" data-f="all">Rest</button></div><div class="pkrow3"><button class="bb minus" id="pkminus" aria-label="Azalt">−</button><button id="pkraise" class="go">YÜKSELT <b>20</b></button><button class="bb plus" id="pkplus" aria-label="Artır">+</button></div></div>
 <div class="row"><button class="go" id="pksit">MASAYA OTUR · 500 €</button><button id="pkleave" class="hide">Masadan kalk</button></div>
-<div class="lbl">Texas Hold'em · kör bahisler 5/10 € · 500 € giriş (yığının bitince bakiyeden yeniden alınır). İki kapalı kart ve beş ortak karttan en iyi 5'li el kazanır. Sıra sende 25 sn: süre dolarsa varsa çek, yoksa pas. Şimdilik Mert ve Elif'e karşı; ortak masa ikinci aşamada.</div>
+<div class="lbl" id="pklbl">Texas Hold'em · kör bahisler 5/10 € · 500 € giriş (yığının bitince bakiyeden yeniden alınır). İki kapalı kart ve beş ortak karttan en iyi 5'li el kazanır. Sıra sende 25 sn: süre dolarsa varsa çek, yoksa pas. Giriş yapmadan Mert ve Elif'e karşı oynarsın.</div>
 </div>
 
 <div id="msg"></div>
@@ -1678,13 +1678,14 @@ if(s>.85&&r<.8&&L.canRaise)return raiseTo(1);if(s>.6&&r<.35&&L.canRaise)return r
 if(s>odds+.12)return{a:'call'};if(s>odds-.05&&r<.4)return{a:'call'};if(r<.05&&L.canRaise)return raiseTo(.9);return{a:'fold'}}
 return{RANKS,SUITS,newDeck,evaluate,CAT,newGame,startHand,legal,act,botDecide,strength,pot,sidePots,activeIdx}})();
 
-/* ===== TEXAS HOLD'EM ARAYÜZÜ (tek kişilik: iki bota karşı; ortak masa ikinci aşama) ===== */
-const PK={st:null,human:false,busy:false,timer:null,tEnd:0,botT:null,next:null,buyin:500,raiseTo:0,shown:new Set(),stat:{},settled:false};
+/* ===== TEXAS HOLD'EM ARAYÜZÜ: giriş yoksa iki bota karşı yerel; giriş varsa ortak masa (cloud.pk, sunucu motoru) aynı çizimi kullanır ===== */
+const PK={st:null,human:false,seated:false,busy:false,timer:null,tEnd:0,botT:null,next:null,buyin:500,raiseTo:0,shown:new Set(),stat:{},settled:false};
+const PKO=()=>!!(window.cloud&&cloud.me&&cloud.me()&&cloud.pk); /* ortak masa (sunucu motoru) aktif mi */
 const PKPOS=[[220,238],[70,98],[370,98]],PKC=[220,128]; /* koltuklar (alt orta = sen) ve masa merkezi */
 const PKBOTS=[{id:'bot1',name:'Mert'},{id:'bot2',name:'Elif'}];
 function pkFit(){const w=$('pkwrap').clientWidth;if(w)$('pkwrap').style.setProperty('--s',w/440)}
 new ResizeObserver(pkFit).observe($('pkwrap'));pkFit();
-PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';$('pkseats').appendChild(d)});
+PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';d.onclick=()=>{if(PKO()&&!PK.seated){ac();S.click();cloud.pk.sit(i)}};$('pkseats').appendChild(d)});
 const pkScale=()=>parseFloat(getComputedStyle($('pkwrap')).getPropertyValue('--s'))||1;
 /* koltuklar (sarmal koordinatı): sen altta sırtı sana dönük, botlar üst köşelerde masaya dönük, krupiye üst ortada */
 [[220,346,180,''],[46,80,-42,''],[394,80,42,''],[220,30,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
@@ -1699,24 +1700,24 @@ $('pkt').querySelectorAll('.c.new').forEach(e=>{e.classList.remove('new');const 
 const onPK=()=>!$('holdem').classList.contains('hide');
 function pkBetPos(i){const [x,y]=PKPOS[i],f=i===0?.66:.42;return{x:x+(PKC[0]-x)*f+(i===0?-62:0),y:y+(PKC[1]-y)*f}}
 function pkRender(){const st=PK.st,seats=$('pkseats').children;
-for(let i=0;i<3;i++){const el=seats[i],p=st?st.players[i]:null;el.classList.toggle('on',!!st&&st.cur===i);el.classList.toggle('fold',!!p&&p.folded&&p.cards.length>0);el.classList.toggle('winner',!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
-syncCards(el.querySelector('.pkcards'),p?p.cards.map(c=>({c,hid:i!==0&&!PK.shown.has(i)})):[],'p'+i+'-');
+for(let i=0;i<3;i++){const el=seats[i];let p=st?st.players[i]:null;if(p&&p.empty)p=null;const mine=i===0&&PK.seated;el.classList.toggle('on',!!st&&st.cur===i);el.classList.toggle('fold',!!p&&p.folded&&p.cards.length>0);el.classList.toggle('winner',!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
+syncCards(el.querySelector('.pkcards'),p?p.cards.map(c=>({c,hid:c==='??'||(!mine&&!PK.shown.has(i))})):[],'p'+i+'-');
 el.querySelector('.pkname').innerHTML=p?p.name+'<b>'+fmt(p.stack)+'</b>'+(p.allin&&!p.folded?'<small>REST</small>':''):'<span style="color:#8fb8e0">Boş</span>';
-let hn='';if(p&&p.cards.length&&!p.folded){if(i===0||PK.shown.has(i)){const e=HE.evaluate(p.cards.concat(st.board));hn=e.name}}el.querySelector('.pkhand').textContent=hn;
+let hn='';if(p&&p.cards.length&&!p.folded&&!p.cards.includes('??')){if(mine||PK.shown.has(i)){const e=HE.evaluate(p.cards.concat(st.board));hn=e.name}}el.querySelector('.pkhand').textContent=hn;
 let bet=$('pkt').querySelector('.pkbet[data-i="'+i+'"]');if(p&&p.bet>0){if(!bet){bet=document.createElement('div');bet.className='pkbet';bet.dataset.i=i;$('pkt').appendChild(bet)}const bp=pkBetPos(i);bet.style.left=bp.x+'px';bet.style.top=bp.y+'px';bet.innerHTML='<div class="bchip"></div><em>'+fmtA(p.bet)+'</em>'}else if(bet)bet.remove()}
 syncCards($('pkboard'),st?st.board.map(c=>({c,hid:false})):[],'b');
-const collected=st?HE.pot(st)-st.players.reduce((a,p)=>a+p.bet,0):0;$('pkpot').textContent=st&&collected>0?'POT '+fmt(collected):'';
+const collected=st?HE.pot(st)-st.players.reduce((a,p)=>a+(p.bet||0),0):0;$('pkpot').textContent=st&&collected>0?'POT '+fmt(collected):'';
 const d=$('pkd');if(st&&st.button>=0){d.classList.remove('hide');const [x,y]=PKPOS[st.button];const bx=x+(x<220?42:x>220?-42:60),by=y+(y<200?28:-6);d.style.transform='translate('+bx+'px,'+by+'px)'}else d.classList.add('hide');
 $('pkleave').disabled=PK.busy;}
 function pkStat(i,txt,cls){const el=$('pkseats').children[i];el.querySelectorAll('.pkstat').forEach(e=>e.remove());if(!txt)return;const s=document.createElement('div');s.className='pkstat '+cls;s.textContent=txt;el.appendChild(s);clearTimeout(PK.stat[i]);PK.stat[i]=setTimeout(()=>s.remove(),2600)}
 function pkFlyChips(from,to,n,label){for(let k=0;k<n;k++)setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.7)';$('pkt').appendChild(e);
 requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(k%2?6:-6)*(k>1?1:0))+'px,'+(to.y-k*3)+'px) scale(1)'}));setTimeout(()=>{if(onPK())S.chip()},480);setTimeout(()=>{e.style.opacity='0'},1050);setTimeout(()=>e.remove(),1350)},k*110)}
 /* --- akış --- */
-function pkSit(){if(PK.human)return;const b=Math.min(PK.buyin,Math.floor(chips));if(b<50){msg('Bakiye yetersiz (en az 50 €)');return}setChips(chips-b);S.chip();
+function pkSit(){if(PKO())return cloud.pk.sit();if(PK.human)return;const b=Math.min(PK.buyin,Math.floor(chips));if(b<50){msg('Bakiye yetersiz (en az 50 €)');return}setChips(chips-b);S.chip();
 const nm=(window.cloud&&cloud.profile&&cloud.profile()&&cloud.profile().name)||'Sen';
 PK.st=HE.newGame([{id:'me',name:nm,stack:b},{id:'bot1',name:PKBOTS[0].name,stack:500,bot:true},{id:'bot2',name:PKBOTS[1].name,stack:500,bot:true}],{sb:5,bb:10});
-PK.human=true;$('pksit').classList.add('hide');$('pkleave').classList.remove('hide');PK.shown.clear();pkRender();msg('');$('pkres').textContent='Kör bahisler 5/10 € · ilk el başlıyor';PK.next=setTimeout(pkDeal,1400)}
-function pkLeave(){if(!PK.human||PK.busy)return;clearTimeout(PK.next);const s=PK.st.players[0].stack;setChips(chips+s);PK.human=false;PK.st=null;PK.shown.clear();$('pksit').classList.remove('hide');$('pkleave').classList.add('hide');$('pkact').classList.add('hide');$('pkt').querySelectorAll('.pkbet,.pkstat').forEach(e=>e.remove());pkRender();$('pkres').textContent='';msg('Masadan kalktın, '+fmtE(s)+' bakiyene döndü')}
+PK.human=true;PK.seated=true;$('pksit').classList.add('hide');$('pkleave').classList.remove('hide');PK.shown.clear();pkRender();msg('');$('pkres').textContent='Kör bahisler 5/10 € · ilk el başlıyor';PK.next=setTimeout(pkDeal,1400)}
+function pkLeave(){if(PKO()&&!PK.human)return cloud.pk.leave();if(!PK.human||PK.busy)return;clearTimeout(PK.next);const s=PK.st.players[0].stack;setChips(chips+s);PK.human=false;PK.seated=false;PK.st=null;PK.shown.clear();$('pksit').classList.remove('hide');$('pkleave').classList.add('hide');$('pkact').classList.add('hide');$('pkt').querySelectorAll('.pkbet,.pkstat').forEach(e=>e.remove());pkRender();$('pkres').textContent='';msg('Masadan kalktın, '+fmtE(s)+' bakiyene döndü')}
 async function pkDeal(){const st=PK.st;if(!st||!PK.human)return;
 /* yeniden alım: sen bakiyeden (yetmezse masadan kalkarsın), botlar sessizce */
 const me=st.players[0];if(me.stack<st.bb){const r=Math.min(PK.buyin,Math.floor(chips));if(r>=50){setChips(chips-r);me.stack=Math.round((me.stack+r)*100)/100;msg('Yeniden alım: +'+fmtE(r))}else{PK.busy=false;pkLeave();msg('Yığının bitti ve bakiye yetersiz; masadan kalktın');return}}
@@ -1731,17 +1732,17 @@ else if(e.t==='win'){await pkWinNoShow(e)}}}
 function pkTurn(){const st=PK.st;if(!st||!PK.human)return;pkRender();
 if(st.phase==='done'){PK.busy=false;pkRender();PK.next=setTimeout(pkDeal,4200);return}
 if(st.cur===0){pkShowActions()}else{$('pkact').classList.add('hide');clearTimeout(PK.botT);PK.botT=setTimeout(()=>{const i=st.cur;const d=HE.botDecide(st,i,Math.random);pkAct(i,d.a,d.amt)},900+Math.random()*900)}}
-async function pkAct(i,a,amt){const st=PK.st;if(!st)return;let ev;try{ev=HE.act(st,i,a,amt)}catch(e){console.warn(e);return}
+async function pkAct(i,a,amt){if(PKO()&&!PK.human){if(i===0)cloud.pk.act(a,amt);return}const st=PK.st;if(!st)return;let ev;try{ev=HE.act(st,i,a,amt)}catch(e){console.warn(e);return}
 pkStopTimer();$('pkact').classList.add('hide');const p=st.players[i],e0=ev[0];
 const lbl=a==='fold'?'PAS':a==='check'?'ÇEK':a==='call'?(p.allin?'REST':'GÖR '+fmtA(e0.amt)):(p.allin?'REST':'YÜKSELT '+fmtA(e0.amt));pkStat(i,lbl,p.allin&&a!=='fold'?'allin':a);
 $('pkres').textContent=p.name+(a==='fold'?' pas geçti':a==='check'?' çekti':a==='call'?(p.allin?' rest çekti':' gördü '+fmtE(e0.amt)):(p.allin?' rest çekti':' yükseltti '+fmtE(e0.amt)));
 if(onPK()){if(a==='fold')S.card();else if(a==='check')S.click();else S.chip()}
 pkRender();await wait(ev.length>1?500:250);await pkEvents(ev.slice(1));pkTurn()}
-function pkShowActions(){const st=PK.st,L=HE.legal(st,0);if(!L)return;$('pkact').classList.remove('hide');
+function pkShowActions(tEnd){const st=PK.st,L=HE.legal(st,0);if(!L)return;$('pkact').classList.remove('hide');
 $('pkcheck').textContent=L.check?'ÇEK':(L.call>=st.players[0].stack?'REST '+fmtA(L.call):'GÖR '+fmtA(L.call));
 const can=L.canRaise;$('pkraise').disabled=!can;$('pkminus').disabled=!can;$('pkplus').disabled=!can;document.querySelectorAll('.pkpre').forEach(b=>b.disabled=!can);
 PK.raiseTo=L.minRaise;pkRaiseLbl();
-PK.tEnd=Date.now()+25000;pkStopTimer();PK.timer=setInterval(()=>{const left=Math.max(0,PK.tEnd-Date.now());const el=$('pkseats').children[0].querySelector('.pktimer i');if(el)el.style.setProperty('--w',(left/250)+'%');if(left<=0){pkStopTimer();const L2=HE.legal(PK.st,0);if(L2)pkAct(0,L2.check?'check':'fold')}},250)}
+PK.tEnd=tEnd||Date.now()+25000;pkStopTimer();PK.timer=setInterval(()=>{const left=Math.max(0,PK.tEnd-Date.now());const el=$('pkseats').children[0].querySelector('.pktimer i');if(el)el.style.setProperty('--w',Math.min(100,left/250)+'%');if(left<=0){pkStopTimer();if(PKO()&&!PK.human){cloud.pk.tick();return}const L2=HE.legal(PK.st,0);if(L2)pkAct(0,L2.check?'check':'fold')}},250)}
 function pkStopTimer(){clearInterval(PK.timer);PK.timer=null;const el=$('pkseats').children[0].querySelector('.pktimer i');if(el)el.style.setProperty('--w','100%')}
 function pkRaiseLbl(){const st=PK.st,L=HE.legal(st,0);if(!L)return;PK.raiseTo=Math.max(L.minRaise,Math.min(L.maxRaise,PK.raiseTo));$('pkraise').innerHTML=(PK.raiseTo>=L.maxRaise?'REST ':'YÜKSELT ')+'<b>'+fmtA(PK.raiseTo)+'</b>'}
 $('pkfold').onclick=()=>{S.click();pkAct(0,'fold')};
@@ -1931,6 +1932,93 @@ insure:t=>{$('insbar').classList.add('hide');rpc('bj_insure',{p_take:t}).then(st
 /* masa durumunu al ve dinle; tablo yoksa tek kişilik mod sürer */
 sb.from('bj_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Ortak blackjack henüz kurulu değil (bj_engine.sql). Masa şimdilik tek kişilik.');return}cloud.bj=bjApi;bjBtns();if(data&&data.state&&data.state.phase)applyState(data.state);else rpc('bj_tick').then(applyState).catch(()=>{});
 sb.channel('bj_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'bj_table'},p=>applyState(p.new.state)).subscribe();countdown()})}
+/* ===== ORTAK POKER (sunucu motoru: supabase/pk_engine.sql). Tek masa, 3 koltuk; boş koltuklar botla dolar. Ekranda sen hep alttasın (koltuklar döndürülür). ===== */
+{const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|pk_/.test(error.message)&&/find|exist/.test(error.message))msg('Poker motoru kurulmamış: supabase/pk_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
+let ST=null,mySeat=-1,myCards=null,myHand=-1,seenLog=0,shownHand=-1,dealtHand=-1,boardN=0,tickT=null,cdT=null,running=false,pending=null,wantSit=null,leftPage=false;
+const isMe=u=>!!u&&me&&u===me.id;
+const rot=j=>j==null||j<0?-1:mySeat<0?j:(j-mySeat+3)%3; /* sunucu koltuğu → ekran koltuğu */
+const inHand=ph=>ph==='preflop'||ph==='flop'||ph==='turn'||ph==='river';
+const EMPTY={empty:true,name:'',stack:0,bet:0,total:0,folded:true,allin:false,cards:[]};
+/* sunucu durumundan HE biçiminde görünüm (pkRender/HE.legal bunu çizer) */
+function view(st,boardCut){const players=[EMPTY,EMPTY,EMPTY];
+for(let j=0;j<3;j++){const s=st.seats[j];if(!s)continue;let cards=[];if(s.cardsN===2){if(s.cards)cards=s.cards.slice();else if(isMe(s.user)&&myCards&&myHand===st.hand)cards=myCards.slice();else cards=['??','??']}
+players[rot(j)]={name:s.name,stack:+s.stack,bet:+s.bet,total:+s.total,folded:!!s.folded,allin:!!s.allin,cards,bot:!!s.bot}}
+return{players,cur:rot(st.cur),phase:st.phase,winners:(st.winners||[]).map(rot),board:(st.board||[]).slice(0,boardCut==null?99:boardCut),button:rot(st.button),bb:+st.bb,sb:+st.sb,curBet:+st.curBet,minRaise:+st.minRaise,hand:st.hand}}
+const draw=(st,cut)=>{PK.st=view(st,cut);pkRender()};
+function applyPK(st){if(!st||!st.phase)return;pending=st;if(!running)drain()}
+async function drain(){running=true;try{while(pending){const st=pending;pending=null;await step(st)}}catch(e){console.warn('poker',e)}running=false}
+async function step(st){ST=st;window.PKST=st;
+let ms=-1;st.seats.forEach((s,j)=>{if(s&&isMe(s.user))ms=j});
+if(ms!==mySeat){mySeat=ms;PK.seated=ms>=0;$('pksit').classList.toggle('hide',ms>=0);$('pkleave').classList.toggle('hide',ms<0);
+if(ms<0){$('pkact').classList.add('hide');pkStopTimer();myCards=null;myHand=-1}
+/* koltuk döndüğü için masa yeniden kurulur */
+$('pkt').querySelectorAll('.pkbet,.pkstat').forEach(e=>e.remove());[...$('pkseats').children].forEach(el=>{el.querySelector('.pkcards').innerHTML=''});PK.shown.clear();st.seats.forEach((s,j)=>{if(s&&s.cards)PK.shown.add(rot(j))})}
+if(wantSit!=null&&mySeat<0&&!inHand(st.phase)){const j=wantSit;wantSit=null;sit(j);return}
+/* kapalı kartlarım */
+if(mySeat>=0&&st.seats[mySeat].cardsN===2&&myHand!==st.hand){try{const r=await rpc('pk_my_cards');if(r&&r.cards&&r.hand===st.hand){myCards=r.cards;myHand=r.hand}}catch(e){}}
+if(st.phase==='idle'){dealtHand=-1;seenLog=0;boardN=0;PK.shown.clear();PK.settled=false;$('pkt').querySelectorAll('.pkbet,.pkstat').forEach(e=>e.remove());draw(st);$('pkres').textContent='Masa boş · otur, el başlasın';$('pkact').classList.add('hide');sitBtn();return}
+/* yeni el */
+if(st.hand!==dealtHand){dealtHand=st.hand;seenLog=0;boardN=0;shownHand=-1;PK.shown.clear();PK.settled=false;st.seats.forEach((s,j)=>{if(s&&s.cards)PK.shown.add(rot(j))});
+$('pkt').querySelectorAll('.pkbet,.pkstat').forEach(e=>e.remove());$('pkt').querySelectorAll('.c').forEach(e=>e.classList.remove('best','dim'));[...$('pkseats').children].forEach(el=>{el.querySelector('.pkcards').innerHTML=''});$('pkboard').innerHTML='';
+if(st.phase!=='done'){$('pkres').textContent='El #'+st.hand+' · kör bahisler koyuldu';draw(st,0);pkFly(130);if(onPK())S.chip();await wait(900)}}
+/* hamleler (log farkı) */
+const log=st.log||[];if(log.length>seenLog)draw(st,boardN);
+for(let n=seenLog;n<log.length;n++){const e=log[n],i=rot(e.i),nm=(st.seats[e.i]||{}).name||'';
+const lbl=e.a==='fold'?'PAS':e.a==='check'?'ÇEK':e.a==='call'?(e.allin?'REST':'GÖR '+fmtA(+e.amt)):(e.allin?'REST':'YÜKSELT '+fmtA(+e.amt));pkStat(i,lbl,e.allin&&e.a!=='fold'?'allin':e.a);
+$('pkres').textContent=nm+(e.a==='fold'?' pas geçti':e.a==='check'?' çekti':e.a==='call'?(e.allin?' rest çekti':' gördü '+fmtE(+e.amt)):(e.allin?' rest çekti':' yükseltti '+fmtE(+e.amt)));
+if(onPK()){if(e.a==='fold')S.card();else if(e.a==='check')S.click();else S.chip()}
+if(n<log.length-1)await wait(420)}
+seenLog=log.length;
+/* sokaklar: flop birlikte, turn ve river tek tek */
+const B=(st.board||[]).length;while(boardN<B){boardN=boardN<3?3:boardN+1;if(boardN>B)boardN=B;await wait(300);draw(st,boardN);pkFly(120);$('pkres').textContent=({3:'Flop',4:'Turn',5:'River'})[boardN]+' açıldı';await wait(650)}
+/* el bitti: showdown veya herkes pas */
+if(st.phase==='done'&&shownHand!==st.hand){shownHand=st.hand;const res=(st.results||[]).filter(Boolean),W=st.winners||[];
+if(st.pots){$('pkres').textContent='Showdown';
+for(const r of res){if(r.inHand&&st.seats[r.i]&&st.seats[r.i].cards&&!(rot(r.i)===0&&PK.seated)){PK.shown.add(rot(r.i));draw(st);if(onPK())S.card();await wait(650)}}
+const best=new Set();res.forEach(r=>{if(W.includes(r.i)&&r.ev&&r.ev.best)r.ev.best.forEach(c=>best.add(c))});
+if(best.size){$('pkt').querySelectorAll('.pkboard .c,.pkseat .c').forEach(el=>{const c=el.dataset.c;if(!c||c==='??')return;el.classList.toggle('best',best.has(c));el.classList.toggle('dim',!best.has(c))})}
+$('pkres').innerHTML=res.filter(r=>W.includes(r.i)).map(r=>'<b>'+st.seats[r.i].name+'</b> kazandı · '+(r.ev?r.ev.name:'')+' · +'+fmt(+r.win)).join(' · ')}
+else{const w=W[0],r=res.find(x=>x.i===w);if(st.seats[w])$('pkres').innerHTML='<b>'+st.seats[w].name+'</b> potu aldı · +'+fmt(r?+r.win:0)+' (herkes pas geçti)'}
+PK.settled=true;draw(st);
+res.forEach(r=>{if(+r.win>0){const i=rot(r.i);pkFlyChips({x:PKC[0],y:PKC[1]-20},{x:PKPOS[i][0],y:PKPOS[i][1]-30},Math.min(4,1+Math.floor(+r.win/50)),fmtA(+r.win))}});
+const mine=mySeat>=0?res.find(r=>r.i===mySeat):null;
+if(mine){const net=+mine.net;if(net>0){msg('Kazandın +'+fmtE(net));if(onPK()){if(net>=200)S.big();else S.win(4);celebrate(net)}}else if(net<0){msg('Kaybettin -'+fmtE(-net));if(onPK()&&mine.inHand)S.lose()}else if(mine.inHand)msg('Başa baş')}
+await wait(1200)}
+draw(st);
+/* sıra bende mi */
+if(mySeat>=0&&inHand(st.phase)&&st.cur===mySeat){if($('pkact').classList.contains('hide')||!PK.timer)pkShowActions(st.deadline?new Date(st.deadline).getTime():0)}else{$('pkact').classList.add('hide');pkStopTimer()}
+sitBtn()}
+function sitBtn(){const st=ST;const full=!!st&&st.seats.every(s=>s&&!s.bot);$('pksit').disabled=full&&mySeat<0;$('pksit').textContent=full&&mySeat<0?'MASA DOLU':'MASAYA OTUR · 500 €'}
+async function refreshBal(){try{const {data}=await sb.from('profiles').select('balance').eq('id',me.id).maybeSingle();if(data&&!busy&&!live)applyBalance(+data.balance)}catch(e){}}
+/* oturma: boş koltuk, yoksa elde olmayan bot, yoksa bot (el bitince oturur) */
+async function sit(seat){if(mySeat>=0)return;const b=Math.min(500,Math.floor(chips));if(b<50){msg('Bakiye yetersiz (en az 50 €)');return}
+const st=ST,seats=(st&&st.seats)||[null,null,null];let j=seat==null?-1:seat;
+if(j<0){for(let k=0;k<3;k++)if(!seats[k]){j=k;break}}
+if(j<0){for(let k=0;k<3;k++)if(seats[k].bot&&!(seats[k].cardsN===2&&!seats[k].folded)){j=k;break}}
+if(j<0){for(let k=0;k<3;k++)if(seats[k].bot){j=k;break}}
+if(j<0||(seats[j]&&!seats[j].bot)){msg(j<0?'Masa dolu':'Bu koltukta '+seats[j].name+' oturuyor');return}
+try{const r=await rpc('pk_sit',{p_seat:j,p_buyin:b});S.chip();wantSit=null;leftPage=false;msg('');$('pkres').textContent='Oturdun · el başlıyor';applyPK(r);refreshBal()}
+catch(e){if(/El bitince/.test(e.message||'')){wantSit=j;msg('Bu el bitince oturacaksın')}}}
+async function leave(){if(mySeat<0)return;try{const r=await rpc('pk_leave');S.click();wantSit=null;applyPK(r);refreshBal();msg('Masadan kalktın, yığının bakiyene döndü')}catch(e){}}
+const pkApi={sit,leave,
+act:(a,amt)=>rpc('pk_act',{p_action:a,p_amount:amt==null?null:amt}).then(st=>{pkStopTimer();$('pkact').classList.add('hide');applyPK(st)}).catch(()=>{}),
+tick:()=>{if(tickT)return;tickT=setTimeout(()=>{tickT=null},1500);rpc('pk_tick').then(applyPK).catch(()=>{})},_apply:applyPK};
+/* zamanlayıcı: bot hamlesi, süre aşımı ve yeni el için sunucuyu dürter; sıradaki insanın süre çubuğu; sayfadan çıkınca kalkar */
+function countdown(){clearInterval(cdT);cdT=setInterval(()=>{const st=ST;if(!st)return;
+if(mySeat>=0&&window.PAGE!=='holdem'){if(!leftPage){leftPage=true;leave()}return}leftPage=false;
+if(mySeat<0&&!onPK())return;
+const now=Date.now(),t=k=>st[k]?new Date(st[k]).getTime():0;
+if(st.cur>=0&&t('deadline')&&st.cur!==mySeat){const el=$('pkseats').children[rot(st.cur)].querySelector('.pktimer i');if(el)el.style.setProperty('--w',Math.max(0,Math.min(100,(t('deadline')-now)/250))+'%')}
+const due=(t('botAt')&&now>t('botAt')+150)||(t('deadline')&&now>t('deadline')+500)||(t('nextAt')&&now>t('nextAt')+200&&!inHand(st.phase));
+if(due)pkApi.tick()},400)}
+setInterval(()=>{if(mySeat>=0)rpc('pk_ping').catch(()=>{})},40000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloud.pk)rpc('pk_tick').then(applyPK).catch(()=>{})});
+/* masa durumunu al ve dinle; tablo yoksa tek kişilik mod sürer */
+sb.from('pk_table').select('state').eq('id',1).maybeSingle().then(({data,error})=>{if(error){if(/schema cache/.test(error.message))msg('Ortak poker henüz kurulu değil (pk_engine.sql). Masa şimdilik tek kişilik.');return}
+if(PK.human){clearTimeout(PK.botT);clearTimeout(PK.next);PK.busy=false;pkLeave()}
+cloud.pk=pkApi;$('pklbl').textContent="Texas Hold'em · ortak masa: arkadaşların seninle aynı masaya oturur, boş koltuklar botlarla (Mert, Elif, Can) dolar. Kör bahisler 5/10 € · 500 € giriş (yığının bitince bakiyeden yeniden alınır). Sıra sende 25 sn: süre dolarsa varsa çek, yoksa pas. Boş veya bot koltuğuna dokunarak da oturabilirsin.";
+if(data&&data.state&&data.state.phase)applyPK(data.state);else rpc('pk_tick').then(applyPK).catch(()=>{});
+sb.channel('pk_table').on('postgres_changes',{event:'UPDATE',schema:'public',table:'pk_table'},p=>applyPK(p.new.state)).subscribe();countdown()})}
 entering=false}
 async function leave(){try{await sb.rpc('leave_seat',{p_game:'bj'});await sb.rpc('leave_seat',{p_game:'rl'})}catch(e){}if(pushT){clearTimeout(pushT);pushT=null;await push(chips)}try{if(lobby){await lobby.untrack();sb.removeChannel(lobby);lobby=null}}catch(e){}await sb.auth.signOut();me=null;prof=null;try{localStorage.removeItem('ge_chips')}catch(e){}location.reload()}
 $('logout').onclick=()=>{leave()};
