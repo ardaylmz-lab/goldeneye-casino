@@ -218,10 +218,13 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .stool::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 16%,#ffffff26,#0000 42%)}
 .stool i{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px;border-radius:50%;border:10px solid #0000;border-bottom-color:#7a2217;transform:rotate(var(--a));filter:drop-shadow(0 3px 4px #000a)}
 .stool i::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid #0000;border-bottom-color:#dcb765}
-.bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:9px;background:repeating-linear-gradient(32deg,#ffffff06 0 2px,#0000 2px 5px),linear-gradient(180deg,#6a3a16,#3f2008 55%,#2a1404);box-shadow:0 14px 28px #000c,inset 0 1px 0 #ffffff22,inset 0 -2px 0 #000a}
-/* deri rayda dikiş izi */
-.bjrail::before{content:"";position:absolute;inset:3px;border-radius:21px 21px 187px 187px/21px 21px 162px 162px;border:1px dashed #ffffff33;pointer-events:none;z-index:1}
-.bjtable{position:relative;width:100%;height:100%;border-radius:18px 18px 180px 180px/18px 18px 155px 155px;background:repeating-linear-gradient(45deg,#ffffff05 0 1px,#0000 1px 3px),repeating-linear-gradient(-45deg,#00000010 0 1px,#0000 1px 3px),radial-gradient(ellipse at 50% 20%,#1b9a5a,#0f6b3d 50%,#0a4a2a 100%);box-shadow:inset 0 0 40px #0009,inset 0 0 0 1.5px #c9971a66}
+.bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
+/* deri ray: altın iplik dikiş ve yastık parlaması */
+.bjrail::before{content:"";position:absolute;inset:3px;border-radius:21px 21px 187px 187px/21px 21px 162px 162px;border:1px dashed #c9971a55;pointer-events:none;z-index:1}
+.bjrail::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,#ffffff14,#0000 16%,#0000 84%,#00000050);pointer-events:none}
+.bjtable{position:relative;width:100%;height:100%;border-radius:17px 17px 178px 178px/17px 17px 153px 153px;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 3px),radial-gradient(ellipse at 50% 28%,#1c8a52,#0f5f38 52%,#083a24 100%);box-shadow:0 0 0 2px #c9971acc,0 0 0 3px #00000088,inset 0 0 46px #000a,inset 0 0 0 1.5px #c9971a55}
+/* çuhada ikinci altın kakma çizgisi */
+.bjtable::before{content:"";position:absolute;inset:6px;border-radius:13px 13px 172px 172px/13px 13px 147px 147px;border:1px solid #c9971a33;pointer-events:none}
 .bjsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .bjsvg text{font-family:"Cinzel",Georgia,serif;font-weight:800;fill:#ffd23fcc;letter-spacing:2px}
 .bjsvg .ins{fill:#ffffffb0;letter-spacing:1.5px}.bjsvg .logo{fill:#ffffff18;letter-spacing:4px;font-size:13px}
@@ -234,9 +237,9 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .dsum{position:absolute;left:50%;top:80px;transform:translateX(-50%);z-index:2;font-family:"Orbitron",Montserrat,monospace;font-size:.58rem;letter-spacing:1px;color:#ffe9a8;font-weight:900;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;padding:2px 9px 1px;border-radius:6px;box-shadow:0 2px 4px #000a}
 .dsum:empty{display:none}
 .seat{position:absolute;left:0;top:0;width:0;height:0}
-.spot{position:absolute;left:-25px;top:-25px;width:50px;height:50px;border-radius:50%;border:2px dashed #ffd23fbb;display:grid;place-items:center;cursor:pointer;transition:box-shadow .2s,border-color .2s;background:#00000018}
-.spot small{font-size:.52rem;color:#ffd23f99;font-weight:700;letter-spacing:1px;pointer-events:none}
-.seat.on .spot{border-style:solid;border-color:#fff3b0;box-shadow:0 0 0 3px #ffd23f55,0 0 18px #ffd23faa}
+.spot{position:absolute;left:-25px;top:-25px;width:50px;height:50px;border-radius:50%;border:1.5px solid #ffd23fb0;display:grid;place-items:center;cursor:pointer;transition:box-shadow .2s,border-color .2s;background:radial-gradient(circle,#00000028,#0000001a 70%);box-shadow:inset 0 0 0 3px #0000,inset 0 0 0 4px #ffd23f40}
+.spot small{font-family:"Cinzel",Georgia,serif;font-size:.56rem;color:#ffd23fb0;font-weight:800;letter-spacing:1px;pointer-events:none}
+.seat.on .spot{border-color:#fff3b0;box-shadow:inset 0 0 0 3px #0000,inset 0 0 0 4px #ffd23f80,0 0 0 3px #ffd23f55,0 0 18px #ffd23faa}
 .bchip{position:relative;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:.55rem;font-weight:900;color:#2a1a00;background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.5deg 45deg);box-shadow:0 0 0 1.5px #0009,0 3px 0 #8a5a08,0 5px 0 #5a3a05,0 7px 8px #000b,inset 0 1px 1px #fff8;pointer-events:none}
 .bchip::before{content:"";position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#f4c33c 60%,#b8860b 100%);box-shadow:inset 0 0 0 1.5px #fff6c0,inset 0 1px 3px #0006}
 .bchip span{position:relative;z-index:1}
@@ -265,17 +268,13 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .c{position:relative;width:34px;height:48px;border-radius:4px;color:#111;font-weight:900;line-height:1;transform-style:preserve-3d;--ry:0deg;transform:rotateY(var(--ry))}
 .c .cf,.c .cb{position:absolute;inset:0;border-radius:4px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 3px 6px #000a}
 .c .cf{background:linear-gradient(160deg,#fffdf7,#efe8d6);box-shadow:0 3px 6px #000a,inset 0 0 0 1px #d8d0bc,inset 0 1px 0 #fff}
-.c .cb{transform:rotateY(180deg);background:radial-gradient(circle at 50% 50%,#ffffff12,#0000 60%),repeating-linear-gradient(45deg,#c9971a44 0 1px,#0000 1px 5px),repeating-linear-gradient(-45deg,#c9971a44 0 1px,#0000 1px 5px),linear-gradient(180deg,#8a0a1a,#4a0410);box-shadow:0 3px 6px #000a,inset 0 0 0 2px #f3e6c4,inset 0 0 0 3px #c9971a}
-.c .cb::before{content:"";position:absolute;inset:5px;border:1px solid #c9971a99;border-radius:2px}
-.c .cb::after{content:"GE";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#1a0306;color:#ffd23f;font-family:"Cinzel",Georgia,serif;font-size:6.5px;font-weight:800;letter-spacing:.5px}
+.c .cb{transform:rotateY(180deg);background:linear-gradient(115deg,#ffffff16 0,#0000 45%),linear-gradient(160deg,#9a1020,#5a0612 60%,#3a0309);box-shadow:0 3px 6px #000a,inset 0 0 0 2px #f3e6c4,inset 0 0 0 3px #c9971a}
+.c .cb::before{content:"";position:absolute;inset:6px;border:1px solid #c9971a77;border-radius:2px}
 .c.r{color:#d90429}
 .c.h{--ry:180deg}
-.c .ix{position:absolute;left:2px;top:2px;font-size:.6rem;text-align:center;line-height:1}.c .ix i{display:block;font-style:normal;font-size:.5rem;margin-top:-1px}
-.c .ix.b2{left:auto;right:2px;top:auto;bottom:2px;transform:rotate(180deg)}
-.c .pp{position:absolute;inset:0}.c .pp>i{position:absolute;transform:translate(-50%,-50%);font-style:normal;font-size:7px}.c .pp>i.inv{transform:translate(-50%,-50%) rotate(180deg)}
-.c .pp>i.ace{left:50%;top:50%;font-size:1.35rem;text-shadow:0 0 6px #ffd23f55}
-.c .fc{position:absolute;left:5px;right:5px;top:11px;bottom:11px;border:1px solid #c9971a99;border-radius:3px;background:linear-gradient(180deg,#fff8e0,#f1e2b8);display:grid;place-items:center;overflow:hidden}
-.c .fc svg{width:17px;height:17px}.c .fc em{position:absolute;right:1px;bottom:0;font-style:normal;font-size:6px}
+.c .ix{position:absolute;left:3px;top:2px;font-size:.8rem;text-align:center;line-height:1;letter-spacing:-.3px}.c .ix i{display:block;font-style:normal;font-size:.6rem;margin-top:1px}
+.c .ix.b2{left:auto;right:3px;top:auto;bottom:2px;transform:rotate(180deg)}
+.c .pp{position:absolute;inset:0;display:grid;place-items:center}.c .pp>i{font-style:normal;font-size:1.05rem;opacity:.85}
 .c.flip{animation:bjfp .6s ease-in-out both}
 @keyframes bjfp{0%{transform:rotateY(180deg)}100%{transform:rotateY(0)}}
 /* kutudan kavisli dağıtım: --dx/--dy kutuya göre fark (JS hesaplar) */
@@ -1401,14 +1400,10 @@ const spotPos=k=>SPOTS[k];
 /* çip uçuşu: raftan koltuğa (ödeme) veya koltuktan rafa (kayıp) */
 function flyChips(from,to,n,delay,label){if(from===RACK)DLR.pay((to.x-211)/211);else DLR.take((from.x-211)/211);for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
 requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{if(!$('bj').classList.contains('hide'))S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
-/* kart yüzleri: pip dizilimi (x%, satır 0–6), figürler altın amblem, As büyük sembol; kapalı kart yalnız arka yüz */
-const PIPS={'2':[[50,0],[50,6]],'3':[[50,0],[50,3],[50,6]],'4':[[22,0],[78,0],[22,6],[78,6]],'5':[[22,0],[78,0],[50,3],[22,6],[78,6]],'6':[[22,0],[78,0],[22,3],[78,3],[22,6],[78,6]],'7':[[22,0],[78,0],[50,1.5],[22,3],[78,3],[22,6],[78,6]],'8':[[22,0],[78,0],[50,1.5],[22,3],[78,3],[50,4.5],[22,6],[78,6]],'9':[[22,0],[78,0],[22,2],[78,2],[50,3],[22,4],[78,4],[22,6],[78,6]],'10':[[22,0],[78,0],[50,1],[22,2],[78,2],[22,4],[78,4],[50,5],[22,6],[78,6]]};
-const FACE={K:'<path d="M4 18 L4 8 L8.5 12 L12 5 L15.5 12 L20 8 L20 18Z" fill="url(#au)" stroke="#5a3a00" stroke-width=".8"/><rect x="4" y="18" width="16" height="2.5" fill="url(#au2)"/><circle cx="12" cy="5" r="1.4" fill="#ff4fb8"/>',
-Q:'<path d="M4 18 L5 8 Q8 13 12 7 Q16 13 19 8 L20 18Z" fill="url(#au)" stroke="#5a3a00" stroke-width=".8"/><rect x="4" y="18" width="16" height="2.5" fill="url(#au2)"/><circle cx="12" cy="7" r="1.6" fill="#19f0ff"/><circle cx="5.5" cy="8" r="1" fill="#fff"/><circle cx="18.5" cy="8" r="1" fill="#fff"/>',
-J:'<path d="M12 3 L19 7 L19 13 Q19 19 12 21 Q5 19 5 13 L5 7Z" fill="url(#au)" stroke="#5a3a00" stroke-width=".8"/><path d="M12 7 L12 17 M8.5 12 L15.5 12" stroke="#5a3a00" stroke-width="1.6" stroke-linecap="round"/>'};
+/* kart yüzü: iki köşede indeks (sayı + küçük sembol), ortada tek sembol; kapalı kart yalnız sade arka */
 function card(c,hid,nw,fl){const cls='c'+(hid?' h':'')+(!hid&&/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':'');if(hid)return '<div class="'+cls+'"><div class="cb"></div><div class="cf"></div></div>';
-const r=c.slice(0,-1),su=c.slice(-1);let mid='';if(r==='A')mid='<i class="ace">'+su+'</i>';else if(PIPS[r])mid=PIPS[r].map(([x,y])=>'<i style="left:'+x+'%;top:'+(14+y*12)+'%"'+(y>3?' class="inv"':'')+'>'+su+'</i>').join('');else mid='<div class="fc"><svg viewBox="0 0 24 24">'+(FACE[r]||'')+'</svg><em>'+su+'</em></div>';
-return '<div class="'+cls+'"><div class="cb"></div><div class="cf"><b class="ix">'+r+'<i>'+su+'</i></b><b class="ix b2">'+r+'<i>'+su+'</i></b><div class="pp">'+mid+'</div></div></div>'}
+const r=c.slice(0,-1),su=c.slice(-1);
+return '<div class="'+cls+'"><div class="cb"></div><div class="cf"><b class="ix">'+r+'<i>'+su+'</i></b><b class="ix b2">'+r+'<i>'+su+'</i></b><div class="pp"><i>'+su+'</i></div></div></div>'}
 /* yeni kartlar kutudan uçar: kutu ile kartın ekran farkı masa ölçeğine bölünüp --dx/--dy olarak verilir */
 function flyNew(){const sh=$('bjt').querySelector('.shoe');if(!sh)return;const sr=sh.getBoundingClientRect();if(!sr.width)return;const s=parseFloat(getComputedStyle($('bjwrap')).getPropertyValue('--s'))||1;
 $('bjt').querySelectorAll('.c.new').forEach(e=>{const r=e.getBoundingClientRect();e.classList.remove('new');e.style.setProperty('--dx',((sr.left+sr.width/2)-(r.left+r.width/2))/s+'px');e.style.setProperty('--dy',((sr.top+sr.height/2)-(r.top+r.height/2))/s+'px');e.classList.add('fly')})}
