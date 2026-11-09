@@ -435,6 +435,44 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .pt .cl{width:100%;margin-top:10px}
 .tiny{color:var(--mut);font-size:.72rem;margin-top:8px;text-align:center}
 #slot.panel,#slot2.panel{padding:8px;border-color:#3a1a00;background:#0a0408}
+/* ===== DIAMOND HEIST: çelik-lacivert kabin, külçe değer etiketi, Kasayı Doldur, Kasa Odası, Soygun Çarkı ===== */
+#slot3.panel{padding:8px;border-color:#0a1a33;background:#04070e}
+.cab.heist{--r1:#0f1a2e;--r2:#060b16;--r3:#1c2f52;--fl:#4fa8ff;background:radial-gradient(ellipse at 50% 0%,#17305a,#060b16 55%,#02050a);box-shadow:0 0 0 2px #0a1222,0 0 30px #4fa8ff55,0 14px 30px #000c,inset 0 0 40px #000a}
+.cab.heist .ctitle{background:linear-gradient(180deg,#ffffff,#bfe6ff 40%,#4fa8ff 55%,#dff4ff);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 2px 0 #0a2a5a) drop-shadow(0 0 10px #4fa8ffaa)}
+.cab.heist .lines{background:linear-gradient(180deg,#0f1a2e,#060b16)}
+.stage.hide{display:none}
+.cell .cv{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);font-family:"Orbitron",Montserrat,monospace;font-size:.48rem;font-weight:900;color:#1a1000;background:linear-gradient(180deg,#fff0a8,#ffd23f 60%,#c58e0a);border-radius:6px;padding:1px 4px;white-space:nowrap;box-shadow:0 1px 2px #000a,inset 0 1px 0 #fff8;pointer-events:none;z-index:2;letter-spacing:.3px}
+.cell .cv.jp{color:#fff;text-shadow:0 1px 1px #0008}.cell .cv.mini{background:linear-gradient(180deg,#8ad0ff,#1e63d6)}.cell .cv.minor{background:linear-gradient(180deg,#9dff9d,#2e9e4f)}.cell .cv.major{background:linear-gradient(180deg,#ff9a9a,#e0202c)}
+.sgrid.hw{background:linear-gradient(180deg,#6fb8ff,#1c3f7a 40%,#4fa8ff 60%,#0a1a3a);box-shadow:0 0 28px #4fa8ff88}
+.cell.hwe{background:linear-gradient(180deg,#1c2436,#0a0f1a);box-shadow:inset 0 0 0 1px #ffffff10,inset 0 2px 6px #000}
+.cell.hwc{background:radial-gradient(circle at 50% 40%,#ffd23f33,transparent 70%)}
+.cell.rs{animation:sp .1s linear infinite;filter:blur(1.5px)}
+.cell.land{animation:ld .38s cubic-bezier(.2,1.4,.4,1)}
+.fsbar.hw{background:linear-gradient(90deg,#1c3f7a,#0a1a3a);border-color:#4fa8ff;box-shadow:0 0 16px #4fa8ff77}
+.hbonus{border-radius:12px;padding:6px;background:linear-gradient(180deg,#0f1a2e,#060b16);border:1.5px solid var(--gd);box-shadow:inset 0 0 20px #000}
+.hbonus.hide{display:none}
+.bhead{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;font-weight:800;font-size:.78rem;letter-spacing:1.5px;color:#bfe6ff}
+.bhead b{color:var(--gold);font-size:1rem;font-variant-numeric:tabular-nums}.bhead .mm{background:var(--gold);color:#1a1000;border-radius:6px;padding:0 6px;font-size:.8rem;margin-left:4px}
+.vaults{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px}
+.vault{position:relative;aspect-ratio:1;margin:0;padding:0;border-radius:10px;background:linear-gradient(145deg,#6a7384,#2c3340 50%,#161b24);border:2px solid #c9971a88;box-shadow:0 4px 8px #000a,inset 0 1px 0 #ffffff40,inset 0 -3px 6px #0008;cursor:pointer;display:grid;place-items:center;transition:transform .15s;color:#fff}
+.vault:active:not(:disabled){transform:scale(.95);box-shadow:0 2px 6px #000a}
+.vault i{width:46%;height:46%;border-radius:50%;background:radial-gradient(circle,#ffd23f 0 18%,#2a1a00 19% 30%,#c9971a 31% 42%,#4a3a1a 43%);box-shadow:0 0 0 2px #0008,0 2px 4px #000a;transition:transform .5s}
+.vault.open{background:linear-gradient(180deg,#0a0f1a,#1c2436);animation:vopen .45s cubic-bezier(.2,1.4,.4,1)}
+.vault.open i{display:none}
+.vault b{font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:.95rem;line-height:1;text-align:center}
+.vault b small{display:block;font-family:Montserrat,sans-serif;font-size:.48rem;letter-spacing:.5px;margin-top:3px;color:#bfe6ff}
+.vault b.mult{color:var(--gold);text-shadow:0 0 10px var(--gold)}
+.vault b.wh{color:#19f0ff;text-shadow:0 0 10px #19f0ff}.vault b.dbl{color:#ff7ae6;text-shadow:0 0 10px #ff7ae6}
+.vault b.alarm{color:#ff3b3b;text-shadow:0 0 12px #ff3b3b;animation:pl .25s ease-in-out infinite alternate}
+.hbonus.alarm{animation:alarmbg .3s ease-in-out 5 alternate}
+@keyframes alarmbg{to{box-shadow:inset 0 0 40px #e0202c,0 0 20px #e0202c}}
+@keyframes vopen{from{transform:rotateY(90deg)}to{transform:none}}
+.bhint{text-align:center;color:#bfe6ff;font-size:.8rem;padding:6px;min-height:20px}
+.wheelb{position:relative;width:240px;height:240px;margin:14px auto 6px}
+.wheelb .disc{position:absolute;inset:0;border-radius:50%;border:6px solid #c9971a;box-shadow:0 0 0 3px #1a1108,0 0 30px #4fa8ff66,0 10px 20px #000c,inset 0 0 20px #0008;transform:rotate(0deg)}
+.wheelb .disc span{position:absolute;left:50%;top:50%;width:44px;margin:-11px -22px;text-align:center;line-height:22px;font-family:"Orbitron",Montserrat,monospace;font-weight:900;font-size:.9rem;color:#fff;text-shadow:0 1px 2px #000}
+.wheelb .hub{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff0a8,#d9a92a 50%,#7a4e00);box-shadow:0 2px 6px #000a}
+.wheelb .ptr{position:absolute;left:50%;top:-12px;width:0;height:0;margin-left:-12px;border-left:12px solid transparent;border-right:12px solid transparent;border-top:28px solid #ffd23f;filter:drop-shadow(0 2px 2px #000a);z-index:2}
 #gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--bg)}
 #gate .box{text-align:center;padding:28px 30px;border-radius:22px;background:linear-gradient(180deg,#2a0a0a,#120404);border:3px solid var(--gd);box-shadow:0 0 0 3px #3a1a00,0 10px 30px #000c;width:min(92vw,340px)}
 #gate h2{font-family:"Cinzel",Georgia,serif;color:#ffe27a;letter-spacing:4px;margin:0 0 6px;text-shadow:0 2px 0 #8a6208,0 0 20px #ffd23f66}
@@ -465,6 +503,8 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <linearGradient id="grn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9dff6a"/><stop offset=".5" stop-color="#2eb82e"/><stop offset="1" stop-color="#0c5a1a"/></linearGradient>
 <linearGradient id="jade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8ffe0"/><stop offset=".5" stop-color="#19b07a"/><stop offset="1" stop-color="#064a30"/></linearGradient>
 <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#9ae8ff"/><stop offset=".7" stop-color="#19a0ff"/><stop offset="1" stop-color="#0b3a8a"/></linearGradient>
+<linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#ffb3e6"/><stop offset=".7" stop-color="#ff4fb8"/><stop offset="1" stop-color="#7a0a52"/></linearGradient>
+<linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0f2f6"/><stop offset=".5" stop-color="#8e96a6"/><stop offset="1" stop-color="#3a4150"/></linearGradient>
 <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity=".6"/></filter>
 <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
@@ -619,6 +659,96 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <circle cx="50" cy="56" r="17" fill="url(#au)"/>
 <text x="50" y="63" text-anchor="middle" font-family="'Noto Serif CJK SC','Songti SC','Hiragino Mincho ProN','MS Mincho',serif" font-size="20" font-weight="700" fill="#8a0010">福</text>
 </g></symbol>
+
+<!-- ===== DIAMOND HEIST ===== -->
+<symbol id="s-key" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="28" r="17" fill="none" stroke="url(#au)" stroke-width="10"/>
+<circle cx="50" cy="28" r="17" fill="none" stroke="url(#hl)" stroke-width="10" opacity=".45"/>
+<rect x="44" y="42" width="12" height="50" rx="4" fill="url(#au2)"/>
+<rect x="54" y="66" width="14" height="8" rx="2" fill="url(#au2)"/><rect x="54" y="80" width="18" height="8" rx="2" fill="url(#au2)"/>
+<path d="M47 46 L47 86" stroke="#fff6c0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+</g></symbol>
+
+<symbol id="s-torch" viewBox="0 0 100 100"><g filter="url(#sh)" transform="rotate(-35 50 50)">
+<path d="M50 2 L18 30 L82 30Z" fill="#fff2a0" opacity=".35"/>
+<rect x="30" y="26" width="40" height="20" rx="4" fill="url(#steel)"/>
+<rect x="34" y="26" width="32" height="6" rx="2" fill="#fff6c0" opacity=".9"/>
+<rect x="37" y="44" width="26" height="48" rx="7" fill="#1c1c22"/>
+<rect x="37" y="44" width="26" height="48" rx="7" fill="url(#hl)" opacity=".5"/>
+<rect x="42" y="52" width="16" height="4" rx="2" fill="#e0202c"/>
+<path d="M41 62 L41 86" stroke="#ffffff30" stroke-width="3" stroke-linecap="round"/>
+</g></symbol>
+
+<symbol id="s-glove" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="30" y="40" width="46" height="50" rx="14" fill="#1c1c24"/>
+<rect x="30" y="18" width="10" height="34" rx="5" fill="#1c1c24"/><rect x="42" y="10" width="10" height="42" rx="5" fill="#1c1c24"/><rect x="54" y="12" width="10" height="40" rx="5" fill="#1c1c24"/><rect x="66" y="20" width="10" height="32" rx="5" fill="#1c1c24"/>
+<rect x="12" y="44" width="12" height="30" rx="6" fill="#1c1c24" transform="rotate(-30 18 59)"/>
+<rect x="30" y="40" width="46" height="50" rx="14" fill="url(#hl)" opacity=".35"/>
+<path d="M36 70 Q53 64 70 70" stroke="#ffffff30" stroke-width="2" fill="none" stroke-dasharray="3 3"/>
+<rect x="28" y="80" width="50" height="10" rx="4" fill="url(#au)"/>
+</g></symbol>
+
+<symbol id="s-dyn" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="24" y="34" width="15" height="56" rx="5" fill="url(#red)"/><rect x="42" y="30" width="16" height="60" rx="5" fill="url(#red)"/><rect x="61" y="34" width="15" height="56" rx="5" fill="url(#red)"/>
+<rect x="22" y="54" width="56" height="9" rx="2" fill="#1a0a0a"/><rect x="22" y="54" width="56" height="3" fill="#ffffff20"/>
+<path d="M31 34 Q28 22 36 16" stroke="#cfa060" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M50 30 Q52 16 62 12" stroke="#cfa060" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M68 34 Q72 24 66 18" stroke="#cfa060" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M62 12 L66 4 L68 12 L76 10 L70 16 L76 20 L68 18 L64 24 L62 16 L54 14Z" fill="url(#fire)" filter="url(#glow)"/>
+</g></symbol>
+
+<symbol id="s-cash" viewBox="0 0 100 100"><g filter="url(#sh)">
+<rect x="14" y="58" width="72" height="20" rx="3" fill="#1f6a3a"/><rect x="14" y="48" width="72" height="20" rx="3" fill="#2a8a4a"/>
+<rect x="12" y="36" width="76" height="22" rx="3" fill="url(#grn)"/>
+<rect x="12" y="36" width="76" height="22" rx="3" fill="url(#hl)" opacity=".3"/>
+<rect x="18" y="40" width="64" height="14" rx="2" fill="none" stroke="#dfffd0" stroke-width="1.5" opacity=".7"/>
+<rect x="42" y="30" width="16" height="34" rx="2" fill="#f4ecd0"/>
+<text x="50" y="52" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="15" fill="#1f6a3a">€</text>
+</g></symbol>
+
+<symbol id="s-ruby" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M30 20 L70 20 L88 44 L50 88 L12 44Z" fill="url(#red)"/>
+<path d="M30 20 L50 44 L70 20Z" fill="#ffb0b0" opacity=".7"/>
+<path d="M12 44 L50 44 L50 88Z" fill="#5a0010" opacity=".4"/>
+<path d="M50 44 L88 44 L50 88Z" fill="#ff6a6a" opacity=".3"/>
+<path d="M30 20 L12 44 L50 44Z" fill="#ff8a8a" opacity=".5"/>
+<path d="M70 20 L88 44 L50 44Z" fill="#ff3b3b" opacity=".5"/>
+<circle cx="38" cy="30" r="3" fill="#fff"/>
+</g></symbol>
+
+<symbol id="s-bdia" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M26 22 L74 22 L92 44 L50 92 L8 44Z" fill="url(#pink)" filter="url(#glow)"/>
+<path d="M26 22 L38 44 L62 44 L74 22Z" fill="#fff" opacity=".75"/>
+<path d="M8 44 L38 44 L50 92Z" fill="#7a0a52" opacity=".35"/>
+<path d="M62 44 L92 44 L50 92Z" fill="#ff4fb8" opacity=".3"/>
+<path d="M26 22 L8 44 L38 44Z" fill="#ffd6f2" opacity=".6"/>
+<path d="M74 22 L92 44 L62 44Z" fill="#ff8fd0" opacity=".55"/>
+<path d="M38 44 L62 44 L50 92Z" fill="#ffffff" opacity=".25"/>
+<path d="M20 12 L23 20 L31 23 L23 26 L20 34 L17 26 L9 23 L17 20Z" fill="#fff"/><path d="M80 60 L82 66 L88 68 L82 70 L80 76 L78 70 L72 68 L78 66Z" fill="#fff" opacity=".9"/>
+</g></symbol>
+
+<symbol id="s-bar" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M24 36 L76 36 L86 54 L14 54Z" fill="url(#au)"/>
+<path d="M24 36 L76 36 L86 54 L14 54Z" fill="url(#hl)" opacity=".5"/>
+<rect x="14" y="54" width="72" height="24" rx="2" fill="url(#au2)"/>
+<path d="M30 42 L70 42" stroke="#fff6c0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+<text x="50" y="71" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="11" fill="#5a3a00" letter-spacing="1">999.9</text>
+</g></symbol>
+
+<symbol id="s-mask" viewBox="0 0 100 100"><g filter="url(#sh)">
+<path d="M6 34 Q28 14 50 32 Q72 14 94 34 Q90 62 66 60 Q52 48 34 60 Q10 62 6 34Z" fill="#1c1c24"/>
+<path d="M6 34 Q28 14 50 32 Q72 14 94 34 Q90 62 66 60 Q52 48 34 60 Q10 62 6 34Z" fill="url(#hl)" opacity=".35"/>
+<ellipse cx="30" cy="38" rx="11" ry="7" fill="#5a5a66"/><ellipse cx="70" cy="38" rx="11" ry="7" fill="#5a5a66"/>
+<rect x="12" y="66" width="76" height="22" rx="6" fill="#06101f" stroke="url(#au)" stroke-width="3"/>
+<text x="50" y="83" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="900" font-size="18" fill="url(#au)" letter-spacing="2">WILD</text>
+</g></symbol>
+
+<symbol id="s-vault" viewBox="0 0 100 100"><g filter="url(#sh)">
+<circle cx="50" cy="50" r="42" fill="url(#steel)" filter="url(#glow)"/>
+<circle cx="50" cy="50" r="34" fill="none" stroke="#2a3140" stroke-width="3"/>
+<circle cx="50" cy="50" r="30" fill="#3a4150"/><circle cx="50" cy="50" r="30" fill="url(#hl)" opacity=".4"/>
+<g stroke="url(#au)" stroke-width="6" stroke-linecap="round"><path d="M50 24 L50 76"/><path d="M24 50 L76 50"/><path d="M32 32 L68 68"/><path d="M68 32 L32 68"/></g>
+<circle cx="50" cy="50" r="9" fill="url(#au2)"/>
+<g fill="#1a1f2a"><circle cx="50" cy="12" r="3"/><circle cx="50" cy="88" r="3"/><circle cx="12" cy="50" r="3"/><circle cx="88" cy="50" r="3"/><circle cx="23" cy="23" r="3"/><circle cx="77" cy="23" r="3"/><circle cx="23" cy="77" r="3"/><circle cx="77" cy="77" r="3"/></g>
+</g></symbol>
 </svg>
 
 <div id="gate"><div class="box"><h2>GOLDEN EYE</h2>
@@ -644,10 +774,11 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <button class="chip" data-b="2.5"><span class="v">2,5</span></button><button class="chip" data-b="5"><span class="v">5</span></button><button class="chip" data-b="10"><span class="v">10</span></button><button class="chip" data-b="25"><span class="v">25</span></button><button class="chip on" data-b="50"><span class="v">50</span></button><button class="chip" data-b="100"><span class="v">100</span></button>
 </div>
 
-<div class="stabs hide" id="stabs"><button data-go="slot" class="on">🔥 Burning Fruits</button><button data-go="slot2">🐉 Jade Dragon</button></div>
+<div class="stabs hide" id="stabs"><button data-go="slot" class="on">🔥 Burning Fruits</button><button data-go="slot2">🐉 Jade Dragon</button><button data-go="slot3">💎 Diamond Heist</button></div>
 <div class="panel hide" id="slot"></div>
 
 <div class="panel hide" id="slot2"></div>
+<div class="panel hide" id="slot3"></div>
 <div class="panel hide" id="rulet">
 <div class="wheelbox"><canvas id="rw3d" width="300" height="240"></canvas><div class="rres3d green" id="rwres">0</div><div class="w3d"><div class="ly" style="--z:24"></div><div class="ly" style="--z:18"></div><div class="ly" style="--z:12"></div><div class="ly" style="--z:6"></div><div class="bowl"></div><div class="track"></div><div class="wheel" id="wheel"></div><div class="gloss"></div><div class="mark"></div><div class="orb" id="orb"><div class="orbr"><i></i></div></div><div class="hub"><div class="ball green" id="ball">0</div></div></div></div>
 <div class="rchairs" id="rchairs"></div>
@@ -696,13 +827,13 @@ function msg(t){$('msg').textContent=t}
 const rnd=n=>Math.floor(Math.random()*n);
 setChips(chips);
 
-function route(x){let h=typeof x==='string'?x:location.hash.slice(1);if(!['slot','slot2','rulet','bj'].includes(h))h='home';
-['home','slot','slot2','rulet','bj'].forEach(t=>$(t).classList.toggle('hide',t!==h));
-$('bets').classList.toggle('hide',h==='home'||h==='slot'||h==='slot2');
+function route(x){let h=typeof x==='string'?x:location.hash.slice(1);if(!['slot','slot2','slot3','rulet','bj'].includes(h))h='home';
+['home','slot','slot2','slot3','rulet','bj'].forEach(t=>$(t).classList.toggle('hide',t!==h));
+$('bets').classList.toggle('hide',h==='home'||h==='slot'||h==='slot2'||h==='slot3');
 if(h==='rulet')voPrefetch(['nomore','place']);if(h==='bj'){const L=['bust','bj','dbj','dbust','push','ins'];for(let n=12;n<=21;n++)L.push('n'+n);voPrefetch(L)}
 /* blackjack'te çipler 10-25-50-100 */
 document.querySelectorAll('#bets [data-b="2.5"],#bets [data-b="5"]').forEach(b=>b.classList.toggle('hide',h==='bj'));
-if(h==='bj'&&bet<10){bet=10;document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',+x.dataset.b===10))}$('stabs').classList.toggle('hide',h!=='slot'&&h!=='slot2');
+if(h==='bj'&&bet<10){bet=10;document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',+x.dataset.b===10))}$('stabs').classList.toggle('hide',h!=='slot'&&h!=='slot2'&&h!=='slot3');
 document.querySelectorAll('#stabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===h));$('back').classList.toggle('hide',h==='home');msg('');window.scrollTo(0,0)}
 window.addEventListener('hashchange',()=>{if(busy||live)return;route()});
 function go(h){if(busy||live)return;if(location.protocol!=='file:'){try{location.hash=h}catch(e){}}route(h)}
@@ -859,12 +990,33 @@ let sc=0;const scells=[];g.forEach((col,c)=>col.forEach((s,r)=>{if(s===T.S){sc++
 let scatWin=0;if(sc>=3){scatWin=bet*T.scat[Math.min(sc,5)-3];total+=scatWin}
 return{total:Math.round(total*100)/100,wins,sc,scells,scatWin:Math.round(scatWin*100)/100,fs:sc>=3}}
 
+/* ===== DIAMOND HEIST matematiği (saf, DOM yok; tarayıcıda ve node'da aynı) ===== */
+const HEIST={
+ coinVals:[[1,30],[2,25],[3,18],[5,12],[10,8],[15,4],[25,2],['MINI',1.2],['MINOR',.4],['MAJOR',.1]], /* külçe değerleri (bahis katı) ve ağırlıkları */
+ jp:{MINI:20,MINOR:50,MAJOR:200,GRAND:1000}, /* jackpotlar bahis katı */
+ hwNeed:6,hwQ:.035, /* tut-kazan: tetik için külçe sayısı, her boş hücrenin yeni külçe olma olasılığı */
+ pick:{vals:[[1,20],[2,25],[3,20],[5,15],[8,10],[10,6],[15,3],[25,1]],wheelP:.04,dblP:.05,alarm:k=>k<=3?0:Math.min(.6,.2+(k-4)*.07)},
+ wheel:[2,2,3,2,5,2,3,2,10,2,3,5] /* çark dilimleri: kasa odası toplamını katlar */
+};
+function wpick(tbl,rnd){const tot=tbl.reduce((a,x)=>a+x[1],0);let x=rnd()*tot;for(const [v,w] of tbl){if(x<w)return v;x-=w}return tbl[0][0]}
+function heistCoinGrid(T,g,rnd){return g.map(col=>col.map(s=>s===T.C?wpick(HEIST.coinVals,rnd):0))}
+/* kasa odası: k'ıncı seçimin içeriği */
+function heistPickGen(k,hasWheel,rnd){if(rnd()<HEIST.pick.alarm(k))return{t:'alarm'};const r=rnd();if(!hasWheel&&r<HEIST.pick.wheelP)return{t:'wheel'};if(k>=2&&r<HEIST.pick.wheelP+HEIST.pick.dblP)return{t:'dbl'};return{t:'mult',v:wpick(HEIST.pick.vals,rnd)}}
+/* tut-kazan turunun tamamı: cv (5x5, 0=boş) yerinde güncellenir */
+function heistHoldWin(cv,rnd){const steps=[];let spins=3,n=cv.flat().filter(Boolean).length;
+while(spins>0&&n<25){const added=[];for(let c=0;c<5;c++)for(let r=0;r<5;r++)if(!cv[c][r]&&rnd()<HEIST.hwQ){cv[c][r]=wpick(HEIST.coinVals,rnd);added.push([c,r]);n++}
+if(added.length)spins=3;else spins--;steps.push({added,spins})}
+let total=0;const jps=[];cv.flat().forEach(v=>{if(!v)return;if(typeof v==='number')total+=v;else{total+=HEIST.jp[v];jps.push(v)}});
+const full=n>=25;if(full){total+=HEIST.jp.GRAND;jps.push('GRAND')}return{steps,total,full,jps}}
+
 /* ===== SLOT ARAYÜZÜ ===== */
 const PAY=[[8,25,80],[8,25,80],[12,35,100],[12,40,125],[18,60,200],[35,125,400],[60,250,1000],[125,600,3000]];
 const WGT=[14,14,13,12,11,8,6,4,2,1.7];
 const THEMES={
 slot:slotTheme('BURNING FRUITS',['cherry','lemon','orange','plum','melon','bell','diamond','seven','wild','star'],WGT,PAY),
-slot2:Object.assign(slotTheme('JADE DRAGON',['clover','lantern','bamboo','coin','lotus','fan','koi','dragon','mahjong','envelope'],WGT,PAY),{jade:true})};
+slot2:Object.assign(slotTheme('JADE DRAGON',['clover','lantern','bamboo','coin','lotus','fan','koi','dragon','mahjong','envelope'],WGT,PAY),{jade:true}),
+/* Diamond Heist: 7 ödeyen sembol + külçe (hat ödemez, 6+ = Kasayı Doldur) + wild + kasa kapısı (3+ = Kasa Odası). RTP ≈ %96 (simülasyon) */
+slot3:Object.assign(slotTheme('DIAMOND HEIST',['key','torch','glove','dyn','cash','ruby','bdia','bar','mask','vault'],[14,14,13,12,10,7,5,5.8,2,1.65],PAY.slice(0,7).concat([[0,0,0]])),{heist:true,C:7})};
 const ico=(id,cls)=>'<svg class="sym'+(cls?' '+cls:'')+'"><use href="#s-'+id+'"/></svg>';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function overlay(html,ms,rays){return new Promise(res=>{const o=document.createElement('div');o.className='ovl';o.innerHTML=(rays?'<div class="rays"></div>':'')+'<div class="box">'+html+'</div>';document.body.appendChild(o);
@@ -874,38 +1026,42 @@ function makeSlot(id,T){
 const p=$(id);
 const LN='<div class="lines"><b class="h">20<small>LINES</small></b><b>15</b><b>10</b><b>5</b><b>1</b></div>';
 p.innerHTML='<div class="jpbox"><div class="jt">JACKPOTLAR</div><div class="jpr"><div style="--c:#4af"><small>MINI</small><b>0</b></div><div style="--c:#4de08a"><small>MINOR</small><b>0</b></div><div style="--c:#ff5a6a"><small>MAJOR</small><b>0</b></div><div style="--c:#ffd23f"><small>GRAND</small><b>0</b></div></div></div>'+
-'<div class="cab'+(T.jade?' jade':'')+'">'+
+'<div class="cab'+(T.jade?' jade':T.heist?' heist':'')+'">'+
 
 '<div class="ctitle">'+T.name+'</div>'+
 '<div class="fsbar hide"><span>FREE SPIN</span><span><b class="fsn">0</b> kaldı · <b>x'+T.fsMult+'</b></span></div>'+
-'<div class="stage">'+LN+'<div class="sgrid">'+Array.from({length:5},()=>'<div class="scol">'+Array.from({length:5},()=>'<div class="cell"></div>').join('')+'</div>').join('')+'<svg class="plsvg"></svg></div>'+LN+'</div>'+
+'<div class="stage">'+LN+'<div class="sgrid">'+Array.from({length:5},()=>'<div class="scol">'+Array.from({length:5},()=>'<div class="cell"></div>').join('')+'</div>').join('')+'<svg class="plsvg"></svg></div>'+LN+'</div>'+(T.heist?'<div class="hbonus hide"></div>':'')+
 '<div class="cbot"><div><small>BAKİYE €</small><b class="bal">0</b></div><div class="mid winbar"></div><div class="wbox"><small>KAZANÇ €</small><b class="wsum">0,00</b></div></div>'+
 '<div class="betrow"><button class="bb minus" aria-label="Bahsi düşür">−</button><div class="disp"><small>BAHİS</small><span class="ghost">88,88</span><span class="v"></span></div><button class="bb plus" aria-label="Bahsi artır">+</button></div>'+
 '<div class="sctl"><button class="ic">ℹ️</button><button class="go">ÇEVİR</button><button class="ic auto">⟳</button></div>'+
-'<div class="tiny">20 hat · soldan sağa 3+ aynı · '+ico(T.sym[T.W],'i')+' wild · 3+ '+ico(T.sym[T.S],'i')+' = '+T.fs+' free spin x'+T.fsMult+'</div></div>';
+(T.heist?'<div class="tiny">20 hat · 3+ '+ico(T.sym[T.S],'i')+' = Kasa Odası · 6+ '+ico('bar','i')+' = Kasayı Doldur · '+ico(T.sym[T.W],'i')+' wild</div>':'<div class="tiny">20 hat · soldan sağa 3+ aynı · '+ico(T.sym[T.W],'i')+' wild · 3+ '+ico(T.sym[T.S],'i')+' = '+T.fs+' free spin x'+T.fsMult+'</div>')+'</div>';
 const svg=p.querySelector('.plsvg'),bal=p.querySelector('.bal'),wsum=p.querySelector('.wsum');
 /* jackpot şeridi (gösterim amaçlı sayaçlar) */
-const JP=[1200,6400,41000,776000].map((v,i)=>v+rnd(v/3));const jpEls=[...p.querySelectorAll('.jpr b')];
-function jpTick(){JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].textContent=Math.round(JP[i]).toLocaleString('tr-TR')})}jpTick();setInterval(jpTick,900);
+const jpEls=[...p.querySelectorAll('.jpr b')];
+if(T.heist){/* Diamond Heist'te jackpotlar gerçek: bahsin sabit katları */const jpUpd=()=>['MINI','MINOR','MAJOR','GRAND'].forEach((k,i)=>jpEls[i].textContent=fmt(sbet()*HEIST.jp[k]));jpUpd();BETUPD.push(jpUpd)}
+else{const JP=[1200,6400,41000,776000].map((v,i)=>v+rnd(v/3));const jpTick=()=>{JP.forEach((v,i)=>{JP[i]+=Math.random()*(i+1)*.7;jpEls[i].textContent=Math.round(JP[i]).toLocaleString('tr-TR')})};jpTick();setInterval(jpTick,900)}
 new MutationObserver(()=>bal.textContent=fmt(chips)).observe($('chips'),{childList:true});bal.textContent=fmt(chips);
 const dispEl=p.querySelector('.betrow .disp'),minusB=p.querySelector('.bb.minus'),plusB=p.querySelector('.bb.plus');
 function updBet(){dispEl.querySelector('.v').textContent=fmt(sbet());minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1;dispEl.classList.remove('flash');void dispEl.offsetWidth;dispEl.classList.add('flash')}
 BETUPD.push(updBet);updBet();dispEl.classList.remove('flash');
 const stepBet=d=>{if(busy)return;const i=sbi+d;if(i<0||i>=BETS.length)return;S.click();try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}setBet(i)};minusB.onclick=()=>stepBet(-1);plusB.onclick=()=>stepBet(1);
 const cols=[...p.querySelectorAll('.scol')],cells=cols.map(c=>[...c.querySelectorAll('.cell')]),grid=p.querySelector('.sgrid'),wb=p.querySelector('.winbar'),fsbar=p.querySelector('.fsbar'),goBtn=p.querySelector('.go'),autoBtn=p.querySelector('.auto'),infoBtn=p.querySelector('.ic');
-let g=slotSpin(T,Math.random),auto=false,fsLeft=0,cycle=null;
-function paint(c){cells[c].forEach((e,r)=>{const sidx=g[c][r];e.innerHTML=ico(T.sym[sidx]);e.className='cell'+(sidx===T.W?' wild':'')})}
+let g=slotSpin(T,Math.random),auto=false,fsLeft=0,cycle=null,cv=T.heist?heistCoinGrid(T,g,Math.random):null;
+const cvLabel=v=>typeof v==='number'?'<b class="cv">'+fmtA(v*sbet())+'</b>':'<b class="cv jp '+v.toLowerCase()+'">'+v+'</b>'; /* külçe değer etiketi */
+function paint(c){cells[c].forEach((e,r)=>{const sidx=g[c][r];e.innerHTML=ico(T.sym[sidx])+(T.heist&&sidx===T.C?cvLabel(cv[c][r]):'');e.className='cell'+(sidx===T.W?' wild':'')})}
 for(let c=0;c<5;c++)paint(c);
+if(T.heist)BETUPD.push(()=>{if(!busy)for(let c=0;c<5;c++)paint(c)}); /* bahis değişince külçe etiketleri yenilenir */
 const LC=['#2ea8d6','#ff4d4d','#5bff7a','#ffd23f','#ff7ae6','#ffa033','#9b7bff','#19f0ff'];
 function drawLines(list){svg.innerHTML='';if(!list.length)return;const gr=grid.getBoundingClientRect();svg.setAttribute('viewBox','0 0 '+gr.width+' '+gr.height);
 list.forEach(({cells:cs,line,scat})=>{const col=scat?'#ffd23f':LC[line%LC.length];const pts=cs.map(([c,r])=>{const b=cells[c][r].getBoundingClientRect();return[b.left-gr.left+b.width/2,b.top-gr.top+b.height/2,b.width,b.height]});
 if(!scat){const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');pl.setAttribute('points',pts.map(q=>q[0]+','+q[1]).join(' '));pl.setAttribute('stroke',col);svg.appendChild(pl)}
 pts.forEach(q=>{const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('class','box');r.setAttribute('x',q[0]-q[2]/2+4);r.setAttribute('y',q[1]-q[3]/2+4);r.setAttribute('width',q[2]-8);r.setAttribute('height',q[3]-8);r.setAttribute('rx',10);r.setAttribute('stroke',col);svg.appendChild(r)})})}
-function clearFx(){clearInterval(cycle);cycle=null;cells.flat().forEach(e=>e.classList.remove('win','scat','dim'));grid.classList.remove('antic');svg.innerHTML='';wsum.textContent='0,00'}
+function clearFx(){clearInterval(cycle);cycle=null;cells.flat().forEach(e=>e.classList.remove('win','scat','dim','hwe','hwc','land','rs'));grid.classList.remove('antic');svg.innerHTML='';wsum.textContent='0,00'}
 infoBtn.onclick=()=>{if(busy)return;S.click();overlay('<div class="pt"><h2 style="font-size:1.3rem;text-align:center">ÖDEME TABLOSU</h2><div class="sub">Kazançlar toplam bahsin katı olarak (3 · 4 · 5 sembol)</div><table>'+
-T.pay.map((pp,i)=>'<tr><td>'+ico(T.sym[i],'pt')+'</td><td>'+pp.map(x=>'<b>'+(x/20).toLocaleString('tr-TR',{maximumFractionDigits:2})+'x</b>').join(' · ')+'</td></tr>').join('')+
+T.pay.map((pp,i)=>T.heist&&i===T.C?'':'<tr><td>'+ico(T.sym[i],'pt')+'</td><td>'+pp.map(x=>'<b>'+(x/20).toLocaleString('tr-TR',{maximumFractionDigits:2})+'x</b>').join(' · ')+'</td></tr>').join('')+
+(T.heist?'<tr><td>'+ico('bar','pt')+'</td><td>Külçe — 6+ külçe: <b>Kasayı Doldur</b>. Külçeler kilitlenir, boş yerler 3 kez döner; her yeni külçe hakkı yeniler. Değerler bahsin katı; jackpot külçeleri <b>MINI 20x · MINOR 50x · MAJOR 200x</b>, 25 külçe <b>GRAND 1000x</b></td></tr>':'')+
 '<tr><td>'+ico(T.sym[T.W],'pt')+'</td><td>Wild — scatter hariç tüm sembollerin yerine geçer</td></tr>'+
-'<tr><td>'+ico(T.sym[T.S],'pt')+'</td><td>Scatter — her yerde 3/4/5: <b>'+T.scat.join('x · ')+'x</b> + <b>'+T.fs+' free spin</b> (x'+T.fsMult+'), tekrar 3+ scatter: +'+T.retrig+' spin</td></tr></table>'+
+(T.heist?'<tr><td>'+ico(T.sym[T.S],'pt')+'</td><td>Kasa kapısı — her yerde 3/4/5: <b>'+T.scat.join('x · ')+'x</b> + <b>Kasa Odası</b>: alarm çalana dek kasa aç, ilk 3 güvenli; 4 kapı x2, 5 kapı x3. ÇARK çıkarsa <b>Soygun Çarkı</b> toplamı x2–x10 katlar</td></tr>':'<tr><td>'+ico(T.sym[T.S],'pt')+'</td><td>Scatter — her yerde 3/4/5: <b>'+T.scat.join('x · ')+'x</b> + <b>'+T.fs+' free spin</b> (x'+T.fsMult+'), tekrar 3+ scatter: +'+T.retrig+' spin</td></tr>')+'</table>'+
 '<div class="sub">20 sabit hat, kazançlar soldan sağa ilk makaradan başlar. Her hat için en yüksek kombinasyon ödenir. Teorik RTP ≈ %96.</div><button class="cl">Kapat</button></div>')};
 autoBtn.onclick=()=>{S.click();auto=!auto;autoBtn.classList.toggle('on',auto);if(auto&&!busy)spin()};
 
@@ -913,15 +1069,16 @@ async function spin(){
 if(busy&&!fsLeft)return;const free=fsLeft>0;
 if(!free){if(chips<sbet()){msg('Yetersiz bakiye, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-sbet())}
 busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');
-g=slotSpin(T,Math.random);
+g=slotSpin(T,Math.random);if(T.heist)cv=heistCoinGrid(T,g,Math.random);
 cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});S.spinStart();
-let t=0,stopped=0,scSoFar=0,extra=0;const base=[700,950,1200,1450,1700];
+let t=0,stopped=0,scSoFar=0,coinSoFar=0,extra=0;const base=[700,950,1200,1450,1700];
 const iv=setInterval(()=>{t+=70;if(t%140<70)S.tick();for(let c=stopped;c<5;c++)cells[c].forEach(e=>e.innerHTML=ico(T.sym[rnd(T.sym.length)]));
 if(stopped<5&&t>=base[stopped]+extra){const c=stopped;cols[c].classList.remove('spin');cols[c].classList.add('land');paint(c);if(c===4)S.spinStop();S.stop();
 if(g[c].includes(T.W)&&c<3&&Math.random()<.5)say('wild');
 const sc=g[c].filter(x=>x===T.S).length;if(sc){scSoFar+=sc;cells[c].forEach((e,r)=>{if(g[c][r]===T.S)e.classList.add('scat')});S.scat()}
+if(T.heist){const cc=g[c].filter(x=>x===T.C).length;if(cc){coinSoFar+=cc;S.coin()}}
 stopped++;
-if(stopped<5&&scSoFar>=2&&scSoFar<3&&!grid.classList.contains('antic')){grid.classList.add('antic');extra+=900;const once=S.antic();const an=setInterval(()=>{if(once||stopped>=5||scSoFar>=3)clearInterval(an);else S.antic()},300)}
+if(stopped<5&&((scSoFar>=2&&scSoFar<3)||(T.heist&&coinSoFar>=4&&coinSoFar<HEIST.hwNeed))&&!grid.classList.contains('antic')){grid.classList.add('antic');extra+=900;const once=S.antic();const an=setInterval(()=>{if(once||stopped>=5)clearInterval(an);else S.antic()},300)}
 if(stopped===5){clearInterval(iv);grid.classList.remove('antic');setTimeout(()=>finish(free),250)}}},70)}
 
 async function finish(free){
@@ -938,7 +1095,8 @@ const showFx=r.total>10;if(showFx&&(!free||x>=5))slotWinFx(x,r.total,p);
 if(showFx&&x>=15)await overlay('<h2 class="wt'+(x>=100?' t5':x>=40?' t4':'')+'">'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmtE(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',x>=100?3600:x>=40?3000:2600,true);
 startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose()}
 setChips(chips+r.total);
-if(r.fs){S.fs();say(free?'bonus':'freespins',400);if(free){fsLeft+=T.retrig;await overlay('<div class="ic">'+ico(T.sym[T.S],'big')+'</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
+if(T.heist){const nc=cv.flat().filter(Boolean).length;if(nc>=HEIST.hwNeed)await holdWin();if(r.fs)await vaultPick(r.sc)}
+else if(r.fs){S.fs();say(free?'bonus':'freespins',400);if(free){fsLeft+=T.retrig;await overlay('<div class="ic">'+ico(T.sym[T.S],'big')+'</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
 else{fsLeft=T.fs;fsTotal=0;await overlay('<div class="ic">'+ico(T.sym[T.S],'big').repeat(Math.min(r.sc,5))+'</div><h2>FREE SPINS</h2><div class="n">'+T.fs+'</div><p>Tüm kazançlar <b style="color:var(--gold)">x'+T.fsMult+'</b></p><p class="tiny">Başlamak için dokun</p>',4000)}
 grid.classList.add('fsmode');fsbar.classList.remove('hide');fsbar.querySelector('.fsn').textContent=fsLeft;if(!free){await wait(400);spin();return}}
 if(free){fsTotal+=r.total;fsLeft--;fsbar.querySelector('.fsn').textContent=fsLeft;
@@ -955,10 +1113,57 @@ if(r.scatWin)items.push({cells:r.scells,txt:ico(T.sym[T.S],'i')+'×'+r.sc+' scat
 if(items.length<2){return}let i=0;const show=()=>{const it=items[i%items.length];cells.forEach((col,c)=>col.forEach((e,rr)=>{const on=it.cells.some(([a,b])=>a===c&&b===rr);e.classList.toggle('win',on&&!it.scat);e.classList.toggle('scat',on&&it.scat);e.classList.toggle('dim',!on)}));
 drawLines([it.scat?{cells:it.cells,scat:true}:{cells:it.cells,line:it.line}]);wb.innerHTML=it.txt;i++};
 setTimeout(()=>{show();cycle=setInterval(show,1100)},1200)}
+/* ===== DIAMOND HEIST bonus oyunları (makeSlot içinde; p, grid, cells, cv, g, wsum, wb, fsbar kapanımları) ===== */
+/* Kasa Odası: alarm çalana dek kasa aç (ilk 3 güvenli); ÇARK çıkarsa sonunda Soygun Çarkı toplamı katlar */
+async function vaultPick(sc){const m=sc>=5?3:sc===4?2:1,stage=p.querySelector('.stage'),bx=p.querySelector('.hbonus');
+S.fs();say('bonus',300);
+await overlay('<div class="ic">'+ico(T.sym[T.S],'big').repeat(Math.min(sc,5))+'</div><h2>KASA ODASI</h2><p>Kasaları aç, alarm çalmadan topla</p>'+(m>1?'<p>Tüm ödüller <b style="color:var(--gold)">x'+m+'</b></p>':'')+'<p class="tiny">Başlamak için dokun</p>',4000);
+stage.classList.add('hide');bx.classList.remove('hide');
+bx.innerHTML='<div class="bhead"><span>KASA ODASI'+(m>1?'<b class="mm">x'+m+'</b>':'')+'</span><span>TOPLAM <b class="btot">0,00</b></span></div><div class="vaults">'+Array.from({length:12},(_,i)=>'<button class="vault" data-i="'+i+'"><i></i></button>').join('')+'</div><div class="bhint">Bir kasaya dokun · ilk 3 kasa güvenli</div>';
+let tot=0,k=1,wheel=false,ended=false;const totEl=bx.querySelector('.btot'),hint=bx.querySelector('.bhint');
+await new Promise(res=>{bx.querySelectorAll('.vault').forEach(v=>v.onclick=async()=>{if(ended||v.classList.contains('open'))return;v.classList.add('open');S.click();const pk=heistPickGen(k,wheel,Math.random);k++;
+if(pk.t==='alarm'){v.innerHTML='<b class="alarm">ALARM</b>';bx.classList.add('alarm');S.lose();hint.textContent='Alarm çaldı, soygun bitti';ended=true;await wait(1700);res();return}
+if(pk.t==='wheel'){wheel=true;v.innerHTML='<b class="wh">ÇARK</b>';S.scat();hint.textContent='Soygun Çarkı kazanıldı: sonunda toplamı katlar'}
+else if(pk.t==='dbl'){tot*=2;v.innerHTML='<b class="dbl">x2<small>HEPSİ</small></b>';S.big();hint.textContent='Toplam ikiye katlandı'}
+else{const a=pk.v*m*sbet();tot+=a;v.innerHTML='<b class="mult">'+fmtA(pk.v*m)+'x<small>+'+fmt(a)+'</small></b>';S.win(Math.min(6,1+Math.floor(pk.v/3)));hint.textContent=k<=4?'Güvenli, devam et':'Devam et: alarm riski artıyor'}
+totEl.textContent=fmt(tot);wsum.textContent=fmt(tot);
+if(k>12){ended=true;if(!wheel){wheel=true;hint.textContent='Tüm kasalar açıldı: Soygun Çarkı!'}await wait(1300);res()}})});
+let mult=1;if(wheel&&tot>0){mult=await heistWheel();tot*=mult}
+bx.classList.add('hide');bx.classList.remove('alarm');stage.classList.remove('hide');
+setChips(chips+tot);wsum.textContent=fmt(tot);
+if(tot>10)slotWinFx(tot/sbet(),tot,p);if(tot/sbet()>=100)say('jackpot',200);else if(tot/sbet()>=20)say('bigwin',200);
+await overlay('<h2 class="wt">KASA ODASI BİTTİ</h2><div class="n">+'+fmtE(tot)+'</div><p>'+(tot/sbet()).toFixed(1)+'x bahis'+(mult>1?' · çark x'+mult:'')+'</p>',3200,tot>10)}
+/* Soygun Çarkı: 12 dilim, toplamı katlar */
+function heistWheel(){return new Promise(res=>{const bx=p.querySelector('.hbonus'),segs=HEIST.wheel,n=segs.length,seg=360/n;
+bx.innerHTML='<div class="bhead"><span>SOYGUN ÇARKI</span><span>Toplamı katlar</span></div><div class="wheelb"><div class="ptr"></div><div class="disc">'+segs.map((v,i)=>'<span style="transform:rotate('+((i+.5)*seg)+'deg) translateY(-88px)">x'+v+'</span>').join('')+'<i class="hub"></i></div></div><div class="bhint">Çevirmek için çarka dokun</div>';
+const disc=bx.querySelector('.disc');disc.style.background='conic-gradient('+segs.map((v,i)=>(v>=10?'#ffd23f':v>=5?'#e0202c':i%2?'#1c3f7a':'#0f2a55')+' '+(i*seg)+'deg '+((i+1)*seg)+'deg').join(',')+')';
+const idx=rnd(n),target=360*5+(360-(idx+.5)*seg)+(Math.random()*seg*.6-seg*.3);
+bx.onclick=async()=>{bx.onclick=null;bx.querySelector('.bhint').textContent='';S.click();S.wheelStart(4.2);disc.style.transition='transform 4.4s cubic-bezier(.12,.75,.08,1)';disc.style.transform='rotate('+target+'deg)';await wait(4500);S.wheelStop();S.big();
+bx.querySelector('.bhint').innerHTML='<b style="color:var(--gold);font-size:1.3rem">x'+segs[idx]+'</b>';await wait(1500);res(segs[idx])}})}
+/* Kasayı Doldur: külçeler kilitlenir, boş hücreler 3 çevirme döner; yeni külçe hakkı yeniler; 25 külçe = GRAND */
+async function holdWin(){S.fs();say('bonus',300);
+await overlay('<div class="ic">'+ico('bar','big').repeat(3)+'</div><h2>KASAYI DOLDUR</h2><p>Külçeler kilitlendi · 3 çevirme hakkı</p><p>Her yeni külçe hakkı yeniler</p><p class="tiny">Başlamak için dokun</p>',4000);
+clearFx();grid.classList.add('hw');fsbar.classList.add('hw');fsbar.classList.remove('hide');
+const locked=g.map(col=>col.map(s=>s===T.C));let count=locked.flat().filter(Boolean).length;
+const res=heistHoldWin(cv,Math.random); /* adımlar önceden belirlenir, sırayla oynatılır */
+for(let c=0;c<5;c++)for(let r=0;r<5;r++){const e=cells[c][r];if(locked[c][r]){e.innerHTML=ico('bar')+cvLabel(cv[c][r]);e.className='cell hwc'}else{e.innerHTML='';e.className='cell hwe'}}
+let spins=3;const bar=t=>fsbar.innerHTML='<span>KASAYI DOLDUR</span><span>'+(t||'<b class="fsn">'+spins+'</b> çevirme · <b>'+count+'</b>/25')+'</span>';bar();
+for(const st of res.steps){await wait(600);const emp=[];for(let c=0;c<5;c++)for(let r=0;r<5;r++)if(!locked[c][r])emp.push([c,r]);
+emp.forEach(([c,r])=>cells[c][r].classList.add('rs'));S.spinStart();
+await new Promise(done=>{let t=0;const iv=setInterval(()=>{t+=70;emp.forEach(([c,r])=>{cells[c][r].innerHTML=Math.random()<.25?ico('bar'):''});if(t>=900){clearInterval(iv);done()}},70)});
+S.spinStop();S.stop();emp.forEach(([c,r])=>{cells[c][r].classList.remove('rs');cells[c][r].innerHTML=''});
+st.added.forEach(([c,r])=>{locked[c][r]=true;count++;const e=cells[c][r];e.innerHTML=ico('bar')+cvLabel(cv[c][r]);e.className='cell hwc land'});
+if(st.added.length){S.coin();S.win(3)}else S.lose();spins=st.spins;bar();await wait(st.added.length?900:600)}
+const total=res.total*sbet();cells.flat().forEach(e=>{if(e.classList.contains('hwc'))e.classList.add('win')});
+bar((res.full?'KASA DOLDU · GRAND! ':'Toplam ')+'<b>'+fmt(total)+'</b>');await countUp(total,1500);setChips(chips+total);
+if(res.full||total/sbet()>=100)say('jackpot',200);else if(total/sbet()>=40)say('megawin',200);else say('bigwin',200);
+if(total>10)slotWinFx(total/sbet(),total,p);
+await overlay('<h2 class="wt'+(res.full?' t5':'')+'">'+(res.full?'GRAND JACKPOT':'KASA AÇILDI')+'</h2><div class="n">+'+fmtE(total)+'</div><p>'+(total/sbet()).toFixed(1)+'x bahis'+(res.jps.length?' · '+res.jps.join(' + '):'')+'</p>',3400,true);
+grid.classList.remove('hw');fsbar.classList.add('hide');fsbar.classList.remove('hw');fsbar.innerHTML='<span>FREE SPIN</span><span><b class="fsn">0</b> kaldı</span>'}
 function btnsLock(){goBtn.disabled=busy;infoBtn.disabled=busy;autoBtn.disabled=busy&&fsLeft>0;minusB.disabled=busy||sbi===0;plusB.disabled=busy||sbi===BETS.length-1}
 goBtn.onclick=()=>{ac();S.click();spin()}
 p.addEventListener('click',()=>{if(!welcomed){welcomed=true;say('welcome')}},{once:true})}
-makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);
+makeSlot('slot',THEMES.slot);makeSlot('slot2',THEMES.slot2);try{makeSlot('slot3',THEMES.slot3)}catch(e){console.error('slot3',e)}
 /* ana ekrandaki minik slot: kendi kendine döner, orta sırada kazanç çizgisi yanıp söner */
 {const T=THEMES.slot,K=9,w=[6,7,5][rnd(3)];const mr=$('mreels');[0,1,2].forEach(c=>{const seq=[];for(let i=0;i<K;i++)seq.push(T.sym[rnd(T.sym.length)]);
 /* döngü sonunda görünen 3 sıra = başlangıçtaki 3 sıra olsun diye şerit kendini tekrar eder; orta sıra kazanan sembol */
