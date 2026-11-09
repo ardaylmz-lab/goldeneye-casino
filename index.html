@@ -229,9 +229,9 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .bjsvg text{font-family:"Cinzel",Georgia,serif;font-weight:800;fill:#ffd23fcc;letter-spacing:2px}
 .bjsvg .ins{fill:#ffffffb0;letter-spacing:1.5px}.bjsvg .logo{fill:#ffffff18;letter-spacing:4px;font-size:13px}
 .shoe,.tray{position:absolute;top:10px;width:46px;height:30px;border-radius:5px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 3px 6px #000a,inset 0 1px 0 #fff2}
-.shoe{right:14px}.shoe::after{content:"";position:absolute;left:6px;top:calc(21px - var(--sh,1)*24px);width:30px;height:calc(6px + var(--sh,1)*24px);border-radius:3px;background:repeating-linear-gradient(45deg,#c9971a44 0 1px,#0000 1px 5px),repeating-linear-gradient(-45deg,#c9971a44 0 1px,#0000 1px 5px),linear-gradient(180deg,#8a0a1a,#4a0410);border:2px solid #f3e6c4;box-shadow:0 2px 3px #0008;transform:rotate(-6deg);transition:top .6s,height .6s}
+.shoe{right:14px}.shoe::after{content:"";position:absolute;left:6px;top:calc(21px - var(--sh,1)*24px);width:30px;height:calc(6px + var(--sh,1)*24px);border-radius:3px;background:linear-gradient(115deg,#ffffff16 0,#0000 45%),linear-gradient(160deg,#9a1020,#5a0612 60%,#3a0309);box-shadow:0 2px 3px #0008,inset 0 0 0 2px #f3e6c4,inset 0 0 0 3px #c9971a;transform:rotate(-6deg);transition:top .6s,height .6s}
 .tray{left:14px;background:linear-gradient(180deg,#3a3a40,#15151a)}
-.tray::after{content:"";position:absolute;left:7px;bottom:4px;width:30px;height:calc(2px + var(--tr,0)*24px);border-radius:2px;background:repeating-linear-gradient(45deg,#c9971a44 0 1px,#0000 1px 5px),repeating-linear-gradient(-45deg,#c9971a44 0 1px,#0000 1px 5px),linear-gradient(180deg,#8a0a1a,#4a0410);border:2px solid #f3e6c4;box-shadow:0 2px 3px #0008;transform:rotate(4deg);opacity:calc(.15 + var(--tr,0)*.85);transition:height .6s,opacity .6s}
+.tray::after{content:"";position:absolute;left:7px;bottom:4px;width:30px;height:calc(2px + var(--tr,0)*24px);border-radius:2px;background:linear-gradient(115deg,#ffffff16 0,#0000 45%),linear-gradient(160deg,#9a1020,#5a0612 60%,#3a0309);box-shadow:0 2px 3px #0008,inset 0 0 0 2px #f3e6c4,inset 0 0 0 3px #c9971a;transform:rotate(4deg);opacity:calc(.15 + var(--tr,0)*.85);transition:height .6s,opacity .6s}
 .dealer{position:absolute;left:50%;top:26px;transform:translateX(-50%);display:flex;min-height:48px;perspective:500px}
 .dealer .c+.c{margin-left:-14px}
 .dsum{position:absolute;left:50%;top:80px;transform:translateX(-50%);z-index:2;font-family:"Orbitron",Montserrat,monospace;font-size:.58rem;letter-spacing:1px;color:#ffe9a8;font-weight:900;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;padding:2px 9px 1px;border-radius:6px;box-shadow:0 2px 4px #000a}
@@ -275,10 +275,10 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .c .ix{position:absolute;left:3px;top:2px;font-size:.8rem;text-align:center;line-height:1;letter-spacing:-.3px}.c .ix i{display:block;font-style:normal;font-size:.6rem;margin-top:1px}
 .c .ix.b2{left:auto;right:3px;top:auto;bottom:2px;transform:rotate(180deg)}
 .c .pp{position:absolute;inset:0;display:grid;place-items:center}.c .pp>i{font-style:normal;font-size:1.05rem;opacity:.85}
-.c.flip{animation:bjfp .6s ease-in-out both}
+.c.flip{animation:bjfp .55s ease-in-out both}
 @keyframes bjfp{0%{transform:rotateY(180deg)}100%{transform:rotateY(0)}}
 /* kutudan kavisli dağıtım: --dx/--dy kutuya göre fark (JS hesaplar) */
-.c.fly{animation:bjfly .42s cubic-bezier(.2,.8,.3,1) both}
+.c.cfly{animation:bjfly .36s cubic-bezier(.2,.8,.3,1) both}
 @keyframes bjfly{0%{transform:translate(var(--dx),var(--dy)) rotate(-24deg) rotateY(var(--ry)) scale(.8);opacity:0}12%{opacity:1}55%{transform:translate(calc(var(--dx)*.35),calc(var(--dy)*.35 - 16px)) rotate(-9deg) rotateY(var(--ry)) scale(.96)}100%{transform:rotateY(var(--ry))}}
 #bjbtns button{flex:1 1 20%}#bjbtns .go{flex-basis:100%}#bjrebet,#bjclear{flex:1 1 45%}
 /* premium ana düğmeler */
@@ -1401,12 +1401,21 @@ const spotPos=k=>SPOTS[k];
 function flyChips(from,to,n,delay,label){if(from===RACK)DLR.pay((to.x-211)/211);else DLR.take((from.x-211)/211);for(let i=0;i<n;i++){setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.6)';$('bjt').appendChild(e);
 requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform='translate('+(to.x+(i%2?6:-6)*(i>1?1:0))+'px,'+(to.y-i*3)+'px) scale(1)'}));setTimeout(()=>{if(!$('bj').classList.contains('hide'))S.chip()},520);setTimeout(()=>{e.style.opacity='0'},1150);setTimeout(()=>e.remove(),1450)},delay+i*110)}}
 /* kart yüzü: iki köşede indeks (sayı + küçük sembol), ortada tek sembol; kapalı kart yalnız sade arka */
-function card(c,hid,nw,fl){const cls='c'+(hid?' h':'')+(!hid&&/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':'');if(hid)return '<div class="'+cls+'"><div class="cb"></div><div class="cf"></div></div>';
-const r=c.slice(0,-1),su=c.slice(-1);
-return '<div class="'+cls+'"><div class="cb"></div><div class="cf"><b class="ix">'+r+'<i>'+su+'</i></b><b class="ix b2">'+r+'<i>'+su+'</i></b><div class="pp"><i>'+su+'</i></div></div></div>'}
+function cardFace(c){const r=c.slice(0,-1),su=c.slice(-1);return '<b class="ix">'+r+'<i>'+su+'</i></b><b class="ix b2">'+r+'<i>'+su+'</i></b><div class="pp"><i>'+su+'</i></div>'}
+function card(c,hid,nw,fl,key){const cls='c'+(hid?' h':'')+(!hid&&/[♥♦]/.test(c)?' r':'')+(nw?' new':'')+(fl?' flip':''),k=key?' data-fk="'+key+'"':'';return '<div class="'+cls+'"'+k+'><div class="cb"></div><div class="cf">'+(hid?'':cardFace(c))+'</div></div>'}
+/* krupiye kartları yerinde güncellenir: yeni kart eklenir, kapalı kart aynı öğe üzerinde çevrilir; böylece ara çizimler animasyonu kesmez */
+function renderDealer(){const dh=$('dh'),want=dealerH.map((c,i)=>({c,hid:hole&&i===1}));let els=[...dh.children];
+let k=0;while(k<els.length&&k<want.length&&(els[k].dataset.c===want[k].c||els[k].classList.contains('h')))k++;
+for(let q=els.length-1;q>=k;q--)els[q].remove();
+for(let q=k;q<want.length;q++){dh.insertAdjacentHTML('beforeend',card(want[q].c,want[q].hid,q>=dshown,false,'d-'+q));dh.lastElementChild.dataset.c=want[q].hid?'??':want[q].c}
+[...dh.children].forEach((el,i)=>{const w=want[i];if(!w)return;if(el.classList.contains('h')&&!w.hid){el.dataset.c=w.c;el.querySelector('.cf').innerHTML=cardFace(w.c);el.classList.remove('h','cfly');el.classList.toggle('r',/[♥♦]/.test(w.c));el.classList.add('flip')}})}
 /* yeni kartlar kutudan uçar: kutu ile kartın ekran farkı masa ölçeğine bölünüp --dx/--dy olarak verilir */
-function flyNew(){const sh=$('bjt').querySelector('.shoe');if(!sh)return;const sr=sh.getBoundingClientRect();if(!sr.width)return;const s=parseFloat(getComputedStyle($('bjwrap')).getPropertyValue('--s'))||1;
-$('bjt').querySelectorAll('.c.new').forEach(e=>{const r=e.getBoundingClientRect();e.classList.remove('new');e.style.setProperty('--dx',((sr.left+sr.width/2)-(r.left+r.width/2))/s+'px');e.style.setProperty('--dy',((sr.top+sr.height/2)-(r.top+r.height/2))/s+'px');e.classList.add('fly')})}
+const FLY={},FLYMS=360;
+function flyNew(){const sh=$('bjt').querySelector('.shoe');if(!sh)return;const sr=sh.getBoundingClientRect();if(!sr.width)return;const s=parseFloat(getComputedStyle($('bjwrap')).getPropertyValue('--s'))||1,now=performance.now();
+$('bjt').querySelectorAll('.c.new,.c[data-fk]').forEach(e=>{const key=e.dataset.fk;let t0=key?FLY[key]:undefined;
+if(e.classList.contains('new')){e.classList.remove('new');t0=now;if(key)FLY[key]=now}
+if(t0===undefined||e.classList.contains('cfly'))return;const age=now-t0;if(age>FLYMS){if(key)delete FLY[key];return}
+const r=e.getBoundingClientRect();e.style.setProperty('--dx',((sr.left+sr.width/2)-(r.left+r.width/2))/s+'px');e.style.setProperty('--dy',((sr.top+sr.height/2)-(r.top+r.height/2))/s+'px');e.style.animationDelay=(-age)+'ms';e.classList.add('cfly')})}
 let prevOut=0,trayCards=0; /* kutu/tepsi görseli: turda dağıtılan kart sayısı ve atık yığını */
 function bjRender(){let dealt=-1;seats.forEach((s,k)=>{const el=$('seats').children[k];el.classList.toggle('on',!!cur&&cur.s===k);
 el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip'+(s.bot?' bot':'')+'"><span>'+fmtA(s.bet)+'</span></div>':'<small>'+(s.bot?BOTNAME:(k+1))+'</small>';
@@ -1414,10 +1423,10 @@ el.querySelector('.spot').innerHTML=s.bet>0?'<div class="bchip'+(s.bot?' bot':''
 /* her el kendi bahsinin üstünde, kartlar sağa-yukarı yelpaze (14px/-6px), bölünmüş eller yan yana (60px), toplam etiketi yelpazenin altında */
 el.querySelector('.hands').innerHTML=s.hands.map((h,j)=>{const n=s.hands.length,vc=h.vis==null?h.cards:h.cards.slice(0,h.vis),m=vc.length,v=val(vc),on=cur&&cur.s===k&&cur.h===j,st=m>=4?10:14,fw=34+st*(m-1),x0=-fw/2;
 /* bölünmüş ikinci el birincinin üstünde (hafif sağda), etiketi üstte */
-return '<div class="hand" style="transform:translate('+(j*(k<3?-14:14))+'px,'+(-j*58)+'px)">'+vc.map((c,i)=>'<div class="cs" style="transform:translate('+(x0+i*st)+'px,'+(-48-i*6)+'px)">'+card(c,false,i>=h.shown)+'</div>').join('')+(m>=2?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="left:-20px;top:'+(j?(-48-6*(m-1)-18):3)+'px">'+(h.bj?'BJ':v.t)+(h.dbl?'·2x':'')+'</div>':'')+'</div>'}).join('');
+return '<div class="hand" style="transform:translate('+(j*(k<3?-14:14))+'px,'+(-j*58)+'px)">'+vc.map((c,i)=>'<div class="cs" style="transform:translate('+(x0+i*st)+'px,'+(-48-i*6)+'px)">'+card(c,false,i>=h.shown,false,k+'-'+j+'-'+i)+'</div>').join('')+(m>=2?'<div class="hsum'+(v.t>21?' bust':h.bj?' bj':on?' on':'')+'" style="left:-20px;top:'+(j?(-48-6*(m-1)-18):3)+'px">'+(h.bj?'BJ':v.t)+(h.dbl?'·2x':'')+'</div>':'')+'</div>'}).join('');
 s.hands.forEach(h=>{const m=h.vis==null?h.cards.length:Math.min(h.vis,h.cards.length);if(m>(h.shown||0))dealt=k;h.shown=m});
 el.querySelector('.bd').innerHTML=s.badge?'<div class="badge '+s.badge.c+'">'+s.badge.t+'</div>':(s.ins>0?'<div class="badge ins">SİGORTA '+fmtA(s.ins)+'</div>':'')});
-$('dh').innerHTML=dealerH.map((c,i)=>card(c,hole&&i===1,i>=dshown,i===1&&!hole&&dflip)).join('');if(dealerH.length>dshown||dflip)dealt='d';dshown=dealerH.length;dflip=false;
+renderDealer();if(dealerH.length>dshown||dflip)dealt='d';dshown=dealerH.length;dflip=false;
 $('dsum').textContent=dealerH.length&&!hole?sum(dealerH):'';
 flyNew();
 {const out=seats.reduce((a,s)=>a+s.hands.reduce((b,h)=>b+h.cards.length,0),0)+dealerH.length;if(out===0&&prevOut>0){trayCards+=prevOut;if(trayCards>104)trayCards=0}prevOut=out;$('bjt').style.setProperty('--tr',Math.min(1,trayCards/104).toFixed(2));$('bjt').style.setProperty('--sh',Math.max(.2,1-(trayCards+out)/150).toFixed(2))}
