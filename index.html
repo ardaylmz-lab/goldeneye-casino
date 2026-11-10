@@ -1900,7 +1900,7 @@ window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};
 {const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|rl_/.test(error.message)&&/find|exist/.test(error.message))msg('Rulet motoru kurulmamış: supabase/rl_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
 let RST=null,spunRound=-1,shownRound=-1,myLastRL=null,tickT=null,cdT=null;
 const isMe=u=>!!u&&me&&u===me.id;
-function redraw(){const st=RST;if(!st)return;clearWon();RB={};
+function redraw(){const st=RST;if(!st)return;clearWon();document.querySelectorAll('#tbl .tc > em').forEach(e=>{e.innerHTML=''});RB={}; /* önce masadaki bütün kendi çip işaretleri silinir: yeni turda ve Temizle'den sonra eski çipler kalıyordu */
 (st.bets||[]).forEach(b=>{if(isMe(b.user)){RB[b.key]=(RB[b.key]||0)+(+b.amt);mark(b.key)}else{const el=document.querySelector('[data-k="'+b.key+'"]');if(!el)return;const k=rSeatOf(b.user);const i=document.createElement('i');i.className='om c'+(k>=0?k:1);i.title=b.name;i.innerHTML='<span>'+fmtA(+b.amt)+'</span>';const n=el.querySelectorAll('.om').length;i.style.left=(2+n*8)+'px';i.style.bottom=(2+n*4)+'px';el.appendChild(i)}});
 if(st.phase==='spin'&&shownRound===st.round&&st.result!=null){const n=st.result;(st.bets||[]).forEach(b=>{if(isMe(b.user)&&wins(b.key,n)){const c=document.querySelector('[data-k="'+b.key+'"]');if(c){c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(+b.amt*payMult(b.key,n,st.lightning,st.light!==false))+'</span>'}}})}
 renderBoard();btns()}
