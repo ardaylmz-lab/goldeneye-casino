@@ -1,4 +1,4 @@
-# Otomatik iskelet: dört görünümlü GLB'den en soldaki figürü ayırır, yatay kesitlerle bacak/gövde/kol dallarını bulur, eklemleri hesaplar,
+# Otomatik iskelet: dört görünümlü GLB'den görseldeki ÖN görünümden üretilen figürü ayırır (satırın ucundaki geniş figür; arkaya dönükse çevrilir), yatay kesitlerle bacak/gövde/kol dallarını bulur, eklemleri hesaplar,
 # köşe ağırlıklarını üretir ve iskeletli GLB yazar. Model: y yukarı, yüz +z, karakterin solu +x, ayaklar y=0.
 # Kullanım: python3 -I rig.py <kaynak.glb> <çıktı.glb> [doku_boyutu]
 import sys, json, struct, io, numpy as np
@@ -14,13 +14,20 @@ def arr(ai,dt,n):
 ct={5121:np.uint8,5123:np.uint16,5125:np.uint32}
 P=arr(prim['attributes']['POSITION'],np.float32,3).astype(np.float64); UV=arr(prim['attributes']['TEXCOORD_0'],np.float32,2)
 I=arr(prim['indices'],ct[acc[prim['indices']]['componentType']],1).reshape(-1,3).astype(np.int64)
-# ---- en soldaki figür ----
+# ---- ön görünüm figürü: sıra [ön, yan, arka, yan]; yüzü görselden gelen figür satırın ucundaki geniş olandır (öbür geniş figürün yüzü üreticinin tahminidir) ----
 key=np.round(P*20000).astype(np.int64); _,inv=np.unique(key,axis=0,return_inverse=True); inv=inv.reshape(-1); W=inv[I]; nv=inv.max()+1
 e=np.concatenate([W[:,[0,1]],W[:,[1,2]],W[:,[2,0]]]); nc,lab=connected_components(coo_matrix((np.ones(len(e)),(e[:,0],e[:,1])),shape=(nv,nv)),directed=False)
 tl=lab[W[:,0]]; tcnt=np.bincount(tl,minlength=nc); big=[c for c in range(nc) if tcnt[c]>0.05*len(I)]
-cx=[P[I[tl==c]].reshape(-1,3)[:,0].mean() for c in big]; comp=big[int(np.argmin(cx))]
+info=[]
+for c in big:
+    Q=P[np.unique(I[tl==c])]; a_,b_=Q.min(0),Q.max(0); info.append((float(Q[:,0].mean()),c,(b_[0]-a_[0])>1.25*(b_[2]-a_[2])))
+info.sort(); ends=[t for t in (info[0],info[-1]) if t[2]]; pick=ends[0] if len(ends)==1 else (min(info) if not ends else ends[0]); comp=pick[1]
+print('figürler (x merkezi, geniş mi):',[(round(x,2),w) for x,_,w in info],'| seçilen x =',round(pick[0],2))
 T=I[tl==comp]; used=np.unique(T); remap=-np.ones(len(P),np.int64); remap[used]=np.arange(len(used)); T=remap[T]; P=P[used]; UV=UV[used]
 mn,mx=P.min(0),P.max(0); P[:,0]-=(mn[0]+mx[0])/2; P[:,2]-=(mn[2]+mx[2])/2; P[:,1]-=mn[1]; H=float(P[:,1].max())
+# yüz +z'ye bakmalı: ayak uçları bacak ekseninin önündedir; arkaya dönükse figür y ekseni çevresinde 180 derece çevrilir
+toe=P[P[:,1]<0.05*H][:,2].mean()-P[(P[:,1]>0.12*H)&(P[:,1]<0.2*H)][:,2].mean()
+if toe<0: P[:,0]*=-1; P[:,2]*=-1; print('figür arkaya dönüktü, 180 derece çevrildi')
 # kaynaştırılmış (konuma göre) topoloji
 key=np.round(P*20000).astype(np.int64); _,first,wid=np.unique(key,axis=0,return_index=True,return_inverse=True); wid=wid.reshape(-1); V=P[first]; Tw=wid[T]
 ok=(Tw[:,0]!=Tw[:,1])&(Tw[:,1]!=Tw[:,2])&(Tw[:,0]!=Tw[:,2]); Tw=Tw[ok]; T=T[ok]; nw=len(V)

@@ -2435,7 +2435,7 @@ function figPose(F,p){const B=F.B,b=F.bind,Q=F.Qw,P=F.pos,set=(n,par,qw)=>{Q[n]=
  P.Mouth=P.Head.clone().add(new THREE.Vector3(0,F.headLen*.22,F.headLen*.42).applyQuaternion(Q.Head));return F}
 /* ---------- 3D karakterler: koltukta oturan oyuncunun iskeletli modeli (models/<ad>.glb). Poz her karede hesaplanır:
    nefes, bakış (sırası gelince kendi kartlarına, yoksa krupiyeye), viski yudumu (bardaklıktaki bardak ele alınır), kazanınca yumruk, kaybedince baş eğme. ---------- */
-const FIGMODEL={gorkem:{url:'models/gorkem.glb',h:2.6,pitch:0},arda:{url:'models/arda.glb',h:2.55,pitch:.22}};
+const FIGMODEL={gorkem:{url:'models/gorkem.glb',h:2.6,pitch:0},arda:{url:'models/arda.glb',h:2.55,pitch:.22},arda_yilmaz:{url:'models/arda_yilmaz.glb',h:2.7,pitch:0}};
 const SEATY=.935,RAILL=.1-FLOOR,GLH=.19,GLY=.1-.13+.004+GLH/2,figs=new Map();let gltfP=null,figT=0;
 const loadGLB=url=>(gltfP||(gltfP=import('three/addons/loaders/GLTFLoader.js').then(m=>new m.GLTFLoader()))).then(L=>new Promise((res,rej)=>L.load(url,res,undefined,rej)));
 const fig3d=name=>{const k=name&&typeof avatarKey==='function'?avatarKey(name):null;return k&&FIGMODEL[k]?k:null};
