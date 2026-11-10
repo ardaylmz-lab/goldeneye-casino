@@ -2228,7 +2228,7 @@ if(st){const u=now-st.t0,se=st.settleT||T2+1.1;
 if(u<T1){wantT.copy(CS);wantD=D0*.8;closeUp=true}
 else if(u<se+1.4){const k=smooth((u-T1)/(T2-T1))*.8;wantT.copy(CS).multiplyScalar(1-k).addScaledVector(ball.position,k);wantD=D0*(.8-.32*smooth((u-T1)/(se-T1)));closeUp=true}}
 /* 3D masa görünümü (VIEW; RL3 kurar): boşta kamera bütün masayı gösterir, çevirince çarka yaklaşır (dikey tuvalde çark enine sığsın diye uzaklık VIEW.zoom ile çarpılır), top oturunca masaya döner. VIEW yokken her şey eskisi gibidir. */
-const V=VIEW;if(V){if(closeUp)wantD*=V.zoom;else{wantT.copy(V.T);wantD=V.D}}
+const V=VIEW;if(V){if(closeUp){wantT.lerpVectors(CS,wantT,V.follow);wantD=Math.max(wantD*V.zoom,V.minD)}else{wantT.copy(V.T);wantD=V.D}} /* masa görünümünde yakın çekim çarkın tamamını (dış ahşabıyla) kadrajda tutar: en yakın uzaklık minD, topu izleme payı follow */
 const ka=1-Math.exp(-dtc*3);camT.lerp(wantT,ka);camD+=(wantD-camD)*(1-Math.exp(-dtc*2.2));vmix+=((V&&!closeUp?1:0)-vmix)*(1-Math.exp(-dtc*2.6));
 /* boşta kamera çarkın çevresinde ağır ağır salınır; çevirince sabitlenir */
 const swayT=st||V?0:.06*Math.sin(now*.21);sway+=(swayT-sway)*(1-Math.exp(-dt*.9));cam.position.copy(camT).addScaledVector(V?DIR.clone().lerp(V.dir,vmix).normalize():DIR.clone().applyAxisAngle(YAX,sway),camD);cam.lookAt(camT);
@@ -2668,7 +2668,7 @@ let started=false;
 function start(){const RW=window.RW,G=window.GE3;if(started||!RW||!RW.ok||!G)return;
 const box=RW.box,cv=RW.cv,ui=document.getElementById('rl3ui'),tog=document.getElementById('rl3tog'),panel=document.getElementById('rulet'),tbl=document.getElementById('tbl');if(!box||!cv||!ui||!tog||!panel||!tbl)return;started=true;
 const scene=RW.scene,cam=RW._cam,V3=(x,y,z)=>new THREE.Vector3(x,y,z),sstep=G.sstep,canvasTex=G.canvasTex;
-const YT=-.2,K=.66,FLY=YT-1.45*K,HW=1.5,Z0=-1.5,Z1=6.2,RWD=.19,CRN=.36;          /* çuha yüksekliği, mobilya ölçeği, zemin; masa yarı eni, uzak ve yakın uç, ray eni, köşe yarıçapı */
+const YT=-.2,K=.66,FLY=YT-1.45*K,HW=1.5,Z0=-1.5,Z1=6.2,RWD=.2,CRN=.36;          /* çuha yüksekliği, mobilya ölçeği, zemin; masa yarı eni, uzak ve yakın uç, ray eni, köşe yarıçapı */
 const FX=HW-RWD,FZ0=1.24,FZ1=Z1-RWD;                                              /* çuha dikdörtgeni */
 const XO=-1.26,XD=-.72,XN=-.30,CWD=.52,ZZ=1.44,RD=.32;                            /* dış bahis sütunu, 12'liler, sayılar; sayı hücresi eni; sıfır satırının başı; satır derinliği */
 const TBL=new THREE.Group();TBL.visible=false;scene.add(TBL);
@@ -2682,9 +2682,10 @@ const OUT=[['low','1-18'],['even','ÇİFT'],['red',''],['black',''],['odd','TEK'
 function drawLayout(g){g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(TW/2,TH*.42,60,TW/2,TH*.5,TH*.62);gr.addColorStop(0,'#0f7a42');gr.addColorStop(.6,'#0a5530');gr.addColorStop(1,'#06351e');g.fillStyle=gr;g.fillRect(0,0,TW,TH);
  for(let i=0;i<26000;i++){g.fillStyle=i%2?'rgba(255,255,255,.022)':'rgba(0,0,0,.05)';g.fillRect(Math.random()*TW,Math.random()*TH,1.5,1.5)}
  const LINE='#ecdca0',cell=(x0,x1,z0,z1,fill,rt)=>{const X=px(x0),Y=pz(z0),W=px(x1)-X,H=pz(z1)-Y,r=rt||8;g.beginPath();g.moveTo(X,Y+H);g.lineTo(X,Y+r);g.arcTo(X,Y,X+r,Y,r);g.lineTo(X+W-r,Y);g.arcTo(X+W,Y,X+W,Y+r,r);g.lineTo(X+W,Y+H);g.closePath();
-   if(fill){const f=g.createLinearGradient(0,Y,0,Y+H);f.addColorStop(0,fill[0]);f.addColorStop(1,fill[1]);g.fillStyle=f;g.fill()}g.lineWidth=5;g.strokeStyle=LINE;g.stroke()},
+   if(fill){const f=g.createLinearGradient(0,Y,0,Y+H);f.addColorStop(0,fill[0]);f.addColorStop(1,fill[1]);g.fillStyle=f;g.fill();g.fillStyle='rgba(255,255,255,.09)';g.fillRect(X+5,Y+5,W-10,5);g.fillStyle='rgba(0,0,0,.2)';g.fillRect(X+5,Y+H-10,W-10,5)}g.lineWidth=5;g.strokeStyle=LINE;g.stroke()},
   text=(s,x,z,font,col,sq)=>{g.save();g.translate(px(x),pz(z));if(sq)g.scale(sq,1);g.font=font;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';g.lineWidth=7;g.strokeStyle='rgba(0,0,0,.45)';g.strokeText(s,0,3);g.fillStyle=col;g.fillText(s,0,3);g.restore()},
   dia=(x,z,c0,c1)=>{g.save();g.translate(px(x),pz(z));g.rotate(Math.PI/4);const f=g.createLinearGradient(-30,-30,30,30);f.addColorStop(0,c0);f.addColorStop(1,c1);g.fillStyle=f;g.fillRect(-27,-27,54,54);g.lineWidth=4;g.strokeStyle=LINE;g.strokeRect(-27,-27,54,54);g.restore()};
+ {const e=70,sh=(x0,y0,x1,y1,a,b,c,d)=>{const q=g.createLinearGradient(a,b,c,d);q.addColorStop(0,'rgba(0,0,0,.42)');q.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=q;g.fillRect(x0,y0,x1,y1)};sh(0,0,e,TH,0,0,e,0);sh(TW-e,0,e,TH,TW,0,TW-e,0);sh(0,0,TW,e,0,0,0,e);sh(0,TH-e,TW,e,0,TH,0,TH-e)} /* ray gölgesi */
  const RED=['#c8102c','#8a0a1c'],BLK=['#1b1b20','#070708'],GRN=['#0f9a50','#08703a'],OUTC=['#0b6238','#084a2a'],NUM='900 84px Montserrat, Arial, sans-serif',LAB='800 50px Cinzel, Georgia, serif';
  cell(XN,XN+3*CWD,ZZ,ZZ+RD,GRN,46);text('0',XN+1.5*CWD,ZZ+RD/2,NUM,'#fff');
  for(let n=1;n<=36;n++){const r=Math.floor((n-1)/3),c=(n-1)%3,x0=XN+c*CWD,z0=ZZ+RD*(r+1);cell(x0,x0+CWD,z0,z0+RD,REDS.includes(n)?RED:BLK,4);text(String(n),x0+CWD/2,z0+RD/2,NUM,'#fff',n>9?.9:1)}
@@ -2694,44 +2695,101 @@ function drawLayout(g){g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradie
  /* ikili ve dörtlü bahis noktaları: 2D masadaki gibi soluk altın benekler */
  g.fillStyle='rgba(255,210,63,.34)';const dot=(x,z)=>{g.beginPath();g.arc(px(x),pz(z),7,0,7);g.fill()};
  for(let n=1;n<=36;n++){const r=Math.floor((n-1)/3),c=(n-1)%3,xc=XN+(c+.5)*CWD,zc=ZZ+RD*(r+1.5);if(c<2)dot(xc+CWD/2,zc);if(n<=33)dot(xc,zc+RD/2);if(c<2&&n<=33)dot(xc+CWD/2,zc+RD/2)}[0,1,2].forEach(c=>dot(XN+(c+.5)*CWD,ZZ+RD));
- g.font='800 40px Cinzel, Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillStyle='rgba(255,233,168,.55)';g.fillText('GOLDEN EYE',px((XO+XN)/2),pz(ZZ+RD*.5))}
+ /* düzenin çevresinde çift altın çerçeve, köşelerde kıvrım; üst solda arma */
+ {const x0=px(XO)-17,y0=pz(ZZ)-20,x1=px(XN+3*CWD)+17,y1=pz(ZZ+14*RD)+19,fr=(o,w,c)=>{g.lineWidth=w;g.strokeStyle=c;g.beginPath();g.roundRect(x0-o,y0-o,x1-x0+2*o,y1-y0+2*o,22+o);g.stroke()};fr(0,3,'#e2bd62');fr(9,1.5,'rgba(226,189,98,.7)');
+  [[x0,y0,1,1],[x1,y0,-1,1],[x0,y1,1,-1],[x1,y1,-1,-1]].forEach(([x,y,sx,sy])=>{g.save();g.translate(x,y);g.scale(sx,sy);g.strokeStyle='#e2bd62';g.lineWidth=2.5;g.beginPath();g.arc(30,30,17,Math.PI,1.5*Math.PI);g.stroke();g.beginPath();g.arc(30,30,8,0,7);g.fillStyle='rgba(226,189,98,.85)';g.fill();g.restore()})}
+ {const cx=px((XO+XN)/2),cy=pz(ZZ+RD*.5);g.font='800 38px Cinzel, Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillStyle='rgba(255,233,168,.75)';g.fillText('GOLDEN EYE',cx,cy+2);g.strokeStyle='rgba(226,189,98,.7)';g.lineWidth=2;[-1,1].forEach(s=>{g.beginPath();g.moveTo(cx-150,cy+s*30);g.lineTo(cx+150,cy+s*30);g.stroke()})}}
 const feltTex=canvasTex(TW,TH,drawLayout);
 {const geo=new THREE.PlaneGeometry(2*FX,FZ1-FZ0);geo.rotateX(-Math.PI/2);const felt=add(geo,new THREE.MeshPhysicalMaterial({map:feltTex,roughness:.96,metalness:0,sheen:.5,sheenRoughness:.6,sheenColor:new THREE.Color(0x2f9d63),envMapIntensity:.12}),0,YT,(FZ0+FZ1)/2);felt.receiveShadow=true}
 if(document.fonts&&document.fonts.load)Promise.all([document.fonts.load('800 20px Cinzel'),document.fonts.load('900 20px Montserrat')]).then(()=>{drawLayout(feltTex.image.getContext('2d'));feltTex.needsUpdate=true}).catch(()=>{});
 
-/* ---------- çark bölmesi: cilalı koyu ahşap güverte, çanağın dibinde pirinç halka; köşelerde krupiyenin çip yığınları ---------- */
-const deckM=RW.wood.clone();deckM.color.set(0x6b4a3c);deckM.envMapIntensity=.35;deckM.clearcoat=.5; /* çanakla aynı maun dokusu, daha koyu */
-const leatherM=new THREE.MeshStandardMaterial({color:0x170b05,roughness:.7,metalness:0,bumpMap:G.leather.bumpMap,bumpScale:.5,envMapIntensity:.16}),goldM=G.goldM,woodM=new THREE.MeshPhysicalMaterial({color:0x200e06,roughness:.4,metalness:0,clearcoat:.6,clearcoatRoughness:.3,envMapIntensity:.2});
-{const geo=new THREE.PlaneGeometry(2*FX,FZ0-(Z0+RWD));geo.rotateX(-Math.PI/2);add(geo,deckM,0,YT+.002,(FZ0+Z0+RWD)/2).receiveShadow=true;
- const ring=add(new THREE.TorusGeometry(1.014,.013,10,120),RW.brass,0,YT+.012,0);ring.rotation.x=Math.PI/2;
- add(new THREE.BoxGeometry(2*FX,.012,.022),goldM,0,YT+.004,FZ0);
- const inl=add(new THREE.TorusGeometry(1.13,.006,6,120),goldM,0,YT+.004,0);inl.rotation.x=Math.PI/2}
+/* ---------- malzemeler: cilalı maun (çarkın çanağıyla aynı doku), konyak deri, kapitone deri, pirinç ---------- */
+const goldM=G.goldM,woodTexOf=(rx,ry)=>{const t=RW.wood.map.clone();t.needsUpdate=true;t.repeat.set(rx,ry);const b=RW.wood.bumpMap.clone();b.needsUpdate=true;b.repeat.set(rx,ry);return[t,b]};
+const mahOf=(rx,ry,tint,env)=>{const [t,b]=woodTexOf(rx,ry);return new THREE.MeshPhysicalMaterial({map:t,bumpMap:b,bumpScale:.003,color:tint,roughness:.4,metalness:0,clearcoat:.8,clearcoatRoughness:.2,envMapIntensity:env})};
+const mahM=mahOf(1,1,0x8f6e5c,.36),mahDark=mahOf(1,1,0x5e4336,.3);
+const leatherM=new THREE.MeshPhysicalMaterial({color:0x2b0f07,roughness:.56,metalness:0,clearcoat:.14,clearcoatRoughness:.5,bumpMap:G.leather.bumpMap,bumpScale:.45,envMapIntensity:.17});
+const tuftM=new THREE.MeshPhysicalMaterial({color:0x34130a,roughness:.54,metalness:0,clearcoat:.16,clearcoatRoughness:.5,bumpMap:G.quilt.bumpMap,bumpScale:1.5,envMapIntensity:.19});
+const studGeo=new THREE.SphereGeometry(1,10,8),studM=new THREE.MeshStandardMaterial({color:0xe2bd62,metalness:1,roughness:.22});
+/* çizgi boyunca eşit aralıklı örnekler: nokta ve teğet açısı */
+const along=(inset,step)=>{const sh=rrect(-HW+inset,HW-inset,Z0+inset,Z1-inset,Math.max(.04,CRN-inset)),n=Math.round(sh.getLength()/step),p=sh.getSpacedPoints(n);p.pop();return p.map((q,i)=>{const a=p[(i+p.length-1)%p.length],b=p[(i+1)%p.length];return[q.x,-q.y,Math.atan2(b.y-a.y,b.x-a.x)]})};
+const inst=(geo,mat,list,place)=>{const im=new THREE.InstancedMesh(geo,mat,list.length),M=new THREE.Matrix4(),q=new THREE.Quaternion(),s=new THREE.Vector3(),p=new THREE.Vector3(),up=new THREE.Vector3(0,1,0);list.forEach((it,i)=>{place(it,p,q,s,up);M.compose(p,q,s);im.setMatrixAt(i,M)});im.frustumCulled=false;TBL.add(im);return im};
+
+/* ---------- çark bölmesi: güneş ışını kakmalı cilalı maun güverte, abanoz ve sedef halka, altın çizgiler; çark basamaklı ahşap kaideye oturur ---------- */
+const DZ0=Z0+RWD,DS=1024,dpx=x=>(x+FX)/(2*FX)*DS,dpz=z=>(z-DZ0)/(FZ0-DZ0)*DS,DU=DS/(2*FX);
+const deckTex=canvasTex(DS,DS,g=>{const cx=dpx(0),cy=dpz(0),R=DS*1.1;g.fillStyle='#3d1a0a';g.fillRect(0,0,DS,DS);
+ /* güneş ışını kaplama: 40 dilim, iki ton, damarlar merkezden dışa */
+ const N=40;for(let i=0;i<N;i++){const a0=i*2*Math.PI/N,a1=(i+1)*2*Math.PI/N;g.beginPath();g.moveTo(cx,cy);g.arc(cx,cy,R,a0,a1);g.closePath();g.fillStyle=i%2?'#54260f':'#3d1a0a';g.fill();
+  g.save();g.clip();for(let k=0;k<26;k++){const a=a0+(a1-a0)*Math.random(),w=.6+Math.random()*1.6;g.strokeStyle=k%3?'rgba(20,7,2,'+(.1+Math.random()*.16)+')':'rgba(255,190,120,'+(.05+Math.random()*.08)+')';g.lineWidth=w;g.beginPath();g.moveTo(cx+Math.cos(a)*390,cy+Math.sin(a)*390);g.lineTo(cx+Math.cos(a+(Math.random()-.5)*.01)*R,cy+Math.sin(a+(Math.random()-.5)*.01)*R);g.stroke()}g.restore()}
+ {const gr=g.createRadialGradient(cx,cy,380,cx,cy,760);gr.addColorStop(0,'rgba(255,200,140,.10)');gr.addColorStop(.5,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,.34)');g.fillStyle=gr;g.fillRect(0,0,DS,DS)}
+ /* abanoz halka, sedef noktalar, altın çizgiler */
+ const ring=(r,w,c)=>{g.beginPath();g.arc(cx,cy,r*DU,0,7);g.lineWidth=w;g.strokeStyle=c;g.stroke()};ring(1.17,.085*DU,'#140905');ring(1.125,3.5,'#e8c66a');ring(1.215,3.5,'#e8c66a');ring(1.245,1.5,'#b8923a');
+ for(let i=0;i<48;i++){const a=i*Math.PI/24;g.beginPath();g.arc(cx+Math.cos(a)*1.17*DU,cy+Math.sin(a)*1.17*DU,i%2?3.2:5.2,0,7);g.fillStyle=i%2?'#e8c66a':'#f6ecd2';g.fill()}
+ /* çerçeve: koyu bordür ve çift altın çizgi; köşelerde baklava kakma */
+ g.lineWidth=46;g.strokeStyle='#22100a';g.strokeRect(23,23,DS-46,DS-46);g.lineWidth=3.5;g.strokeStyle='#e8c66a';g.strokeRect(48,48,DS-96,DS-96);g.lineWidth=1.5;g.strokeStyle='#b8923a';g.strokeRect(12,12,DS-24,DS-24);
+ [[96,96],[DS-96,96],[96,DS-96],[DS-96,DS-96]].forEach(([x,y])=>{g.save();g.translate(x,y);g.rotate(Math.PI/4);g.fillStyle='#140905';g.fillRect(-21,-21,42,42);g.strokeStyle='#e8c66a';g.lineWidth=3;g.strokeRect(-21,-21,42,42);g.fillStyle='#f6ecd2';g.fillRect(-8,-8,16,16);g.restore()})});
+{const geo=new THREE.PlaneGeometry(2*FX,FZ0-DZ0);geo.rotateX(-Math.PI/2);add(geo,new THREE.MeshPhysicalMaterial({map:deckTex,roughness:.32,metalness:0,clearcoat:.85,clearcoatRoughness:.14,envMapIntensity:.42}),0,YT+.002,(FZ0+DZ0)/2).receiveShadow=true;
+ /* basamaklı kaide ve pirinç halkalar */
+ const st=add(new THREE.CylinderGeometry(1.085,1.1,.034,96,1,true),mahDark,0,YT+.019,0);st.castShadow=true;const cap=add(new THREE.RingGeometry(.99,1.085,96),mahDark,0,YT+.0362,0);cap.rotation.x=-Math.PI/2;cap.receiveShadow=true;
+ [[1.088,.0365,.011],[1.012,.045,.012]].forEach(([r,y,t])=>{const m=add(new THREE.TorusGeometry(r,t,10,128),RW.brass,0,YT+y,0);m.rotation.x=Math.PI/2});
+ add(new THREE.BoxGeometry(2*FX,.014,.026),goldM,0,YT+.004,FZ0)}
+/* krupiyenin çipleri: uzak köşelerde pirinç çerçeveli, kadife tabanlı tablalar */
 const chipGeo=new THREE.CylinderGeometry(1,1,1,28),chipMats=new Map();
 function chipMat(col){let m=chipMats.get(col);if(m)return m;const c=G.hex(col);m=[new THREE.MeshStandardMaterial({map:G.sideTex(c,12),roughness:.5}),new THREE.MeshStandardMaterial({map:canvasTex(96,96,(g,w)=>{const r=w/2;g.translate(r,r);for(let i=0;i<12;i++){g.beginPath();g.moveTo(0,0);g.arc(0,0,r,i*Math.PI/6,(i+1)*Math.PI/6);g.closePath();g.fillStyle=i%2?'#fff6e0':c;g.fill()}g.beginPath();g.arc(0,0,r*.8,0,7);g.fillStyle=c;g.fill();g.beginPath();g.arc(0,0,r*.66,0,7);g.strokeStyle='#ffffff66';g.lineWidth=3;g.stroke()}),roughness:.45}),new THREE.MeshStandardMaterial({color:col,roughness:.6})];chipMats.set(col,m);return m}
 const stack=(col,n,r,th,par,x,y,z)=>{const m=new THREE.Mesh(chipGeo,chipMat(col));m.scale.set(r,th*n,r);m.position.set(x,y+th*n/2,z);par.add(m);return m};
-[[1,-1],[-1,-1]].forEach(([sx])=>{const cols=[0x1e63d6,0xe0202c,0x2e9e4f,0xc9971a,0x1b1b1f,0x7b3fe4];cols.forEach((c,i)=>{const row=i%3,colm=Math.floor(i/3);stack(c,7+((i*5)%4),.07,.02,TBL,sx*(.86+row*.155),YT+.002,-1.16+colm*.16+row*.05).castShadow=true})});
+[1,-1].forEach(sx=>{const tx=sx*1.01,tz=-1.03;add(new RoundedBoxGeometry(.5,.03,.44,3,.014),RW.brass,tx,YT+.012,tz).castShadow=true;add(new RoundedBoxGeometry(.46,.012,.4,3,.01),new THREE.MeshStandardMaterial({color:0x0a3a22,roughness:1}),tx,YT+.024,tz);
+ [0x1e63d6,0xe0202c,0x2e9e4f,0xc9971a,0x1b1b1f,0x7b3fe4].forEach((c,i)=>{stack(c,7+((i*5)%4),.064,.02,TBL,tx+(i%3-1)*.148,YT+.03,tz+(i<3?-.095:.095)).castShadow=true})});
 
-/* ---------- ray (deri yastık), altın biyeler, ahşap gövde, ayaklar, zemin ---------- */
-{const rs=rrect(-HW,HW,Z0,Z1,CRN);rs.holes.push(new THREE.Path(rrect(-FX+.045,FX-.045,Z0+RWD+.045,FZ1-.045,CRN-RWD+.05).getPoints(8).reverse()));
- const rg=new THREE.ExtrudeGeometry(rs,{depth:.05,bevelEnabled:true,bevelThickness:.045,bevelSize:.045,bevelSegments:6,curveSegments:10});rg.rotateX(-Math.PI/2);add(rg,leatherM,0,YT,0);
- const tube=(inset,y,r)=>{const pts=rrect(-HW+inset,HW-inset,Z0+inset,Z1-inset,Math.max(.05,CRN-inset)).getPoints(10).map(p=>V3(p.x,y,-p.y));add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),320,r,6,true),goldM)};
- tube(RWD+.002,YT+.014,.009);tube(-.05,YT+.03,.01);tube(-.02,YT-.09,.009);tube(-.02,YT-.42,.011);
- const bg=new THREE.ExtrudeGeometry(rrect(-HW+.01,HW-.01,Z0+.01,Z1-.01,CRN),{depth:.38,bevelEnabled:false,curveSegments:10});bg.rotateX(-Math.PI/2);add(bg,woodM,0,YT-.43,0);
- const pedM=new THREE.MeshStandardMaterial({color:0x0c0705,roughness:.6,metalness:.1});
- [.25,4.45].forEach(z=>{add(new RoundedBoxGeometry(1.5,YT-.43-FLY,1.05,3,.08),pedM,0,(YT-.43+FLY)/2,z);add(new RoundedBoxGeometry(2.05,.07,1.5,3,.03),woodM,0,FLY+.035,z)});
- const tex=canvasTex(512,512,(g,w)=>{const r=w/2,gr=g.createRadialGradient(r,r,0,r,r,r);gr.addColorStop(0,'rgba(64,40,24,1)');gr.addColorStop(.38,'rgba(30,19,12,1)');gr.addColorStop(.7,'rgba(12,8,5,.85)');gr.addColorStop(1,'rgba(8,5,3,0)');g.fillStyle=gr;g.fillRect(0,0,w,w);
-   g.globalCompositeOperation='source-atop';g.strokeStyle='rgba(201,151,26,.045)';g.lineWidth=1;for(let i=-26;i<=26;i++){g.beginPath();g.moveTo(i*20,0);g.lineTo(i*20+512,512);g.stroke();g.beginPath();g.moveTo(i*20+512,0);g.lineTo(i*20,512);g.stroke()}});
+/* ---------- ray: dışta maun pervaz, içte altın dikişli konyak deri yastık; gövdede pirinç çiviler; torna ayaklar; desenli halı ---------- */
+{const ringGeo=(o,i,depth,bt,bs)=>{const s=rrect(-HW+o,HW-o,Z0+o,Z1-o,Math.max(.05,CRN-o));s.holes.push(new THREE.Path(rrect(-HW+i,HW-i,Z0+i,Z1-i,Math.max(.05,CRN-i)).getPoints(10).reverse()));const g=new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:true,bevelThickness:bt,bevelSize:bs,bevelSegments:6,curveSegments:12});g.rotateX(-Math.PI/2);return g};
+ add(ringGeo(.014,.043,.06,.012,.012),mahM,0,YT-.004,0).castShadow=true;                                  /* pervaz: 0..0,055; üstü YT+.068 */
+ add(ringGeo(.097,RWD-.042,.03,.046,.042),leatherM,0,YT+.03,0).castShadow=true;                           /* yastık: 0,055..RWD; üstü YT+.106 */
+ const tube=(inset,y,r,m)=>{const pts=rrect(-HW+inset,HW-inset,Z0+inset,Z1-inset,Math.max(.05,CRN-inset)).getPoints(10).map(p=>V3(p.x,y,-p.y));add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),360,r,6,true),m||goldM)};
+ tube(.056,YT+.068,.008);tube(RWD+.002,YT+.016,.009);tube(-.004,YT-.34,.012);tube(.004,YT-.05,.006);
+ /* altın dikiş: yastığın iki kenarı boyunca */
+ const stGeo=new THREE.BoxGeometry(.03,.004,.007),stM=new THREE.MeshStandardMaterial({color:0xd9b25a,roughness:.5,metalness:.5});
+ [.086,RWD-.03].forEach(ins=>inst(stGeo,stM,along(ins,.052),([x,z,a],p,q,s,up)=>{p.set(x,YT+.1005,z);q.setFromAxisAngle(up,a);s.set(1,1,1)}));
+ /* pirinç çiviler: pervazın altında gövde boyunca */
+ inst(studGeo,studM,along(.012,.085),([x,z],p,q,s)=>{p.set(x,YT-.085,z);q.identity();s.setScalar(.017)});
+ /* gövde: maun etek, altta koyu süpürgelik */
+ const bg=new THREE.ExtrudeGeometry(rrect(-HW+.02,HW-.02,Z0+.02,Z1-.02,CRN-.02),{depth:.32,bevelEnabled:false,curveSegments:12});bg.rotateX(-Math.PI/2);add(bg,mahM,0,YT-.34,0).castShadow=true;
+ const sk=new THREE.ExtrudeGeometry(rrect(-HW+.005,HW-.005,Z0+.005,Z1-.005,CRN),{depth:.07,bevelEnabled:false,curveSegments:12});sk.rotateX(-Math.PI/2);add(sk,mahDark,0,YT-.41,0);
+ /* torna ayaklar */
+ const LH=YT-.41-FLY,lp=[[.052,0],[.078,.02],[.082,.06],[.05,.1],[.04,.2],[.072,.42],[.088,.5],[.06,.56],[.072,.6],[.095,.63],[.095,LH]].map(p=>new THREE.Vector2(p[0],p[1])),legG=new THREE.LatheGeometry(lp,22);
+ [[-1,Z0+.34],[1,Z0+.34],[-1,2.35],[1,2.35],[-1,Z1-.34],[1,Z1-.34]].forEach(([s,z])=>{const x=s*(HW-.3);add(legG,mahDark,x,FLY,z).castShadow=true;[[.1,.052],[.565,.064]].forEach(([y,r])=>{const t=add(new THREE.TorusGeometry(r,.009,8,20),goldM,x,FLY+y,z);t.rotation.x=Math.PI/2});add(new THREE.CylinderGeometry(.056,.064,.03,16),RW.brass,x,FLY+.015,z)});
+ /* halı: bordo zemin, altın baklava deseni; kenara doğru saydamlaşır */
+ const tex=canvasTex(512,512,(g,w)=>{const r=w/2,gr=g.createRadialGradient(r,r,0,r,r,r);gr.addColorStop(0,'rgba(44,11,15,1)');gr.addColorStop(.4,'rgba(27,8,10,1)');gr.addColorStop(.72,'rgba(12,5,5,.9)');gr.addColorStop(1,'rgba(8,4,4,0)');g.fillStyle=gr;g.fillRect(0,0,w,w);
+   g.globalCompositeOperation='source-atop';g.strokeStyle='rgba(226,189,98,.06)';g.lineWidth=1.2;for(let i=-26;i<=26;i++){g.beginPath();g.moveTo(i*24,0);g.lineTo(i*24+512,512);g.stroke();g.beginPath();g.moveTo(i*24+512,0);g.lineTo(i*24,512);g.stroke()}
+   g.fillStyle='rgba(226,189,98,.08)';for(let y=0;y<=512;y+=24)for(let x=(y/24%2)*12;x<=512;x+=24){g.beginPath();g.arc(x,y,1.8,0,7);g.fill()}});
  const fl=add(new THREE.CircleGeometry(1,48),new THREE.MeshStandardMaterial({map:tex,transparent:true,roughness:1,metalness:0,depthWrite:false}),0,FLY,2.4);fl.rotation.x=-Math.PI/2;fl.scale.set(6.4,10.4,1);fl.renderOrder=-1}
 /* bahis alanının üstünde ikinci lamba (çarkın kendi spotu çark bölmesini aydınlatır) */
-const lamp=new THREE.SpotLight(0xfff0d8,34,22,.6,.9,1.5);lamp.position.set(.3,6.2,4.3);lamp.target.position.set(0,YT,4.1);TBL.add(lamp,lamp.target);
+const lamp=new THREE.SpotLight(0xfff0d8,31,22,.6,.9,1.5);lamp.position.set(.3,6.2,4.3);lamp.target.position.set(0,YT,4.1);TBL.add(lamp,lamp.target);
 
-/* ---------- koltuklar: blackjack koltukları K ölçeğinde; üç oyuncu yakın uçta, krupiye çarkın ardında ---------- */
+/* ---------- koltuklar: kemerli sırtlı kapitone konyak deri kulüp koltuğu, maun kasa ve ayaklar, pirinç çiviler; K ölçeğinde. Oturma yüksekliği ve kolçak arası blackjack koltuğuyla aynı (karakterler aynı pozla oturur). ---------- */
+const lthSeat=new THREE.MeshPhysicalMaterial({color:0x34130a,roughness:.54,metalness:0,clearcoat:.16,clearcoatRoughness:.5,bumpMap:G.leather.bumpMap,bumpScale:.45,envMapIntensity:.19}),tuftSeat=tuftM.clone();tuftSeat.color.set(0x3d170b);
+function makeRChair(){const g=new THREE.Group(),ad=(geo,mat,x,y,z,par)=>{const m=new THREE.Mesh(geo,mat);m.castShadow=true;m.position.set(x,y,z);(par||g).add(m);return m};
+ const leg=new THREE.CylinderGeometry(.05,.03,.5,14);[[-.38,-.34],[.38,-.34],[-.38,.34],[.38,.34]].forEach(([x,z])=>{ad(leg,mahDark,x,.27,z);ad(new THREE.CylinderGeometry(.036,.042,.04,14),goldM,x,.02,z)});
+ ad(new RoundedBoxGeometry(.96,.1,.9,3,.03),mahM,0,.57,0);ad(new THREE.BoxGeometry(.966,.012,.906),goldM,0,.625,0);
+ ad(new RoundedBoxGeometry(.92,.2,.86,4,.06),lthSeat,0,.72,0);ad(new RoundedBoxGeometry(.76,.15,.7,4,.06),tuftSeat,0,.86,-.03);
+ /* kemerli sırtlık */
+ const back=new THREE.Group();back.position.set(0,1.14,.42);back.rotation.x=.16;g.add(back);const W=.44,H0=-.43,H1=.3,AR=.2;
+ const sh=new THREE.Shape();sh.moveTo(-W,H0);sh.lineTo(W,H0);sh.lineTo(W,H1);sh.absellipse(0,H1,W,AR,0,Math.PI,false);sh.lineTo(-W,H0);
+ const bgeo=new THREE.ExtrudeGeometry(sh,{depth:.07,bevelEnabled:true,bevelThickness:.04,bevelSize:.04,bevelSegments:5,curveSegments:18});bgeo.translate(0,0,-.035);ad(bgeo,tuftSeat,0,0,0,back);
+ /* arka yüz: kemeri izleyen pirinç çiviler, kapitone düğmeleri */
+ const P=[];for(let i=0;i<=22;i++){const a=Math.PI*i/22;P.push([Math.cos(a)*(W-.02),H1+Math.sin(a)*(AR-.02)])}for(let y=H0+.04;y<H1;y+=.075){P.push([W-.02,y]);P.push([-W+.02,y])}for(let x=-W+.09;x<W-.03;x+=.075)P.push([x,H0+.02]);
+ const im=new THREE.InstancedMesh(studGeo,studM,P.length),M=new THREE.Matrix4();P.forEach(([x,y],i)=>{M.makeScale(.017,.017,.017);M.setPosition(x,y,.079);im.setMatrixAt(i,M)});im.frustumCulled=false;back.add(im);
+ const B=[];[-.24,0,.24].forEach(x=>[-.3,-.06,.18].forEach(y=>B.push([x,y])));[-.12,.12].forEach(x=>[-.18,.06,.3].forEach(y=>B.push([x,y])));
+ const ib=new THREE.InstancedMesh(studGeo,goldM,B.length);B.forEach(([x,y],i)=>{M.makeScale(.02,.02,.012);M.setPosition(x,y,.076);ib.setMatrixAt(i,M)});ib.frustumCulled=false;back.add(ib);
+ /* yuvarlak kolçaklar, önlerinde pirinç rozet */
+ [-1,1].forEach(s=>{ad(new RoundedBoxGeometry(.12,.24,.72,3,.045),lthSeat,s*.455,.9,.03);const arm=ad(new THREE.CapsuleGeometry(.074,.6,6,14),lthSeat,s*.455,1.04,.03);arm.rotation.x=Math.PI/2;const ros=ad(new THREE.CylinderGeometry(.05,.05,.014,20),goldM,s*.455,1.04,-.345);ros.rotation.x=Math.PI/2});
+ return{g,back}}
 const FUR=new THREE.Group();FUR.scale.setScalar(K);FUR.position.y=YT;TBL.add(FUR);
-const CHZ=Z1-RWD/2+.64*K,CHX=[.98,0,-.98],chairs=CHX.map(x=>{const c=G.makeChair();c.g.position.set(x/K,-1.45,CHZ/K);FUR.add(c.g);return c});
-const dealerChair=G.makeChair();dealerChair.g.position.set(0,-1.45,(Z0+RWD/2-.64*K)/K);dealerChair.g.rotation.y=Math.PI;FUR.add(dealerChair.g);TBL.updateMatrixWorld(true);
-const L2W=(c,x,y,z)=>c.g.localToWorld(V3(x,y,z)),RAILL=1.45+.1/K;
-const SEATC=chairs.map(c=>L2W(c,0,1.0,.05)),SEATLBL=chairs.map(c=>L2W(c,0,.98,-.05)),PLATEP=chairs.map(c=>c.back.localToWorld(V3(0,.02,.09)));
-const DEALERLBL=dealerChair.back.localToWorld(V3(0,.12,-.14)),DEALERTOP=L2W(dealerChair,0,2.64,-.06);
+const CHZ=Z1-RWD/2+.64*K,CHX=[.98,0,-.98],chairs=CHX.map(x=>{const c=makeRChair();c.g.position.set(x/K,-1.45,CHZ/K);FUR.add(c.g);return c});
+/* krupiye ayakta durur: masanın uzak kenarının hemen ardında, çarka dönük; koltuğu yanında boş durur (masaya hafif dönük) */
+const DSTAND=Z0-.2,dspot=new THREE.Group();dspot.position.set(0,-1.45,DSTAND/K);dspot.rotation.y=Math.PI;FUR.add(dspot);
+const dealerChair=makeRChair();dealerChair.g.position.set(-1.02/K,-1.45,(DSTAND-.3)/K);dealerChair.g.rotation.y=Math.PI+.42;FUR.add(dealerChair.g);TBL.updateMatrixWorld(true);
+const L2W=(c,x,y,z)=>c.g.localToWorld(V3(x,y,z)),D2W=(x,y,z)=>dspot.localToWorld(V3(x,y,z)),RAILL=1.45+.106/K;
+const SEATC=chairs.map(c=>L2W(c,0,1.0,.05)),SEATLBL=chairs.map(c=>L2W(c,0,.98,-.05)),PLATEP=chairs.map(c=>c.back.localToWorld(V3(0,.0,.1)));
+const DEALERLBL=D2W(0,1.9,0),DEALERTOP=D2W(0,2.84,0);
 
 /* ---------- bahis yerleri ---------- */
 const OUTK=OUT.map(o=>o[0]);
@@ -2789,45 +2847,45 @@ function result(n){const p=posOf('n:'+n);if(!p)return;dollyTo=n===0?V3(p.x-.4,YT
 
 /* ---------- 3D karakterler: krupiye (çarkı çevirir, topu izler, kazanan sayıyı işaretler) ve modeli olan oyuncular (topu izler, kazanınca/kaybedince tepki verir) ---------- */
 const figs=new Map();let dlr=null,dlrBusy=false,lookNum=null,lookNumUntil=0,figT=0;
-function seatFigure(chair,M,ready){G.loadGLB(M.url).then(g=>{const F=G.figBuild(g.scene),s=M.h/F.H,b=F.bind,holder=new THREE.Group();holder.add(g.scene);holder.scale.setScalar(s);holder.rotation.y=Math.PI;
-  holder.position.set(s*b.Hips.x,.935+.062*F.H*s-s*b.LeftUpLeg.y,(M.fwd?-.05:.1)+s*b.Hips.z);chair.g.add(holder);g.scene.traverse(o=>{if(o.isMesh){o.castShadow=!!M.shadow;o.receiveShadow=false;o.frustumCulled=false}});ready({F,s,holder,M,yaw:0,pitch:.12,last:performance.now()})}).catch(e=>{console.warn('3D karakter yüklenemedi',M.url,e)})}
+function placeFigure(parent,M,stand,ready){G.loadGLB(M.url).then(g=>{const F=G.figBuild(g.scene),s=M.h/F.H,b=F.bind,holder=new THREE.Group();holder.add(g.scene);holder.scale.setScalar(s);holder.rotation.y=Math.PI;
+  if(stand)holder.position.set(s*b.Hips.x,0,s*b.Hips.z);else holder.position.set(s*b.Hips.x,.935+.062*F.H*s-s*b.LeftUpLeg.y,.1+s*b.Hips.z);parent.add(holder);g.scene.traverse(o=>{if(o.isMesh){o.castShadow=!!M.shadow;o.receiveShadow=false;o.frustumCulled=false}});ready({F,s,holder,M,yaw:0,pitch:.12,last:performance.now()})}).catch(e=>{console.warn('3D karakter yüklenemedi',M.url,e)})}
 function dropFig(c){const f=c.fig;if(!f)return;c.g.remove(f.holder);f.holder.traverse(o=>{if(o.isMesh){o.geometry.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m.map)m.map.dispose();m.dispose()})}});c.fig=null}
 function setChairFig(k,key){const c=chairs[k];if((c.figKey||null)===(key||null))return;c.figKey=key||null;if(c.fig){dropFig(c);figs.delete(k)}if(!key)return;
- seatFigure(c,G.FIGMODEL[key],f=>{if(c.figKey!==key||c.fig){f.holder.parent&&f.holder.parent.remove(f.holder);return}f.k=k;f.ph=k*1.7;f.g=null;c.fig=f;figs.set(k,f);labels()})}
-function loadDealer(){if(dlr||dlrBusy)return;dlrBusy=true;seatFigure(dealerChair,Object.assign({fwd:true,shadow:true},G.DEALERFIG),f=>{f.ev=[];f.talk=0;f.act=0;dlr=f;labels()})}
+ placeFigure(c.g,G.FIGMODEL[key],false,f=>{if(c.figKey!==key||c.fig){f.holder.parent&&f.holder.parent.remove(f.holder);return}f.k=k;f.ph=k*1.7;f.g=null;c.fig=f;figs.set(k,f);labels()})}
+function loadDealer(){if(dlr||dlrBusy)return;dlrBusy=true;placeFigure(dspot,Object.assign({shadow:true},G.DEALERFIG),true,f=>{f.ev=[];f.talk=0;f.act=0;dlr=f;labels()})}
 const dlrEv=(hand,to,delay,dur)=>{if(dlr&&on)dlr.ev.push({hand,to:to.clone(),t:performance.now()+(delay||0),dur})};
-/* ortak poz: koltukta oturur, eller rayda; bakış hedefe yumuşakça döner */
-function poseFig(f,chair,t,o){const F=f.F,dt=Math.max(0,Math.min(200,t-f.last)),ks=1-Math.exp(-dt/260);f.last=t;chair.g.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(F.scene.matrixWorld).invert(),toM=v=>v.clone().applyMatrix4(inv),dM=v=>v.clone().transformDirection(inv);
+/* ortak poz: oturur (thigh 1.5) ya da ayakta durur (thigh 0), eller rayda; bakış hedefe yumuşakça döner */
+function poseFig(f,node,t,o){const F=f.F,dt=Math.max(0,Math.min(200,t-f.last)),ks=1-Math.exp(-dt/260);f.last=t;node.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(F.scene.matrixWorld).invert(),toM=v=>v.clone().applyMatrix4(inv),dM=v=>v.clone().transformDirection(inv);
  const hd=F.pos.Head||F.bind.Head,lm=toM(o.look).sub(hd),wy=Math.max(-.8,Math.min(.8,Math.atan2(lm.x,lm.z))),wq=Math.max(-.12,Math.min(.4,Math.atan2(-lm.y,Math.hypot(lm.x,lm.z))-.14));f.yaw+=(wy-f.yaw)*ks;f.pitch+=(wq-f.pitch)*ks;
- G.figPose(F,{lean:o.lean,thigh:1.5,shin:.1,splay:o.splay,headYaw:f.yaw,headPitch:f.pitch+(f.M.pitch||0)+(o.pitchAdd||0),handL:toM(o.hL),handR:toM(o.hR),fingL:dM(o.fL),fingR:dM(o.fR)})}
-function dealerFrame(t){const D=dlr,F=D.F,c=dealerChair,sec=t/1000,W=(x,y,z)=>L2W(c,x,y,z),wp=n=>(F.pos[n]||F.bind[n]).clone().applyMatrix4(F.scene.matrixWorld),reach=(F.arm.Left.l1+F.arm.Left.l2)*D.s*K,SL=wp('LeftArm'),SR=wp('RightArm');
+ G.figPose(F,{lean:o.lean,thigh:o.stand?0:1.5,shin:o.stand?0:.1,splay:o.splay,headYaw:f.yaw,headPitch:f.pitch+(f.M.pitch||0)+(o.pitchAdd||0),handL:toM(o.hL),handR:toM(o.hR),fingL:dM(o.fL),fingR:dM(o.fR)})}
+function dealerFrame(t){const D=dlr,F=D.F,sec=t/1000,W=D2W,wp=n=>(F.pos[n]||F.bind[n]).clone().applyMatrix4(F.scene.matrixWorld),reach=(F.arm.Left.l1+F.arm.Left.l2)*D.s*K,SL=wp('LeftArm'),SR=wp('RightArm');
  const toward=(S,p,f)=>{const v=p.clone().sub(S),d=v.length()||1;v.multiplyScalar(Math.min(d,reach*f)/d).add(S);v.y=Math.max(v.y,YT+.16);return v};
  D.ev=D.ev.filter(e=>t<e.t+e.dur+300);let bL=0,bR=0,sL=0,sR=0;const aL=V3(0,0,0),aR=V3(0,0,0);
  for(const e of D.ev){const u=(t-e.t)/e.dur;if(u<=0||u>=1)continue;const b=sstep(u/.42)*(1-sstep((u-.55)/.45));if(e.hand==='L'){bL=Math.max(bL,b);sL+=b;aL.addScaledVector(e.to,b)}else{bR=Math.max(bR,b);sR+=b;aR.addScaledVector(e.to,b)}}
  let tL=sL>1e-4?aL.multiplyScalar(1/sL):null,tR=sR>1e-4?aR.multiplyScalar(1/sR):null;if(D.fix){bL=D.fix.bL||0;bR=D.fix.bR||0;tL=tR=D.fix.to||V3(0,.1,-.6)}
  const fwd=W(0,0,-1).sub(W(0,0,0)).normalize(),right=W(1,0,0).sub(W(0,0,0)).normalize(),flat=(a,b)=>{const v=a.clone().sub(b);v.y=0;return v.normalize().add(V3(0,-.12,0))};
- const hL=W(-.27,RAILL+.05,-.6),hR=W(.27,RAILL+.05,-.6);if(tL)hL.lerp(toward(SL,tL.clone().add(V3(0,.1,0)),.99),bL);if(tR)hR.lerp(toward(SR,tR.clone().add(V3(0,.1,0)),.99),bR);
+ const hL=W(-.25,RAILL+.045,-.46),hR=W(.25,RAILL+.045,-.46);if(tL)hL.lerp(toward(SL,tL.clone().add(V3(0,.1,0)),.99),bL);if(tR)hR.lerp(toward(SR,tR.clone().add(V3(0,.1,0)),.99),bR);
  const fL=fwd.clone().add(right.clone().multiplyScalar(.25)).add(V3(0,-.15,0)).lerp(flat(hL,SL),bL),fR=fwd.clone().add(right.clone().multiplyScalar(-.25)).add(V3(0,-.15,0)).lerp(flat(hR,SR),bR);
  const look=RW.spinning()&&t>lookNumUntil?RW._ball.position:t<lookNumUntil&&lookNum?lookNum:V3(Math.sin(sec*.19)*1.1,YT+.5,6.4),talk=t<D.talk?1:0;
- poseFig(D,c,t,{look,lean:Math.min(.5,.17+.012*Math.sin(sec*1.4)+.2*bL+.24*bR),splay:.02,pitchAdd:talk*.045*Math.sin(sec*9.5),hL,hR,fL,fR})}
+ poseFig(D,dspot,t,{stand:true,look,lean:Math.min(.42,.07+.01*Math.sin(sec*1.4)+.2*bL+.24*bR),splay:.015,pitchAdd:talk*.045*Math.sin(sec*9.5),hL,hR,fL,fR})}
 function figFrame(f,t){const c=chairs[f.k],sec=t/1000,W=(x,y,z)=>L2W(c,x,y,z),F=f.F,fwd=W(0,0,-1).sub(W(0,0,0)).normalize(),right=W(1,0,0).sub(W(0,0,0)).normalize(),up=V3(0,1,0);
  let hR=W(.2,RAILL+.05,-.58),hL=W(-.2,RAILL+.05,-.6),fR=fwd.clone().add(right.clone().multiplyScalar(-.25)).add(V3(0,-.15,0)),fL=fwd.clone().add(right.clone().multiplyScalar(.25)).add(V3(0,-.15,0)),pitchAdd=0,lean=.2+.012*Math.sin(sec*1.5+f.ph);
  const gq=f.g;if(gq){const u=gq.fix!=null?gq.fix:(t-gq.t0)/1000;if(u>=0&&gq.type==='win'){if(u>=1.9)f.g=null;else{const e=sstep(u/.3)*(1-sstep((u-1.5)/.4)),sh=F.pos.RightArm?F.pos.RightArm.clone().applyMatrix4(F.scene.matrixWorld):hR,pump=sh.clone().add(right.clone().multiplyScalar(.12*K)).add(fwd.clone().multiplyScalar(.28*K)).add(V3(0,(.5+.05*Math.sin(u*15))*K,0));hR=hR.clone().lerp(pump,e);fR=fR.clone().lerp(up,e).normalize();pitchAdd=-.18*e;lean-=.05*e}}
   else if(u>=0&&gq.type==='lose'){if(u>=2.6)f.g=null;else{const e=sstep(u/.5)*(1-sstep((u-2)/.6));pitchAdd=.4*e;lean+=.09*e}}}
  const look=RW.spinning()&&t>lookNumUntil?RW._ball.position:t<lookNumUntil&&lookNum?lookNum:V3(Math.sin(sec*.23+f.ph)*.6,YT,3.4+Math.cos(sec*.17+f.ph)*1.2);
- poseFig(f,c,t,{look,lean,splay:.1,pitchAdd,hL,hR,fL,fR})}
+ poseFig(f,c.g,t,{look,lean,splay:.1,pitchAdd,hL,hR,fL,fR})}
 /* sonuç tepkisi: kendi koltuğum için son net kazanç; ortak masada diğer oyuncular için sunucunun sonuç listesi */
 function react(){figs.forEach((f,k)=>{const o=RSEATMAP[k];let net=null;if(k===mySeatR&&typeof lastNet==='number')net=lastNet;else if(o&&window.RLST&&Array.isArray(RLST.results)){const r=RLST.results.find(r=>r.user===o.user_id);if(r)net=+r.net}if(net>0)f.g={type:'win',t0:performance.now()};else if(net<0)f.g={type:'lose',t0:performance.now()}})}
 
 /* ---------- kamera: bütün masa tuvale sığar; çevirince çarkın kendi sinematik kamerası devreye girer ---------- */
-const EL=52*Math.PI/180,VF=36,view={T:V3(0,YT,2.5),D:15,dir:V3(0,Math.sin(EL),Math.cos(EL)),fov:VF,zoom:2.6},tc=new THREE.PerspectiveCamera(VF,1,.1,90);
+const EL=52*Math.PI/180,VF=36,view={T:V3(0,YT,2.5),D:15,dir:V3(0,Math.sin(EL),Math.cos(EL)),fov:VF,zoom:2.6,minD:8,follow:.08},tc=new THREE.PerspectiveCamera(VF,1,.1,90);
 const fitPts=[];[[-1,Z0],[1,Z0],[-1,Z1],[1,Z1]].forEach(([s,z])=>fitPts.push(V3(s*(HW+.06),YT+.1,z+(z>0?.06:-.06))));
-chairs.forEach(c=>[[-.54,1.62,.56],[.54,1.62,.56],[-.54,.02,.5],[.54,.02,.5],[0,2.56,.1]].forEach(([x,y,z])=>fitPts.push(L2W(c,x,y,z))));[[-.5,2.78,-.06],[.5,2.78,-.06],[-.54,1.62,.56],[.54,1.62,.56]].forEach(([x,y,z])=>fitPts.push(L2W(dealerChair,x,y,z)));
+chairs.forEach(c=>[[-.54,1.72,.56],[.54,1.72,.56],[-.54,.02,.5],[.54,.02,.5],[0,2.56,.1]].forEach(([x,y,z])=>fitPts.push(L2W(c,x,y,z))));[[-.5,3.0,0],[.5,3.0,0]].forEach(([x,y,z])=>fitPts.push(D2W(x,y,z)));[[-.54,1.95,.56],[.54,1.95,.56],[-.54,1.0,.56]].forEach(([x,y,z])=>fitPts.push(L2W(dealerChair,x,y,z)));
 let CWp=0,CHp=0;
 function fitView(){const w=box.clientWidth,h=box.clientHeight;if(!w||!h)return false;CWp=w;CHp=h;tc.aspect=w/h;tc.updateProjectionMatrix();const v=new THREE.Vector3(),place=d=>{tc.position.copy(view.T).addScaledVector(view.dir,d);tc.lookAt(view.T);tc.updateMatrixWorld(true)};
  for(let it=0;it<10;it++){let lo=4,hi=50;for(let i=0;i<24;i++){const d=(lo+hi)/2;place(d);let ok=true;for(const p of fitPts){v.copy(p).project(tc);if(Math.abs(v.x)>.975||v.y>.965||v.y<-.975){ok=false;break}}if(ok)hi=d;else lo=d}view.D=hi;place(hi);
   let y0=1,y1=-1;for(const p of fitPts){v.copy(p).project(tc);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y)}const mid=(y0+y1)/2;if(Math.abs(mid)<.008)break;view.T.z-=mid*view.D*.4}
- view.zoom=Math.max(1,1.25/(w/h));return true}
+ view.zoom=Math.max(1,1.25/(w/h));view.minD=1.22/(Math.tan(17*Math.PI/180)*(w/h));return true} /* minD: yakın çekimde çanağın dış ahşabı ve kaidesi (yarıçap 1,1) iki yanda payla sığar */
 
 /* ---------- yazılar: HTML olarak sahnenin üstüne yansıtılır ---------- */
 const els=new Map(),pv=new THREE.Vector3();let seatLabels=[];
