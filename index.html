@@ -220,7 +220,11 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .pkavs .figw,.pkfigs .figw{transform:translate(-50%,-100%)}
 /* ===== 2.5D OTURAN FİGÜRLER: karakter sayfasından kesilen yarım boy; nefes ve salınım, sıra gelince öne eğilme, pasta solma, kazanınca zıplama ===== */
 .figw{position:absolute;pointer-events:none;display:none}.figw.on{display:block}
-.fig{display:block;height:104px;width:auto;transform-origin:50% 100%;animation:figbreath var(--bd,4.4s) ease-in-out var(--dl,0s) infinite;filter:drop-shadow(0 3px 5px #000a)}
+.fig{position:relative;display:block;height:calc(var(--fh,104px)*var(--r,1));line-height:0;transform-origin:50% 100%;animation:figbreath var(--bd,4.4s) ease-in-out var(--dl,0s) infinite;filter:drop-shadow(0 3px 5px #000a)}
+/* iki resim katmanı üst üste: poz değişince 280 ms çapraz geçiş. Aynı karakterin pozları aynı tuvalde hizalı olduğu için gövde yerinde kalır.
+   İlk katman normal akışta ve kutunun genişliğini belirler (yüzde yükseklik sabit yükseklikli blokta çözülür; ızgarada satır içeriğe göre büyüyüp resmi kendi boyutunda bırakıyordu). */
+.fig img{display:block;height:100%;width:auto;opacity:0;transition:opacity .28s}.fig img.show{opacity:1}.fig img:not([src]){display:none}
+.fig img+img{position:absolute;left:50%;top:0;transform:translateX(-50%)}
 @keyframes figbreath{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.012,1.024) rotate(.5deg)}}
 .figw.turn .fig{animation-name:figturn}
 @keyframes figturn{0%,100%{transform:scale(1.05) translateY(2px) rotate(-.4deg)}50%{transform:scale(1.062,1.075) translateY(2px) rotate(.4deg)}}
@@ -229,8 +233,9 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 @keyframes figwin{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.05)}}
 @media (prefers-reduced-motion:reduce){.fig{animation:none}}
 /* alt kenar yumuşak solar: ray ya da minder kapatmadığı yerde kesik kenar görünmez (çift figürü gibi geniş kesitlerde de) */
-.pkfigs .fig{-webkit-mask-image:linear-gradient(#000 76%,#0000 98%);mask-image:linear-gradient(#000 76%,#0000 98%)}
-.rchairs .stool .figw{left:50%;bottom:18px;transform:translateX(-50%)}.rchairs .fig{height:76px;-webkit-mask-image:linear-gradient(#000 79%,#0000 100%);mask-image:linear-gradient(#000 79%,#0000 100%)}
+.pkfigs .fig{-webkit-mask-image:linear-gradient(to top,#0000 2px,#000 25px);mask-image:linear-gradient(to top,#0000 2px,#000 25px)}
+.rchairs .stool .figw{left:50%;bottom:18px;transform:translateX(-50%)}.rchairs .fig{--fh:76px;-webkit-mask-image:linear-gradient(to top,#0000 0,#000 16px);mask-image:linear-gradient(to top,#0000 0,#000 16px)}
+.rchairs.spin .fig{animation-name:figturn} /* çark dönerken öne eğilme */
 #online .av{width:20px;height:20px;vertical-align:-5px;margin:0 3px 0 6px;box-shadow:0 0 0 1px #dcb765}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
 .bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/458;--top:38px}
@@ -1000,7 +1005,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="holdem">
-<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkfigs" id="pkfigs"><span class="figw"><img class="fig" alt=""></span><span class="figw"><img class="fig" alt=""></span></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="figw"><img class="fig" alt=""></span></div></div>
+<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkfigs" id="pkfigs"><span class="figw"><span class="fig"><img alt=""><img alt=""></span></span><span class="figw"><span class="fig"><img alt=""><img alt=""></span></span></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="figw"><span class="fig"><img alt=""><img alt=""></span></span></div></div>
 <div class="res" id="pkres"></div>
 <div class="pkact hide" id="pkact"><div class="pkrow1"><button id="pkfold">PAS</button><button id="pkcheck" class="go">ÇEK</button></div><div class="pkrow2"><button class="pkpre" data-f="min">Min</button><button class="pkpre" data-f=".5">½ Pot</button><button class="pkpre" data-f="1">Pot</button><button class="pkpre" data-f="all">Rest</button></div><div class="pkrow3"><button class="bb minus" id="pkminus" aria-label="Azalt">−</button><button id="pkraise" class="go">YÜKSELT <b>20</b></button><button class="bb plus" id="pkplus" aria-label="Artır">+</button></div></div>
 <div class="row"><button class="go" id="pksit">MASAYA OTUR · 500 €</button><button id="pkleave" class="hide">Masadan kalk</button></div>
@@ -1040,7 +1045,28 @@ function avatarKey(name){if(!name)return null;return AVATARS[String(name).trim()
 function avatarOf(name){const f=avatarKey(name);return f?'avatars/'+f+'.png':null}
 /* yarım boy figür (view: front|back). Poz görselleri gelince yalnız dosya adı değişir. */
 function figSrc(key,view){return 'avatars/'+key+'_'+view+'.png'}
-function setFig(el,name,view){let w=el.querySelector(':scope > .figw');const k=avatarKey(name);if(!k){if(w)w.remove();return}if(!w){w=document.createElement('span');w.className='figw on';w.innerHTML='<img class="fig" alt="">';el.insertBefore(w,el.querySelector('.plate'))}const im=w.firstChild,src=figSrc(k,view);if(im.getAttribute('src')!==src)im.src=src}
+/* ===== POZLAR: karakter başına 5 hizalı kesit (idle, cards, sip, win, lose). r = tuval yüksekliği / boşta gövde yüksekliği ===== */
+const AVPOSE={gorkem:{r:1.011},arda:{r:1.007},arda_yilmaz:{r:1.052}};
+const FIGPRE=new Set();
+function figShow(w,src){if(w._src===src)return;w._src=src;const im=w.firstChild.children,cur=w._cur==null?-1:w._cur,nx=cur===0?1:0;
+const go=()=>{if(w._src!==src)return;im[nx].classList.add('show');if(cur>=0)im[cur].classList.remove('show');w._cur=nx};
+if(im[nx].getAttribute('src')===src&&im[nx].complete&&im[nx].naturalWidth)go();else{im[nx].onload=go;im[nx].src=src}}
+function figRefresh(w){const key=w._key;if(!key)return;const P=AVPOSE[key];let src,r=1;
+if(w._view==='back'||!P)src=figSrc(key,w._view==='back'?'back':'front');
+else{const now=Date.now();let pose=w._base;if(w._tmp&&now<w._tmpUntil)pose=w._tmp;else if(now<(w._sipUntil||0)&&(pose==='idle'||pose==='cards'))pose='sip';src=figSrc(key,pose);r=P.r;
+if(!FIGPRE.has(key)){FIGPRE.add(key);setTimeout(()=>['sip','win','lose','cards','idle'].forEach(q=>{new Image().src=figSrc(key,q)}),1200)}}
+w.firstChild.style.setProperty('--r',r);figShow(w,src)}
+/* kişi ya da görünüm değişince katmanlar sıfırlanır: yeni resim ilk (kutuyu boyutlandıran) katmana yüklenir.
+   Çapraz geçiş yalnız aynı karakterin pozları arasındadır; farklı genişlikte bir resim üst katmanda kalıp maskeli kutudan taşmaz. */
+function figSet(w,key,view,base){if(w._key!==key||w._view!==view){const im=w.firstChild.children;im[0].classList.remove('show');im[1].classList.remove('show');im[0].onload=im[1].onload=null;im[1].removeAttribute('src');w._cur=null;w._src=null;w._tmp=null;w._sipUntil=0}
+w._key=key;w._view=view;w._base=base||'idle';figRefresh(w)}
+function figTemp(w,pose,ms){w._tmp=pose;w._tmpUntil=Date.now()+ms;figRefresh(w)}
+/* yudum: önden görünen her figür 20-40 sn'de bir, sırası değilken 2.4 sn viskisini yudumlar; kişiye özel ritim */
+setInterval(()=>{const now=Date.now();document.querySelectorAll('.figw.on').forEach(w=>{if(!w._key||w._view==='back'||!AVPOSE[w._key])return;if(!w._nextSip)w._nextSip=now+8000+Math.random()*22000;
+if(now>w._nextSip&&!w.classList.contains('turn')){w._sipUntil=now+2400;w._nextSip=now+20000+Math.random()*20000}figRefresh(w)})},700);
+function setFig(el,name,view){let w=el.querySelector(':scope > .figw');const k=avatarKey(name);if(!k){if(w)w.remove();return}if(!w){w=document.createElement('span');w.className='figw on';w.innerHTML='<span class="fig"><img alt=""><img alt=""></span>';el.insertBefore(w,el.querySelector('.plate'))}figSet(w,k,view,'idle')}
+/* rulet sonucu: kazanan sevinir, kaybeden üzülür (4.5 sn) */
+function rlFigResult(res){document.querySelectorAll('#rchairs .stool').forEach(d=>{const o=RSEATMAP[+d.dataset.k],w=d.querySelector(':scope > .figw');if(!o||!w)return;const r=(res||[]).find(x=>x.user===o.user_id);if(r&&+r.net!==0)figTemp(w,+r.net>0?'win':'lose',4500)})}
 function avHtml(name){const u=avatarOf(name);return u?'<span class="av" style="background-image:url('+u+')"></span>':''}
 function setAv(el,name){let av=el.querySelector(':scope > .av');const u=avatarOf(name);if(u){if(!av){av=document.createElement('span');av.className='av';el.insertBefore(av,el.querySelector('.plate'))}av.style.backgroundImage='url('+u+')'}else if(av)av.remove()}
 const rnd=n=>Math.floor(Math.random()*n);
@@ -1734,6 +1760,8 @@ new ResizeObserver(pkFit).observe($('pkwrap'));pkFit();
 PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';d.onclick=()=>{if(PKO()&&!PK.seated){ac();S.click();cloud.pk.sit(i)}};$('pkseats').appendChild(d)});
 const pkScale=()=>parseFloat(getComputedStyle($('pkwrap')).getPropertyValue('--s'))||1;
 const PKFIG=[$('pkavs').children[0],$('pkfigs').children[0],$('pkfigs').children[1]];
+/* elde kart varken kartlı poz; el bitince kazanan sevinir, showdown'da kaybeden üzülür; pas geçen ve bekleyen boşta */
+function pkPose(st,p,i){if(!st||!p)return 'idle';const inH=p.cards.length>0&&!p.folded;if(st.phase==='done'&&PK.settled){if(st.winners.includes(i))return 'win';return inH&&st.pots?'lose':'idle'}return inH?'cards':'idle'}
 [[220,466],[74,108],[366,108]].forEach((p,i)=>{const w=PKFIG[i];w.style.left=p[0]+'px';w.style.top=p[1]+'px';w.firstChild.style.setProperty('--bd',[4.6,4.1,5][i]+'s');w.firstChild.style.setProperty('--dl',[0,-1.3,-2.6][i]+'s')}); /* figürlerin alt-orta noktası (sarmal koordinatı) */
 /* koltuklar (sarmal koordinatı): sen altta sırtı sana dönük, botlar üst köşelerde masaya dönük, krupiye üst ortada */
 [[220,386,180,''],[46,100,-42,''],[394,100,42,''],[220,50,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
@@ -1752,13 +1780,13 @@ function pkRender(){const st=PK.st,seats=$('pkseats').children;
 for(let i=0;i<3;i++){const el=seats[i];let p=st?st.players[i]:null;if(p&&p.empty)p=null;const mine=i===0&&PK.seated;el.classList.toggle('on',!!st&&st.cur===i);el.classList.toggle('fold',!!p&&p.folded&&p.cards.length>0);el.classList.toggle('winner',!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
 syncCards(el.querySelector('.pkcards'),p?p.cards.map(c=>({c,hid:c==='??'||(!mine&&!PK.shown.has(i))})):[],'p'+i+'-');
 el.querySelector('.pkname').innerHTML=p?p.name+'<b>'+fmt(p.stack)+'</b>'+(p.allin&&!p.folded?'<small>REST</small>':''):'<span style="color:#8fb8e0">Boş</span>';
-const fk=p&&avatarKey(p.name),fe=PKFIG[i];fe.classList.toggle('on',!!fk);if(fk){const src=figSrc(fk,i===0?'back':'front'),im=fe.firstChild;if(im.getAttribute('src')!==src)im.src=src}
+const fk=p&&avatarKey(p.name),fe=PKFIG[i];fe.classList.toggle('on',!!fk);if(fk)figSet(fe,fk,i===0?'back':'front',pkPose(st,p,i));
 fe.classList.toggle('turn',!!fk&&!!st&&st.cur===i);fe.classList.toggle('fold',!!fk&&p.folded&&p.cards.length>0);fe.classList.toggle('win',!!fk&&!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
 let hn='';if(p&&p.cards.length&&!p.folded&&!p.cards.includes('??')){if(mine||PK.shown.has(i)){const e=HE.evaluate(p.cards.concat(st.board));hn=e.name}}el.querySelector('.pkhand').textContent=hn;
 let bet=$('pkt').querySelector('.pkbet[data-i="'+i+'"]');if(p&&p.bet>0){if(!bet){bet=document.createElement('div');bet.className='pkbet';bet.dataset.i=i;$('pkt').appendChild(bet)}const bp=pkBetPos(i);bet.style.left=bp.x+'px';bet.style.top=bp.y+'px';bet.innerHTML='<div class="bchip"></div><em>'+fmtA(p.bet)+'</em>'}else if(bet)bet.remove()}
 syncCards($('pkboard'),st?st.board.map(c=>({c,hid:false})):[],'b');
 const collected=st?HE.pot(st)-st.players.reduce((a,p)=>a+(p.bet||0),0):0;$('pkpot').textContent=st&&collected>0?'POT '+fmt(collected):'';
-const d=$('pkd');if(st&&st.button>=0){d.classList.remove('hide');const [x,y]=PKPOS[st.button];const bx=st.button===0?x-60:x<210?x+54:x-54,by=st.button===0?y-6:y-8;d.style.transform='translate('+bx+'px,'+by+'px)'}else d.classList.add('hide');
+const d=$('pkd');if(st&&st.button>=0){d.classList.remove('hide');const [x,y]=PKPOS[st.button];const bx=st.button===0?x-60:x<210?x+60:x-60,by=st.button===0?y-6:y-14; /* üst koltuklarda kartların (3px) ve bahis çipinin (4px) dışında */d.style.transform='translate('+bx+'px,'+by+'px)'}else d.classList.add('hide');
 $('pkleave').disabled=PK.busy;}
 function pkStat(i,txt,cls){const el=$('pkseats').children[i];el.querySelectorAll('.pkstat').forEach(e=>e.remove());if(!txt)return;const s=document.createElement('div');s.className='pkstat '+cls;s.textContent=txt;el.appendChild(s);clearTimeout(PK.stat[i]);PK.stat[i]=setTimeout(()=>s.remove(),2600)}
 function pkFlyChips(from,to,n,label){for(let k=0;k<n;k++)setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.7)';$('pkt').appendChild(e);
@@ -1886,13 +1914,13 @@ function redraw(){const st=RST;if(!st)return;clearWon();RB={};
 (st.bets||[]).forEach(b=>{if(isMe(b.user)){RB[b.key]=(RB[b.key]||0)+(+b.amt);mark(b.key)}else{const el=document.querySelector('[data-k="'+b.key+'"]');if(!el)return;const k=rSeatOf(b.user);const i=document.createElement('i');i.className='om c'+(k>=0?k:1);i.title=b.name;i.innerHTML='<span>'+fmtA(+b.amt)+'</span>';const n=el.querySelectorAll('.om').length;i.style.left=(2+n*8)+'px';i.style.bottom=(2+n*4)+'px';el.appendChild(i)}});
 if(st.phase==='spin'&&shownRound===st.round&&st.result!=null){const n=st.result;(st.bets||[]).forEach(b=>{if(isMe(b.user)&&wins(b.key,n)){const c=document.querySelector('[data-k="'+b.key+'"]');if(c){c.classList.add('won');c.querySelector('em').innerHTML='<span>+'+fmtA(+b.amt*payMult(b.key,n,st.lightning,st.light!==false))+'</span>'}}})}
 renderBoard();btns()}
-function showRL(st){shownRound=st.round;const n=st.result,res=st.results||[],mine=res.find(r=>isMe(r.user));lastNet=mine?+mine.net:null;const lm=st.lightning&&st.lightning[n];
+function showRL(st){shownRound=st.round;const n=st.result,res=st.results||[],mine=res.find(r=>isMe(r.user));$('rchairs').classList.remove('spin');rlFigResult(res);lastNet=mine?+mine.net:null;const lm=st.lightning&&st.lightning[n];
 $('rres').innerHTML=lightHtml(st.lightning)+(res.length?'<div class="rres-list">'+res.map(r=>'<span>'+r.name+' <b class="'+(+r.net>0?'pos':+r.net<0?'neg':'')+'">'+(+r.net>0?'+':'')+fmtE(+r.net)+'</b></span>').join('')+'</div>':'Bu turda bahis yoktu');
 redraw();const myStraight=RB['n:'+n]||0;
 if(mine){const w=+mine.won,t=+mine.bet;msg((lm?'ŞİMŞEK x'+lm+' · ':'')+(w>t?'Sayı '+n+' · Kazandın +'+fmtE(w-t):w>0?'Sayı '+n+' · Geri aldın +'+fmtE(w):'Sayı '+n+' · Kaybettin -'+fmtE(t)));
 if(onRL()){if(lm&&myStraight){S.big();say(lm>=200?'epicwin':'megawin',900);celebrate(w-t);overlay('<h2 class="wt t5">ŞİMŞEK x'+lm+'</h2><div class="n">+'+fmtE(myStraight*(lm+1))+'</div><p>Sayı '+n+' şimşek sayısıydı</p>',3600,true)}else if(w>t){const x=(w-t)/Math.max(1,bet);if(x>=15){S.big();say('bigwin',1500)}else S.win(Math.min(6,2+Math.floor(x)));celebrate(w-t)}else if(w===0)S.lose()}}else msg((lm?'ŞİMŞEK x'+lm+' · ':'')+'Sayı '+n)}
 function applyRL(st){if(!st||!st.phase)return;const prev=RST;RST=st;window.RLST=st;hist=(st.history||[]).slice();
-if(st.phase==='spin'&&spunRound!==st.round){spunRound=st.round;const el=(Date.now()-new Date(st.spin_at).getTime())/1000;const dur=(window.RW&&RW.ok)?RW.dur:4.2;
+if(st.phase==='spin'&&spunRound!==st.round){spunRound=st.round;$('rchairs').classList.add('spin');const el=(Date.now()-new Date(st.spin_at).getTime())/1000;const dur=(window.RW&&RW.ok)?RW.dur:4.2;
 const L=st.lightning&&Object.keys(st.lightning).length?st.lightning:null,LT=L?1.3+.46*Object.keys(L).length:0;
 if(onRL()){$('rres').textContent='';}redraw();
 (async()=>{if(L){if(el<1.5)await lightningShow(L);else{clearLight();Object.keys(L).forEach(k=>markLight(+k,L[k]))}}rlRun(st.result,()=>showRL(RST&&RST.round===st.round?RST:st),el>dur+LT+.5)})();return}
@@ -1994,7 +2022,7 @@ const EMPTY={empty:true,name:'',stack:0,bet:0,total:0,folded:true,allin:false,ca
 function view(st,boardCut){const players=[EMPTY,EMPTY,EMPTY];
 for(let j=0;j<3;j++){const s=st.seats[j];if(!s)continue;let cards=[];if(s.cardsN===2){if(s.cards)cards=s.cards.slice();else if(isMe(s.user)&&myCards&&myHand===st.hand)cards=myCards.slice();else cards=['??','??']}
 players[rot(j)]={name:s.name,stack:+s.stack,bet:+s.bet,total:+s.total,folded:!!s.folded,allin:!!s.allin,cards,bot:!!s.bot}}
-return{players,cur:rot(st.cur),phase:st.phase,winners:(st.winners||[]).map(rot),board:(st.board||[]).slice(0,boardCut==null?99:boardCut),button:rot(st.button),bb:+st.bb,sb:+st.sb,curBet:+st.curBet,minRaise:+st.minRaise,hand:st.hand}}
+return{players,cur:rot(st.cur),phase:st.phase,winners:(st.winners||[]).map(rot),board:(st.board||[]).slice(0,boardCut==null?99:boardCut),button:rot(st.button),bb:+st.bb,sb:+st.sb,curBet:+st.curBet,minRaise:+st.minRaise,hand:st.hand,pots:st.pots||null}}
 const draw=(st,cut)=>{PK.st=view(st,cut);pkRender()};
 function applyPK(st){if(!st||!st.phase)return;pending=st;if(!running)drain()}
 async function drain(){running=true;try{while(pending){const st=pending;pending=null;await step(st)}}catch(e){console.warn('poker',e)}running=false}
