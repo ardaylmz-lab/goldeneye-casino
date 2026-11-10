@@ -2572,7 +2572,8 @@ function fly(from,to,n,delay){const A=(from===RACK?RACKP.clone().setY(.12):T2(fr
 /* ---------- yazılar: HTML olarak sahnenin üstüne yansıtılır (keskin kalır) ---------- */
 const els=new Map(),pv=new THREE.Vector3();let glowOn=false,labelList=[];
 function labels(){const L=[];
- if(dealerH.length&&!hole)L.push({id:'ds',cls:'dsum',html:String(val(dealerH).t),at:T2(211,-9,.12)});
+ /* krupiye toplamı: oyuncu ellerindeki gibi ilk kartının sol alt köşesinde (eskiden kartların üstündeydi; orada artık krupiyenin elleri var) */
+ if(dealerH.length&&!hole){const n=dealerH.length,sp=n>4?Math.min(.44,1.9/(n-1)):.44,c=T2(211,44,.03);L.push({id:'ds',cls:'dsum',html:String(val(dealerH).t),at:new THREE.Vector3(c.x-(n-1)/2*sp-CW/2+.1,.03,c.z+CH/2-.07)})}
  seats.forEach((s,k)=>{const o=T2(SPOTS[k].x,SPOTS[k].y),nh=s.hands.length,amt=nh?s.hands.reduce((a,h)=>a+h.bet,0):s.bet;
   if(amt<=0&&s.owner&&s.owner!=='me')L.push({id:'o'+k,cls:'b3name',html:s.owner,at:o.clone().add(new THREE.Vector3(0,.01,SPOTR+.1))});
   s.hands.forEach((h,j)=>{const vc=h.vis==null?h.cards:h.cards.slice(0,h.vis);if(vc.length<2)return;const v=val(vc),act=cur&&cur.s===k&&cur.h===j,G=handGeo(k,j,vc.length,nh);
