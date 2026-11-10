@@ -208,6 +208,15 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .res b{color:var(--cyan)}
 .tc.won{border-color:var(--gold);box-shadow:0 0 12px var(--gold);animation:pl .6s ease-in-out infinite alternate}
 .tc.won em{font-size:.72rem}
+/* ===== AVATAR MADALYONLARI: profil adına göre avatars/ klasöründen (GPT ile üretilen 3D karakter sayfasından kesilen büst). Blackjack taburesi, rulet koltuk sırtı, poker sandalyesi, çevrimiçi listesi ===== */
+.av{display:inline-block;border-radius:50%;background:#0a0806 center/cover no-repeat;box-shadow:0 0 0 1.5px #dcb765,0 0 0 3px #1a0c04,0 3px 6px #000a;pointer-events:none}
+/* blackjack taburesi rayın altında kaldığı için madalyon tabureden dışa (sırtlık yönüne) 26px kayar, yüz dik kalır; plaka aşağı iner */
+.stool .av{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;z-index:1;transform:rotate(var(--a,0deg)) translateY(26px) rotate(calc(-1*var(--a,0deg)))}
+.stool .av ~ .plate{margin-top:30px}
+.rchairs .stool .av{position:absolute;left:50%;top:3px;width:40px;height:40px;margin:0 0 0 -20px;z-index:1;transform:none}.rchairs .stool .av ~ .plate{margin-top:6px}
+.pkavs{position:absolute;left:0;top:0;width:440px;height:404px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none;z-index:4}
+.pkavs .av{position:absolute;width:46px;height:46px;margin:-23px;display:none}.pkavs .av.on{display:block}
+#online .av{width:20px;height:20px;vertical-align:-5px;margin:0 3px 0 6px;box-shadow:0 0 0 1px #dcb765}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
 .bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/458;--top:38px}
 .stools{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));pointer-events:none}
@@ -976,7 +985,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="holdem">
-<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div></div>
+<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="av"></span><span class="av"></span><span class="av"></span></div></div>
 <div class="res" id="pkres"></div>
 <div class="pkact hide" id="pkact"><div class="pkrow1"><button id="pkfold">PAS</button><button id="pkcheck" class="go">ÇEK</button></div><div class="pkrow2"><button class="pkpre" data-f="min">Min</button><button class="pkpre" data-f=".5">½ Pot</button><button class="pkpre" data-f="1">Pot</button><button class="pkpre" data-f="all">Rest</button></div><div class="pkrow3"><button class="bb minus" id="pkminus" aria-label="Azalt">−</button><button id="pkraise" class="go">YÜKSELT <b>20</b></button><button class="bb plus" id="pkplus" aria-label="Artır">+</button></div></div>
 <div class="row"><button class="go" id="pksit">MASAYA OTUR · 500 €</button><button id="pkleave" class="hide">Masadan kalk</button></div>
@@ -1010,6 +1019,11 @@ function fmtA(n){n=Math.round(n*100)/100;return Number.isInteger(n)?n.toLocaleSt
 function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}if(window.onChips)onChips(n);
 $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
+/* ===== AVATARLAR: profil adına göre avatars/<dosya>.png. Yeni kişi eklemek için AVATARS'a "ad":"dosya" satırı yeter (ad küçük harf, ilk kelime de eşleşir). ===== */
+const AVATARS={'görkem':'gorkem'};
+function avatarOf(name){if(!name)return null;const k=String(name).trim().toLocaleLowerCase('tr');const f=AVATARS[k]||AVATARS[k.split(/\s+/)[0]];return f?'avatars/'+f+'.png':null}
+function avHtml(name){const u=avatarOf(name);return u?'<span class="av" style="background-image:url('+u+')"></span>':''}
+function setAv(el,name){let av=el.querySelector(':scope > .av');const u=avatarOf(name);if(u){if(!av){av=document.createElement('span');av.className='av';el.insertBefore(av,el.querySelector('.plate'))}av.style.backgroundImage='url('+u+')'}else if(av)av.remove()}
 const rnd=n=>Math.floor(Math.random()*n);
 setChips(chips);
 
@@ -1464,20 +1478,20 @@ const seats=SPOTS.map(()=>({bet:0,ins:0,hands:[],badge:null,owner:null}));let de
 const BOT=-1,BOTNAME='';let botBank=0;const saveBot=()=>{}; /* sanal oyuncu kaldırıldı; krupiye: Mira */
 function bjFit(){const w=$('bjwrap').clientWidth;if(w)$('bjwrap').style.setProperty('--s',w/440)}
 /* tabureler: korkuluğun dışında, rail'in altında kalır */
-CHAIRS.forEach((c,k)=>{const d=document.createElement('div');d.className='stool';d.dataset.k=k;d.style.left=(9+c.x)+'px';d.style.top=(9+c.y)+'px';d.innerHTML='<i style="--a:'+c.a+'deg"></i><b class="plate"></b>';d.onclick=()=>seatTap(k);$('stools').appendChild(d)});
+CHAIRS.forEach((c,k)=>{const d=document.createElement('div');d.className='stool';d.dataset.k=k;d.style.left=(9+c.x)+'px';d.style.top=(9+c.y)+'px';d.style.setProperty('--a',c.a+'deg');d.innerHTML='<i style="--a:'+c.a+'deg"></i><b class="plate"></b>';d.onclick=()=>seatTap(k);$('stools').appendChild(d)});
 /* ortak koltuklar: bulutta kim nerede oturuyor (SEATMAP[k]={user_id,name}); bulut kapalıysa herkes her koltuğa oynar */
 let SEATMAP={},mySeat=-1;
 function seatAllowed(k){if(!CLOUD||!window.cloud||!cloud.me())return true;if(mySeat<0){msg('Önce bir sandalyeye dokunup otur');return false}const o=seats[k].owner;if(o&&o!=='me'){msg('Bu yere '+o+' oynuyor');return false}if(!o&&seats.filter(s=>s.owner==='me'&&s.bet>0).length>=2){msg('En fazla iki yere oynayabilirsin');return false}return true}
 function seatTap(k){if(!CLOUD||!window.cloud||!cloud.me()){msg('Koltuklar için giriş gerekli');return}if(phase!=='bet'&&phase!=='settle'){msg('El bitince');return}
 if(mySeat===k){cloud.leaveSeat('bj');return}const o=SEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return}cloud.takeSeat('bj',k)}
 function renderSeats(){const me=window.cloud&&cloud.me();mySeat=-1;Object.entries(SEATMAP).forEach(([k,o])=>{if(me&&o.user_id===me.id)mySeat=+k});
-document.querySelectorAll('#stools .stool[data-k]').forEach(d=>{const k=+d.dataset.k,o=SEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeat===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeat===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'')});
+document.querySelectorAll('#stools .stool[data-k]').forEach(d=>{const k=+d.dataset.k,o=SEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeat===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeat===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');setAv(d,o&&o.name)});
 $('seats').querySelectorAll('.seat').forEach((el,k)=>{const o=seats[k].owner;el.classList.toggle('taken',!!o&&o!=='me');el.classList.toggle('mine',o==='me');const sm=el.querySelector('.spot small');if(sm)sm.textContent=o&&o!=='me'?o:(k+1)})}
 let RSEATMAP={},mySeatR=-1;
 [0,1,2].forEach(k=>{const d=document.createElement('div');d.className='stool c'+k;d.dataset.k=k;d.innerHTML='<i></i><b class="plate"></b>';d.onclick=()=>rSeatTap(k);$('rchairs').appendChild(d)});
 function rSeatTap(k){if(!CLOUD||!window.cloud||!cloud.me()){msg('Koltuklar için giriş gerekli');return}if(window.RLST&&RLST.phase!=='bet'){msg('Çark dönerken');return}if(mySeatR===k){cloud.leaveSeat('rl');return}const o=RSEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return}cloud.takeSeat('rl',k)}
 function renderRSeats(){const me=window.cloud&&cloud.me();mySeatR=-1;Object.entries(RSEATMAP).forEach(([k,o])=>{if(me&&o.user_id===me.id)mySeatR=+k});
-document.querySelectorAll('#rchairs .stool').forEach(d=>{const k=+d.dataset.k,o=RSEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeatR===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeatR===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'')})}
+document.querySelectorAll('#rchairs .stool').forEach(d=>{const k=+d.dataset.k,o=RSEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeatR===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeatR===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');setAv(d,o&&o.name)})}
 const rSeatOf=uid=>{for(const [k,o] of Object.entries(RSEATMAP))if(o.user_id===uid)return +k;return -1};
 window.applySeats=rows=>{SEATMAP={};RSEATMAP={};rows.forEach(r=>{if(r.game==='bj')SEATMAP[r.seat]=r;if(r.game==='rl')RSEATMAP[r.seat]=r});renderSeats();renderRSeats();if(window.RLST&&window.cloud&&cloud.rl)cloud.rl.redraw()};renderSeats();renderRSeats();
 {const d=document.createElement('div');d.className='stool dc';d.style.left=(9+RACK.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">KRUPİYE</b>';$('stools').appendChild(d)}
@@ -1700,6 +1714,7 @@ function pkFit(){const w=$('pkwrap').clientWidth;if(w)$('pkwrap').style.setPrope
 new ResizeObserver(pkFit).observe($('pkwrap'));pkFit();
 PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';d.onclick=()=>{if(PKO()&&!PK.seated){ac();S.click();cloud.pk.sit(i)}};$('pkseats').appendChild(d)});
 const pkScale=()=>parseFloat(getComputedStyle($('pkwrap')).getPropertyValue('--s'))||1;
+[[220,377],[28,54],[412,54]].forEach((p,i)=>{const a=$('pkavs').children[i];a.style.left=p[0]+'px';a.style.top=p[1]+'px'}); /* avatar madalyonları sandalyelerin üstünde */
 /* koltuklar (sarmal koordinatı): sen altta sırtı sana dönük, botlar üst köşelerde masaya dönük, krupiye üst ortada */
 [[220,366,180,''],[46,80,-42,''],[394,80,42,''],[220,30,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
 /* kart listesini DOM ile eşle: yeni kart eklenir (uçar), kapalı kart yerinde çevrilir, fazlalık silinir */
@@ -1717,6 +1732,7 @@ function pkRender(){const st=PK.st,seats=$('pkseats').children;
 for(let i=0;i<3;i++){const el=seats[i];let p=st?st.players[i]:null;if(p&&p.empty)p=null;const mine=i===0&&PK.seated;el.classList.toggle('on',!!st&&st.cur===i);el.classList.toggle('fold',!!p&&p.folded&&p.cards.length>0);el.classList.toggle('winner',!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
 syncCards(el.querySelector('.pkcards'),p?p.cards.map(c=>({c,hid:c==='??'||(!mine&&!PK.shown.has(i))})):[],'p'+i+'-');
 el.querySelector('.pkname').innerHTML=p?p.name+'<b>'+fmt(p.stack)+'</b>'+(p.allin&&!p.folded?'<small>REST</small>':''):'<span style="color:#8fb8e0">Boş</span>';
+const au=p&&avatarOf(p.name),ae=$('pkavs').children[i];ae.classList.toggle('on',!!au);if(au)ae.style.backgroundImage='url('+au+')';
 let hn='';if(p&&p.cards.length&&!p.folded&&!p.cards.includes('??')){if(mine||PK.shown.has(i)){const e=HE.evaluate(p.cards.concat(st.board));hn=e.name}}el.querySelector('.pkhand').textContent=hn;
 let bet=$('pkt').querySelector('.pkbet[data-i="'+i+'"]');if(p&&p.bet>0){if(!bet){bet=document.createElement('div');bet.className='pkbet';bet.dataset.i=i;$('pkt').appendChild(bet)}const bp=pkBetPos(i);bet.style.left=bp.x+'px';bet.style.top=bp.y+'px';bet.innerHTML='<div class="bchip"></div><em>'+fmtA(p.bet)+'</em>'}else if(bet)bet.remove()}
 syncCards($('pkboard'),st?st.board.map(c=>({c,hid:false})):[],'b');
@@ -1832,7 +1848,7 @@ $('whoname').textContent=prof.name;$('who').classList.remove('hide');const g=$('
 sb.channel('profile:'+me.id).on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+me.id},p=>{const b=+p.new.balance;if(b!==chips&&b!==lastPushed&&!busy&&!live)applyBalance(b);if(p.new.name){prof.name=p.new.name;$('whoname').textContent=p.new.name}}).subscribe();
 /* lobi: kim çevrimiçi */
 lobby=sb.channel('lobby',{config:{presence:{key:me.id}}});
-lobby.on('presence',{event:'sync'},()=>{const st=lobby.presenceState();const names=Object.values(st).map(a=>a[0]&&a[0].name).filter(Boolean);$('online').innerHTML='<i></i>Çevrimiçi: '+names.join(' · ')}).subscribe(async s=>{if(s==='SUBSCRIBED')await lobby.track({name:prof.name,at:Date.now()})});
+lobby.on('presence',{event:'sync'},()=>{const st=lobby.presenceState();const names=Object.values(st).map(a=>a[0]&&a[0].name).filter(Boolean);$('online').innerHTML='<i></i>Çevrimiçi: '+names.map(n=>avHtml(n)+n).join(' · ')}).subscribe(async s=>{if(s==='SUBSCRIBED')await lobby.track({name:prof.name,at:Date.now()})});
 /* ortak koltuklar */
 async function loadSeats(){const {data}=await sb.from('seats').select('*');if(data&&window.applySeats)applySeats(data.filter(r=>Date.now()-new Date(r.since).getTime()<120000))}
 setInterval(()=>{if(!me)return;if(!$('bj').classList.contains('hide')&&mySeat>=0)sb.rpc('seat_heartbeat',{p_game:'bj'}).then(()=>{});if(!$('rulet').classList.contains('hide')&&mySeatR>=0)sb.rpc('seat_heartbeat',{p_game:'rl'}).then(()=>{})},30000);setInterval(loadSeats,45000);
