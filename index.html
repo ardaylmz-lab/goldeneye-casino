@@ -2848,7 +2848,9 @@ cv.addEventListener('click',ev=>{if(!on)return;const h=pick(ev.clientX,ev.client
 /* ---------- döngü ve aç/kapa ---------- */
 let on=false,dirty=true,lastW=0,lastH=0,prevT=0,winT=0,winN=0,PR=Math.min(2,window.devicePixelRatio||1);
 new MutationObserver(()=>{dirty=true}).observe(tbl,{subtree:true,childList:true,attributes:true,attributeFilter:['class'],characterData:true});
-const spin0=RW.spin;RW.spin=i=>{if(on){dolly.visible=false;lookNumUntil=0;dlrEv('R',V3(-.5,.12,-.72),0,1100)}return spin0(i)};
+/* çevirişte: işaret kalkar, krupiye çarka uzanır; tuval ekranda ama ortada değilse sayfa çarkın görüneceği yere kayar (yakın çekim tuvalin ortasındadır) */
+const spin0=RW.spin;RW.spin=i=>{if(on){dolly.visible=false;lookNumUntil=0;dlrEv('R',V3(-.5,.12,-.72),0,1100);
+  try{if(!panel.classList.contains('hide')){const r=box.getBoundingClientRect(),c=r.top+r.height/2,H=window.innerHeight;if(r.bottom>0&&r.top<H&&(c<H*.3||c>H*.7))window.scrollBy({top:c-H/2,behavior:'smooth'})}}catch(e){}}return spin0(i)};
 function frame(now,close){if(!on)return;const t=performance.now();
  /* yavaş cihaz: 2,5 sn boyunca kareler ortalama 70 ms'den seyrek gelirse çözünürlük bir kademe düşer (2 > 1,5 > 1) */
  {const d=t-prevT;prevT=t;if(d>6000||(window.RL3&&RL3._noAdapt)){winT=0;winN=0}else{winT+=d;winN++;if(winT>=2500){if(winT/winN>70&&PR>1){PR=Math.max(1,PR-.5);RW.setPR(PR)}winT=0;winN=0}}}
