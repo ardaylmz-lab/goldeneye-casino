@@ -488,12 +488,12 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 #slot3.panel{padding:8px;border-color:#0a1a33;background:#04070e}
 /* ===== TEXAS HOLD'EM MASASI: oval espresso ray, zümrüt çuha, 3 koltuk, ortak kartlar, pot, dealer düğmesi ===== */
 #holdem.panel{padding:8px;border-color:#0a1a33;background:#04070e}
-.pkwrap{position:relative;width:100%;max-width:440px;margin:4px auto 6px;aspect-ratio:440/384}
-.pkrail{position:absolute;left:0;top:0;width:440px;height:300px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(32px);border-radius:150px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
+.pkwrap{position:relative;width:100%;max-width:440px;margin:4px auto 6px;aspect-ratio:440/404}
+.pkrail{position:absolute;left:0;top:0;width:440px;height:320px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(32px);border-radius:150px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
 .pkrail::before{content:"";position:absolute;inset:3px;border-radius:147px;border:1px dashed #c9971a55;pointer-events:none;z-index:1}
 .pktable{position:relative;width:100%;height:100%;border-radius:140px;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 3px),radial-gradient(ellipse at 50% 40%,#1c8a52,#0f5f38 55%,#083a24 100%);box-shadow:0 0 0 2px #c9971acc,0 0 0 3px #00000088,inset 0 0 46px #000a,inset 0 0 0 1.5px #c9971a55}
 .pktable::before{content:"";position:absolute;inset:14px;border-radius:126px;border:1px solid #c9971a33;pointer-events:none}
-.pklogo{position:absolute;left:50%;top:50px;transform:translateX(-50%);font-family:"Cinzel",Georgia,serif;font-weight:800;font-size:.95rem;letter-spacing:5px;color:#ffd23f4d;text-shadow:0 1px 0 #00000055;white-space:nowrap;pointer-events:none}
+.pklogo{position:absolute;left:50%;top:52px;transform:translateX(-50%);font-family:"Cinzel",Georgia,serif;font-weight:800;font-size:.78rem;letter-spacing:3px;color:#ffd23f4d;text-shadow:0 1px 0 #00000055;white-space:nowrap;pointer-events:none}
 /* krupiye alanı: çip rafı ve deste (üst orta) */
 .pkdealer{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;pointer-events:none}
 .pkrack{width:104px;height:18px;border-radius:5px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:3px 6px;box-sizing:border-box}
@@ -501,7 +501,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .pkrack b::before{content:"";position:absolute;left:0;right:0;top:-2px;height:4px;border-radius:50%;background:var(--c);box-shadow:inset 0 1px 1px #fff8}
 .pkdeck{position:relative;width:26px;height:22px;border-radius:3px;background:linear-gradient(160deg,#17305a,#0a1a3a 60%,#060b16);box-shadow:0 0 0 1.5px #f3e6c4,0 0 0 2.5px #c9971a,1px 1px 0 #0a1a3a,2px 2px 0 #c9971a66,3px 3px 0 #0a1a3a,4px 4px 0 #c9971a66,0 5px 6px #000a}
 /* koltuklar: masanın dışında, ray arkasında; siyah kapitone deri, altın biye, altın başlıklı kolçaklar */
-.pkchairs{position:absolute;left:0;top:0;width:440px;height:384px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
+.pkchairs{position:absolute;left:0;top:0;width:440px;height:404px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
 .pkchair{position:absolute;width:78px;height:72px;margin:-36px -39px;transform:rotate(var(--a,0deg))}
 .pkchair .bk{position:absolute;left:4px;right:4px;top:0;height:28px;border-radius:36px 36px 10px 10px;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .7px,#0000 1.4px) 6px 6px/12px 12px,repeating-linear-gradient(45deg,#0000 0 11.3px,#ffffff10 11.3px 12.3px),repeating-linear-gradient(-45deg,#0000 0 11.3px,#ffffff10 11.3px 12.3px),linear-gradient(180deg,#2c2c34,#141418 60%,#0a0a0c);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #0a0a0c,inset 0 2px 4px #ffffff2a,inset 0 -3px 6px #000a,0 8px 14px #000b}
 .pkchair .st{position:absolute;left:10px;right:10px;top:24px;height:46px;border-radius:10px 10px 18px 18px;background:linear-gradient(90deg,#101014,#222228 45%,#2c2c34 50%,#222228 55%,#101014);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #0a0a0c,inset 0 2px 4px #ffffff22,inset 0 -3px 5px #000a,0 6px 10px #000a}
@@ -515,24 +515,28 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .pktable .c .cb{background:linear-gradient(115deg,#ffffff14 0,#0000 45%),linear-gradient(160deg,#17305a,#0a1a3a 60%,#060b16);box-shadow:0 3px 6px #000a,inset 0 0 0 2px #f3e6c4,inset 0 0 0 3px #c9971a}
 .pktable .c .cb::before{inset:7px;border-color:#c9971a88}
 .pkseat .pkcards{height:54px;left:-36px;top:-70px}
-.pkpot{position:absolute;left:50%;top:92px;transform:translateX(-50%);font-family:"Orbitron",Montserrat,monospace;font-size:.6rem;font-weight:900;color:#ffe9a8;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;border-radius:8px;padding:3px 10px 2px;box-shadow:0 2px 4px #000a;white-space:nowrap;z-index:2}
+/* üst koltuklarda kartlar masanın içine doğru kayar (köşe rayına binmez); isim kutusu kartların 16px altında */
+.pkseat:nth-child(2) .pkcards{left:-20px}.pkseat:nth-child(3) .pkcards{left:-48px}
+.pkpot{position:absolute;left:50%;top:84px;transform:translateX(-50%);font-family:"Orbitron",Montserrat,monospace;font-size:.6rem;font-weight:900;color:#ffe9a8;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;border-radius:8px;padding:3px 10px 2px;box-shadow:0 2px 4px #000a;white-space:nowrap;z-index:2}
 .pkpot:empty{display:none}
-.pkboard{position:absolute;left:50%;top:116px;transform:translateX(-50%);display:flex;gap:6px;perspective:500px;min-height:54px}
+.pkboard{position:absolute;left:50%;top:136px;transform:translateX(-50%);display:flex;gap:6px;perspective:500px;min-height:54px}
 .pkseat{position:absolute;left:0;top:0;width:0;height:0}
 .pkseat .pkcards{position:absolute;display:flex;perspective:500px}
 .pkseat .pkcards .c+.c{margin-left:-8px}
-.pkname{position:absolute;left:50%;top:-10px;transform:translateX(-50%);min-width:86px;text-align:center;padding:3px 8px 2px;border-radius:7px;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;box-shadow:0 3px 6px #000a;color:#ffe9a8;font-size:.55rem;font-weight:800;white-space:nowrap;line-height:1.15;z-index:2}
+.pkname{position:absolute;left:50%;top:-4px;transform:translateX(-50%);min-width:86px;text-align:center;padding:3px 8px 2px;border-radius:7px;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;box-shadow:0 3px 6px #000a;color:#ffe9a8;font-size:.55rem;font-weight:800;white-space:nowrap;line-height:1.15;z-index:2}
 .pkname b{display:block;font-family:"Orbitron",Montserrat,monospace;font-size:.6rem;color:#ffd23f}
 .pkname small{display:block;font-size:.42rem;letter-spacing:1px;color:#ff9a9a}
 .pkseat.on .pkname{border-color:#ffd23f;box-shadow:0 0 12px #ffd23f88,0 3px 6px #000a}
 .pkseat.fold .pkcards{opacity:.35;filter:grayscale(.6)}
 .pkseat.winner .pkname{background:linear-gradient(180deg,#fff0a8,#ffd23f 50%,#c58e0a);color:#1a1000;border-color:#fff6c0;box-shadow:0 0 16px #ffd23f,0 3px 6px #000a}.pkseat.winner .pkname b{color:#1a1000}
-.pkhand{position:absolute;left:50%;top:28px;transform:translateX(-50%);font-size:.5rem;color:#bfe6ff;white-space:nowrap;letter-spacing:.3px;font-weight:700}
+.pkhand{position:absolute;left:50%;top:34px;transform:translateX(-50%);font-size:.5rem;color:#bfe6ff;white-space:nowrap;letter-spacing:.3px;font-weight:700}
 .pkseat.winner .pkhand{color:#ffd23f}
+.pkseat:first-child .pkhand{left:50px;top:1px;transform:none} /* kendi el adın isim kutusunun sağında (masa altında yer yok) */
 .pkstat{position:absolute;left:50%;top:-92px;transform:translateX(-50%);padding:2px 7px;border-radius:6px;font-size:.5rem;font-weight:900;letter-spacing:.5px;color:#fff;background:#000c;border:1px solid #ffffff22;white-space:nowrap;animation:rpop .3s cubic-bezier(.2,1.6,.4,1);z-index:3}
-.pkseat:first-child .pkstat{left:-96px;top:-50px;transform:none}
+.pkseat:first-child .pkstat{left:-96px;top:-40px;transform:none}
+.pkseat:nth-child(2) .pkstat{left:62px;top:-62px;transform:none}.pkseat:nth-child(3) .pkstat{left:auto;right:62px;top:-62px;transform:none}
 .pkstat.fold{background:#6a0010}.pkstat.raise{background:#b8860b;color:#1a1000}.pkstat.allin{background:#e0202c}.pkstat.check{background:#1a3a6a}.pkstat.call{background:#1a9a4a}
-.pktimer{position:absolute;left:50%;top:21px;width:86px;height:3px;margin-left:-43px;z-index:3;background:#0006;border-radius:2px;overflow:hidden;display:none}
+.pktimer{position:absolute;left:50%;top:27px;width:86px;height:3px;margin-left:-43px;z-index:3;background:#0006;border-radius:2px;overflow:hidden;display:none}
 .pkseat.on .pktimer{display:block}.pktimer i{display:block;height:100%;width:var(--w,100%);background:linear-gradient(90deg,#ffd23f,#ff7a00);transition:width .25s linear}
 .pkbet{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;align-items:center;gap:3px;z-index:2}
 .pkbet .bchip{width:26px;height:26px;font-size:.46rem}
@@ -1681,14 +1685,14 @@ return{RANKS,SUITS,newDeck,evaluate,CAT,newGame,startHand,legal,act,botDecide,st
 /* ===== TEXAS HOLD'EM ARAYÜZÜ: giriş yoksa iki bota karşı yerel; giriş varsa ortak masa (cloud.pk, sunucu motoru) aynı çizimi kullanır ===== */
 const PK={st:null,human:false,seated:false,busy:false,timer:null,tEnd:0,botT:null,next:null,buyin:500,raiseTo:0,shown:new Set(),stat:{},settled:false};
 const PKO=()=>!!(window.cloud&&cloud.me&&cloud.me()&&cloud.pk); /* ortak masa (sunucu motoru) aktif mi */
-const PKPOS=[[220,238],[70,98],[370,98]],PKC=[220,128]; /* koltuklar (alt orta = sen) ve masa merkezi */
+const PKPOS=[[210,266],[66,106],[354,106]],PKC=[210,128]; /* koltuklar (alt orta = sen) ve pot merkezi; çuha 420x300, merkez x=210 */
 const PKBOTS=[{id:'bot1',name:'Mert'},{id:'bot2',name:'Elif'}];
 function pkFit(){const w=$('pkwrap').clientWidth;if(w)$('pkwrap').style.setProperty('--s',w/440)}
 new ResizeObserver(pkFit).observe($('pkwrap'));pkFit();
 PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';d.onclick=()=>{if(PKO()&&!PK.seated){ac();S.click();cloud.pk.sit(i)}};$('pkseats').appendChild(d)});
 const pkScale=()=>parseFloat(getComputedStyle($('pkwrap')).getPropertyValue('--s'))||1;
 /* koltuklar (sarmal koordinatı): sen altta sırtı sana dönük, botlar üst köşelerde masaya dönük, krupiye üst ortada */
-[[220,346,180,''],[46,80,-42,''],[394,80,42,''],[220,30,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
+[[220,366,180,''],[46,80,-42,''],[394,80,42,''],[220,30,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
 /* kart listesini DOM ile eşle: yeni kart eklenir (uçar), kapalı kart yerinde çevrilir, fazlalık silinir */
 function syncCards(box,want,pre){let els=[...box.children];let k=0;while(k<els.length&&k<want.length&&(els[k].dataset.c===want[k].c||els[k].classList.contains('h')))k++;
 for(let q=els.length-1;q>=k;q--)els[q].remove();
@@ -1698,7 +1702,8 @@ for(let q=k;q<want.length;q++){box.insertAdjacentHTML('beforeend',card(want[q].c
 function pkFly(delayStep){const t=$('pkt').getBoundingClientRect();if(!t.width)return;const s=pkScale(),ox=t.left+t.width/2,oy=t.top+8*s;let n=0;
 $('pkt').querySelectorAll('.c.new').forEach(e=>{e.classList.remove('new');const r=e.getBoundingClientRect();e.style.setProperty('--dx',(ox-(r.left+r.width/2))/s+'px');e.style.setProperty('--dy',(oy-(r.top+r.height/2))/s+'px');e.style.animationDelay=(n*(delayStep||0))+'ms';e.classList.add('cfly');e.addEventListener('animationend',()=>{e.classList.remove('cfly');e.style.animationDelay=''},{once:true});const d=n*(delayStep||0);setTimeout(()=>{if(onPK())S.card()},d+60);n++})}
 const onPK=()=>!$('holdem').classList.contains('hide');
-function pkBetPos(i){const [x,y]=PKPOS[i],f=i===0?.66:.42;return{x:x+(PKC[0]-x)*f+(i===0?-62:0),y:y+(PKC[1]-y)*f}}
+function pkBetPos(i){const [x,y]=PKPOS[i];if(i===0)return{x:x-60,y:y-60};const f=.54;return{x:x+(PKC[0]-x)*f,y:y+(PKC[1]-y)*f}}
+function pkWinPos(i){const [x,y]=PKPOS[i];return i===0?{x:x+58,y:y-44}:{x:x+(x<210?-20:20),y:y+64}} /* kazanç çipleri: sende kartların sağı, üst koltuklarda isim kutusunun dış-alt yanı */
 function pkRender(){const st=PK.st,seats=$('pkseats').children;
 for(let i=0;i<3;i++){const el=seats[i];let p=st?st.players[i]:null;if(p&&p.empty)p=null;const mine=i===0&&PK.seated;el.classList.toggle('on',!!st&&st.cur===i);el.classList.toggle('fold',!!p&&p.folded&&p.cards.length>0);el.classList.toggle('winner',!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
 syncCards(el.querySelector('.pkcards'),p?p.cards.map(c=>({c,hid:c==='??'||(!mine&&!PK.shown.has(i))})):[],'p'+i+'-');
@@ -1707,7 +1712,7 @@ let hn='';if(p&&p.cards.length&&!p.folded&&!p.cards.includes('??')){if(mine||PK.
 let bet=$('pkt').querySelector('.pkbet[data-i="'+i+'"]');if(p&&p.bet>0){if(!bet){bet=document.createElement('div');bet.className='pkbet';bet.dataset.i=i;$('pkt').appendChild(bet)}const bp=pkBetPos(i);bet.style.left=bp.x+'px';bet.style.top=bp.y+'px';bet.innerHTML='<div class="bchip"></div><em>'+fmtA(p.bet)+'</em>'}else if(bet)bet.remove()}
 syncCards($('pkboard'),st?st.board.map(c=>({c,hid:false})):[],'b');
 const collected=st?HE.pot(st)-st.players.reduce((a,p)=>a+(p.bet||0),0):0;$('pkpot').textContent=st&&collected>0?'POT '+fmt(collected):'';
-const d=$('pkd');if(st&&st.button>=0){d.classList.remove('hide');const [x,y]=PKPOS[st.button];const bx=x+(x<220?42:x>220?-42:60),by=y+(y<200?28:-6);d.style.transform='translate('+bx+'px,'+by+'px)'}else d.classList.add('hide');
+const d=$('pkd');if(st&&st.button>=0){d.classList.remove('hide');const [x,y]=PKPOS[st.button];const bx=st.button===0?x-60:x<210?x+54:x-54,by=st.button===0?y-6:y-8;d.style.transform='translate('+bx+'px,'+by+'px)'}else d.classList.add('hide');
 $('pkleave').disabled=PK.busy;}
 function pkStat(i,txt,cls){const el=$('pkseats').children[i];el.querySelectorAll('.pkstat').forEach(e=>e.remove());if(!txt)return;const s=document.createElement('div');s.className='pkstat '+cls;s.textContent=txt;el.appendChild(s);clearTimeout(PK.stat[i]);PK.stat[i]=setTimeout(()=>s.remove(),2600)}
 function pkFlyChips(from,to,n,label){for(let k=0;k<n;k++)setTimeout(()=>{const e=document.createElement('div');e.className='bchip fly';e.innerHTML=label?'<span>'+label+'</span>':'';e.style.transform='translate('+from.x+'px,'+from.y+'px) scale(.7)';$('pkt').appendChild(e);
@@ -1761,7 +1766,7 @@ $('pkres').innerHTML=main.map(r=>'<b>'+st.players[r.i].name+'</b> kazandı · '+
 PK.settled=true;pkRender();await pkAward(e.results)}
 async function pkWinNoShow(e){const st=PK.st,p=st.players[e.i];$('pkres').innerHTML='<b>'+p.name+'</b> potu aldı · +'+fmt(e.amt)+' (herkes pas geçti)';PK.settled=true;pkRender();await pkAward(st.results)}
 async function pkAward(results){const st=PK.st;const me=results.find(r=>r.i===0);
-results.forEach(r=>{if(r.win>0){pkFlyChips({x:PKC[0],y:PKC[1]-20},{x:PKPOS[r.i][0],y:PKPOS[r.i][1]-30},Math.min(4,1+Math.floor(r.win/50)),fmtA(r.win))}});
+results.forEach(r=>{if(r.win>0){pkFlyChips({x:PKC[0],y:PKC[1]-20},pkWinPos(r.i),Math.min(4,1+Math.floor(r.win/50)),fmtA(r.win))}});
 if(me){if(me.net>0){msg('Kazandın +'+fmtE(me.net));if(onPK()){if(me.net>=200){S.big()}else S.win(4);celebrate(me.net)}}else if(me.net<0){msg('Kaybettin -'+fmtE(-me.net));if(onPK()&&me.inHand)S.lose()}else msg('Başa baş')}
 await wait(1500)}
 /* sayfadan ayrılırken yığın bakiyeye döner (ortadaki pot kaybolur) */
@@ -1980,7 +1985,7 @@ if(best.size){$('pkt').querySelectorAll('.pkboard .c,.pkseat .c').forEach(el=>{c
 $('pkres').innerHTML=res.filter(r=>W.includes(r.i)).map(r=>'<b>'+st.seats[r.i].name+'</b> kazandı · '+(r.ev?r.ev.name:'')+' · +'+fmt(+r.win)).join(' · ')}
 else{const w=W[0],r=res.find(x=>x.i===w);if(st.seats[w])$('pkres').innerHTML='<b>'+st.seats[w].name+'</b> potu aldı · +'+fmt(r?+r.win:0)+' (herkes pas geçti)'}
 PK.settled=true;draw(st);
-res.forEach(r=>{if(+r.win>0){const i=rot(r.i);pkFlyChips({x:PKC[0],y:PKC[1]-20},{x:PKPOS[i][0],y:PKPOS[i][1]-30},Math.min(4,1+Math.floor(+r.win/50)),fmtA(+r.win))}});
+res.forEach(r=>{if(+r.win>0){pkFlyChips({x:PKC[0],y:PKC[1]-20},pkWinPos(rot(r.i)),Math.min(4,1+Math.floor(+r.win/50)),fmtA(+r.win))}});
 const mine=mySeat>=0?res.find(r=>r.i===mySeat):null;
 if(mine){const net=+mine.net;if(net>0){msg('Kazandın +'+fmtE(net));if(onPK()){if(net>=200)S.big();else S.win(4);celebrate(net)}}else if(net<0){msg('Kaybettin -'+fmtE(-net));if(onPK()&&mine.inHand)S.lose()}else if(mine.inHand)msg('Başa baş')}
 await wait(1200)}
