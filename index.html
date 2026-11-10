@@ -43,7 +43,9 @@ button.on{border-color:var(--gold);color:var(--gold);box-shadow:0 3px 0 #5a4005,
 button.go{background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid var(--gold);color:#fff;font-weight:800;letter-spacing:2px;text-shadow:0 2px 0 #0008;box-shadow:0 4px 0 #5a0010,0 0 18px #ff2b2b77,inset 0 2px 2px #fff5}
 button:disabled{opacity:.45}
 .panel{background:var(--card);border:2px solid var(--gd);border-radius:18px;padding:16px;text-align:center;box-shadow:0 0 0 3px #2a1a00,0 12px 30px #000c}
-#rulet.panel,#bj.panel{background:radial-gradient(ellipse at 50% 30%,#157a46,var(--felt) 50%,var(--felt2));box-shadow:0 0 0 3px #2a1a00,0 12px 30px #000c,inset 0 0 60px #0007}
+#rulet.panel{background:radial-gradient(ellipse at 50% 30%,#157a46,var(--felt) 50%,var(--felt2));box-shadow:0 0 0 3px #2a1a00,0 12px 30px #000c,inset 0 0 60px #0007}
+/* blackjack: koyu sıcak salon zemini (masa çuhası öne çıkar), espresso kenar */
+#bj.panel{border-color:#3a2416;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 4px),radial-gradient(ellipse at 50% 16%,#22170f,#100b08 48%,#070504 100%);box-shadow:0 0 0 3px #1a1108,0 12px 30px #000c,inset 0 0 70px #000a}
 #rulet .lbl,#bj .lbl{color:#cfe8d8}
 .bets{display:flex;gap:8px;justify-content:center;margin:12px 0}
 .ball{width:110px;height:110px;margin:12px auto;border-radius:50%;display:grid;place-items:center;font-size:2.6rem;font-weight:800;border:4px solid var(--gold);box-shadow:0 0 20px var(--gold)}
@@ -212,11 +214,11 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .stool.dc::before{inset:7px;border-color:#c9971a44}
 .stool.dc i{width:86px;height:86px;margin:-43px;border-width:11px;border-bottom-color:#1c1c22}
 .stool.dc i::after{content:"";position:absolute;left:50%;bottom:-11px;width:40px;height:3px;margin-left:-20px;border-radius:2px;background:#c9971a}
-/* sandalyeler: kapitone bordo deri (altın düğmeler), altın biye, koyu metal taban; sırtlık masaya ters, altın biyeli */
-.stool{position:absolute;width:52px;height:52px;margin:-26px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .8px,#0000 1.6px) 6.5px 6.5px/13px 13px,repeating-linear-gradient(45deg,#0000 0 12.2px,#00000042 12.2px 13.2px),repeating-linear-gradient(-45deg,#0000 0 12.2px,#00000042 12.2px 13.2px),radial-gradient(circle at 40% 34%,#c2583f,#8a2a1b 46%,#541309 78%,#2c0804);box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #5a4018,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
+/* sandalyeler: kapitone zümrüt deri (altın düğmeler), altın biye, koyu metal taban; sırtlık masaya ters, altın biyeli */
+.stool{position:absolute;width:52px;height:52px;margin:-26px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .8px,#0000 1.6px) 6.5px 6.5px/13px 13px,repeating-linear-gradient(45deg,#0000 0 12.2px,#00000042 12.2px 13.2px),repeating-linear-gradient(-45deg,#0000 0 12.2px,#00000042 12.2px 13.2px),radial-gradient(circle at 40% 34%,#2f9d5f,#15683e 46%,#0a4226 78%,#042414);box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #5a4018,0 12px 18px #000c,inset 0 3px 6px #ffffff3a,inset 0 -5px 9px #0009}
 .stool::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed #ffffff2e;box-shadow:inset 0 0 10px #0006}
 .stool::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 16%,#ffffff26,#0000 42%)}
-.stool i{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px;border-radius:50%;border:10px solid #0000;border-bottom-color:#7a2217;transform:rotate(var(--a));filter:drop-shadow(0 3px 4px #000a)}
+.stool i{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px;border-radius:50%;border:10px solid #0000;border-bottom-color:#0f5a34;transform:rotate(var(--a));filter:drop-shadow(0 3px 4px #000a)}
 .stool i::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid #0000;border-bottom-color:#dcb765}
 .bjrail{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));border-radius:24px 24px 190px 190px/24px 24px 165px 165px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
 /* deri ray: altın iplik dikiş ve yastık parlaması */
@@ -288,6 +290,10 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 @keyframes sheen{0%{left:-70%}55%{left:140%}100%{left:140%}}
 #deal:active:not(:disabled),#rspin:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 2px #2a0610,0 1px 0 #1e040c,0 3px 8px #000b,inset 0 2px 2px #fff3}
 #deal:disabled,#rspin:disabled{opacity:1;filter:grayscale(.55) brightness(.55)}#deal:disabled::after,#rspin:disabled::after{display:none}
+/* blackjack tuşları masanın paletinde: DAĞIT zümrüt-altın, diğerleri espresso deri + altın yazı (koyu salon zeminiyle uyumlu) */
+#deal{background:linear-gradient(180deg,#1c8a52,#0f5f38 48%,#083a24);color:#fff6c0;box-shadow:0 0 0 2px #06301c,0 5px 0 #04281a,0 9px 18px #000b,0 0 14px #1c8a5255,inset 0 2px 2px #fff3,inset 0 -2px 4px #0007}
+#deal:active:not(:disabled){box-shadow:0 0 0 2px #06301c,0 1px 0 #04281a,0 3px 8px #000b,inset 0 2px 2px #fff3}
+#bjbtns button:not(#deal){background:linear-gradient(180deg,#3a2416,#1e120a);border-color:#8a6a2a;color:#ffe9a8;box-shadow:0 3px 0 #0e0804,0 6px 12px #0008,inset 0 1px 0 #ffffff14}
 #rulet .row button{flex:1}#rspin{flex-basis:100%}
 .rack{position:absolute;left:50%;top:102px;width:130px;height:20px;transform:translateX(-50%);border-radius:5px;background:linear-gradient(180deg,#2a2a30,#0b0b0d);border:1px solid #c9971a88;box-shadow:0 2px 4px #000a,inset 0 1px 0 #fff2;display:flex;gap:4px;padding:3px 7px;box-sizing:border-box}
 .rack b{position:relative;flex:1;border-radius:3px 3px 1px 1px;background:repeating-linear-gradient(180deg,var(--c) 0 2.5px,#ffffff66 2.5px 3.5px);box-shadow:inset 0 1px 0 #fff6,inset 0 -1px 0 #0008,0 1px 2px #000a}
