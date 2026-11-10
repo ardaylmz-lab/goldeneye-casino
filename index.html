@@ -153,7 +153,7 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .tc.won em::before{background:radial-gradient(circle at 38% 32%,#fff8 0,#fff0 45%),radial-gradient(circle,#5be88f 60%,#1a9a4a 100%);box-shadow:inset 0 0 0 1.5px #eafff0,inset 0 1px 3px #0006}
 /* bilgi ekranı (tote board) */
 /* rulet koltukları: önden görünen yüksek sırtlı kapitone konyak-maun deri koltuk (çarkın maunuyla uyumlu), altın çerçeve, altın başlıklı kolçaklar; dolu koltukta oyuncu rengi sırtlık çerçevesinde */
-.rchairs{display:flex;justify-content:center;gap:34px;margin:10px 0 46px;height:66px}
+.rchairs{display:flex;justify-content:center;gap:34px;margin:36px 0 46px;height:66px}
 .rchairs .stool{position:relative;width:60px;height:66px;margin:0;border-radius:0;background:none;box-shadow:none;pointer-events:auto;--sc:#dcb765}
 .rchairs .stool::before{display:none}
 .rchairs .stool::after{content:"";position:absolute;left:3px;right:3px;top:auto;bottom:0;height:24px;border-radius:7px 7px 11px 11px;background:linear-gradient(90deg,#3a1708,#6a3115 42%,#8a4a1f 50%,#6a3115 58%,#3a1708);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #1a0c04,0 8px 12px #000b,inset 0 2px 4px #ffffff30,inset 0 -3px 5px #0009}
@@ -214,8 +214,23 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .stool .av{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;z-index:1;transform:rotate(var(--a,0deg)) translateY(26px) rotate(calc(-1*var(--a,0deg)))}
 .stool .av ~ .plate{margin-top:30px}
 .rchairs .stool .av{position:absolute;left:50%;top:3px;width:40px;height:40px;margin:0 0 0 -20px;z-index:1;transform:none}.rchairs .stool .av ~ .plate{margin-top:6px}
-.pkavs{position:absolute;left:0;top:0;width:440px;height:404px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none;z-index:4}
-.pkavs .av{position:absolute;width:46px;height:46px;margin:-23px;display:none}.pkavs .av.on{display:block}
+.pkavs,.pkfigs{position:absolute;left:0;top:0;width:440px;height:424px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
+/* ön katman (ben, sırttan): masanın önünde, alt kenarda yumuşak kesilir. arka katman (karşıdakiler, önden): rayın arkasında oturur */
+.pkavs{z-index:4;overflow:hidden;-webkit-mask-image:linear-gradient(#000 calc(100% - 16px),#0000);mask-image:linear-gradient(#000 calc(100% - 16px),#0000)}
+.pkavs .figw,.pkfigs .figw{transform:translate(-50%,-100%)}
+/* ===== 2.5D OTURAN FİGÜRLER: karakter sayfasından kesilen yarım boy; nefes ve salınım, sıra gelince öne eğilme, pasta solma, kazanınca zıplama ===== */
+.figw{position:absolute;pointer-events:none;display:none}.figw.on{display:block}
+.fig{display:block;height:104px;width:auto;transform-origin:50% 100%;animation:figbreath var(--bd,4.4s) ease-in-out var(--dl,0s) infinite;filter:drop-shadow(0 3px 5px #000a)}
+@keyframes figbreath{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.012,1.024) rotate(.5deg)}}
+.figw.turn .fig{animation-name:figturn}
+@keyframes figturn{0%,100%{transform:scale(1.05) translateY(2px) rotate(-.4deg)}50%{transform:scale(1.062,1.075) translateY(2px) rotate(.4deg)}}
+.figw.fold{filter:grayscale(.55) brightness(.6)}
+.figw.win .fig{animation:figwin .55s ease-in-out 4}
+@keyframes figwin{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.fig{animation:none}}
+/* alt kenar yumuşak solar: ray ya da minder kapatmadığı yerde kesik kenar görünmez (çift figürü gibi geniş kesitlerde de) */
+.pkfigs .fig{-webkit-mask-image:linear-gradient(#000 76%,#0000 98%);mask-image:linear-gradient(#000 76%,#0000 98%)}
+.rchairs .stool .figw{left:50%;bottom:18px;transform:translateX(-50%)}.rchairs .fig{height:76px;-webkit-mask-image:linear-gradient(#000 79%,#0000 100%);mask-image:linear-gradient(#000 79%,#0000 100%)}
 #online .av{width:20px;height:20px;vertical-align:-5px;margin:0 3px 0 6px;box-shadow:0 0 0 1px #dcb765}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
 .bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/458;--top:38px}
@@ -506,8 +521,8 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 /* ===== TEXAS HOLD'EM MASASI: oval espresso ray, zümrüt çuha, 3 koltuk, ortak kartlar, pot, dealer düğmesi ===== */
 /* poker paneli: blackjack ile aynı koyu sıcak salon zemini ve espresso kenar */
 #holdem.panel{padding:8px;border-color:#3a2416;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 4px),radial-gradient(ellipse at 50% 16%,#22170f,#100b08 48%,#070504 100%);box-shadow:0 0 0 3px #1a1108,0 12px 30px #000c,inset 0 0 70px #000a}
-.pkwrap{position:relative;width:100%;max-width:440px;margin:4px auto 6px;aspect-ratio:440/404}
-.pkrail{position:absolute;left:0;top:0;width:440px;height:320px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(32px);border-radius:150px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
+.pkwrap{position:relative;width:100%;max-width:440px;margin:4px auto 6px;aspect-ratio:440/424}
+.pkrail{position:absolute;left:0;top:0;width:440px;height:320px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(52px);border-radius:150px;padding:10px;background:linear-gradient(180deg,#3a2416,#1e120a 55%,#120a05);box-shadow:0 0 0 1.5px #c9971a99,0 16px 30px #000c,inset 0 1px 0 #ffffff2a,inset 0 -2px 0 #000a}
 .pkrail::before{content:"";position:absolute;inset:3px;border-radius:147px;border:1px dashed #c9971a55;pointer-events:none;z-index:1}
 .pktable{position:relative;width:100%;height:100%;border-radius:140px;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 3px),radial-gradient(ellipse at 50% 40%,#1c8a52,#0f5f38 55%,#083a24 100%);box-shadow:0 0 0 2px #c9971acc,0 0 0 3px #00000088,inset 0 0 46px #000a,inset 0 0 0 1.5px #c9971a55}
 .pktable::before{content:"";position:absolute;inset:14px;border-radius:126px;border:1px solid #c9971a33;pointer-events:none}
@@ -519,7 +534,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .pkrack b::before{content:"";position:absolute;left:0;right:0;top:-2px;height:4px;border-radius:50%;background:var(--c);box-shadow:inset 0 1px 1px #fff8}
 .pkdeck{position:relative;width:26px;height:22px;border-radius:3px;background:linear-gradient(160deg,#17305a,#0a1a3a 60%,#060b16);box-shadow:0 0 0 1.5px #f3e6c4,0 0 0 2.5px #c9971a,1px 1px 0 #0a1a3a,2px 2px 0 #c9971a66,3px 3px 0 #0a1a3a,4px 4px 0 #c9971a66,0 5px 6px #000a}
 /* koltuklar: masanın dışında, ray arkasında; siyah kapitone deri, altın biye, altın başlıklı kolçaklar */
-.pkchairs{position:absolute;left:0;top:0;width:440px;height:404px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
+.pkchairs{position:absolute;left:0;top:0;width:440px;height:424px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none}
 .pkchair{position:absolute;width:78px;height:72px;margin:-36px -39px;transform:rotate(var(--a,0deg))}
 .pkchair .bk{position:absolute;left:4px;right:4px;top:0;height:28px;border-radius:36px 36px 10px 10px;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .7px,#0000 1.4px) 6px 6px/12px 12px,repeating-linear-gradient(45deg,#0000 0 11.3px,#ffffff10 11.3px 12.3px),repeating-linear-gradient(-45deg,#0000 0 11.3px,#ffffff10 11.3px 12.3px),linear-gradient(180deg,#2c2c34,#141418 60%,#0a0a0c);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #0a0a0c,inset 0 2px 4px #ffffff2a,inset 0 -3px 6px #000a,0 8px 14px #000b}
 .pkchair .st{position:absolute;left:10px;right:10px;top:24px;height:46px;border-radius:10px 10px 18px 18px;background:linear-gradient(90deg,#101014,#222228 45%,#2c2c34 50%,#222228 55%,#101014);box-shadow:0 0 0 2px #dcb765,0 0 0 3.5px #0a0a0c,inset 0 2px 4px #ffffff22,inset 0 -3px 5px #000a,0 6px 10px #000a}
@@ -985,7 +1000,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="holdem">
-<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="av"></span><span class="av"></span><span class="av"></span></div></div>
+<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkfigs" id="pkfigs"><span class="figw"><img class="fig" alt=""></span><span class="figw"><img class="fig" alt=""></span></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="figw"><img class="fig" alt=""></span></div></div>
 <div class="res" id="pkres"></div>
 <div class="pkact hide" id="pkact"><div class="pkrow1"><button id="pkfold">PAS</button><button id="pkcheck" class="go">ÇEK</button></div><div class="pkrow2"><button class="pkpre" data-f="min">Min</button><button class="pkpre" data-f=".5">½ Pot</button><button class="pkpre" data-f="1">Pot</button><button class="pkpre" data-f="all">Rest</button></div><div class="pkrow3"><button class="bb minus" id="pkminus" aria-label="Azalt">−</button><button id="pkraise" class="go">YÜKSELT <b>20</b></button><button class="bb plus" id="pkplus" aria-label="Artır">+</button></div></div>
 <div class="row"><button class="go" id="pksit">MASAYA OTUR · 500 €</button><button id="pkleave" class="hide">Masadan kalk</button></div>
@@ -1021,7 +1036,11 @@ $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
 /* ===== AVATARLAR: profil adına göre avatars/<dosya>.png. Yalnız tam ad eşleşir (küçük/büyük harf ve fazla boşluk önemsiz): "Arda" ile "Arda Yılmaz" farklı kişilerdir. Yeni kişi için AVATARS'a "ad":"dosya" satırı yeter. ===== */
 const AVATARS={'görkem':'gorkem','arda':'arda','arda yılmaz':'arda_yilmaz'};
-function avatarOf(name){if(!name)return null;const k=String(name).trim().toLocaleLowerCase('tr').replace(/\s+/g,' ');const f=AVATARS[k];return f?'avatars/'+f+'.png':null}
+function avatarKey(name){if(!name)return null;return AVATARS[String(name).trim().toLocaleLowerCase('tr').replace(/\s+/g,' ')]||null}
+function avatarOf(name){const f=avatarKey(name);return f?'avatars/'+f+'.png':null}
+/* yarım boy figür (view: front|back). Poz görselleri gelince yalnız dosya adı değişir. */
+function figSrc(key,view){return 'avatars/'+key+'_'+view+'.png'}
+function setFig(el,name,view){let w=el.querySelector(':scope > .figw');const k=avatarKey(name);if(!k){if(w)w.remove();return}if(!w){w=document.createElement('span');w.className='figw on';w.innerHTML='<img class="fig" alt="">';el.insertBefore(w,el.querySelector('.plate'))}const im=w.firstChild,src=figSrc(k,view);if(im.getAttribute('src')!==src)im.src=src}
 function avHtml(name){const u=avatarOf(name);return u?'<span class="av" style="background-image:url('+u+')"></span>':''}
 function setAv(el,name){let av=el.querySelector(':scope > .av');const u=avatarOf(name);if(u){if(!av){av=document.createElement('span');av.className='av';el.insertBefore(av,el.querySelector('.plate'))}av.style.backgroundImage='url('+u+')'}else if(av)av.remove()}
 const rnd=n=>Math.floor(Math.random()*n);
@@ -1491,7 +1510,7 @@ let RSEATMAP={},mySeatR=-1;
 [0,1,2].forEach(k=>{const d=document.createElement('div');d.className='stool c'+k;d.dataset.k=k;d.innerHTML='<i></i><b class="plate"></b>';d.onclick=()=>rSeatTap(k);$('rchairs').appendChild(d)});
 function rSeatTap(k){if(!CLOUD||!window.cloud||!cloud.me()){msg('Koltuklar için giriş gerekli');return}if(window.RLST&&RLST.phase!=='bet'){msg('Çark dönerken');return}if(mySeatR===k){cloud.leaveSeat('rl');return}const o=RSEATMAP[k];if(o){msg('Bu koltukta '+o.name+' oturuyor');return}cloud.takeSeat('rl',k)}
 function renderRSeats(){const me=window.cloud&&cloud.me();mySeatR=-1;Object.entries(RSEATMAP).forEach(([k,o])=>{if(me&&o.user_id===me.id)mySeatR=+k});
-document.querySelectorAll('#rchairs .stool').forEach(d=>{const k=+d.dataset.k,o=RSEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeatR===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeatR===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');setAv(d,o&&o.name)})}
+document.querySelectorAll('#rchairs .stool').forEach(d=>{const k=+d.dataset.k,o=RSEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeatR===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeatR===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');setFig(d,o&&o.name,'front')})}
 const rSeatOf=uid=>{for(const [k,o] of Object.entries(RSEATMAP))if(o.user_id===uid)return +k;return -1};
 window.applySeats=rows=>{SEATMAP={};RSEATMAP={};rows.forEach(r=>{if(r.game==='bj')SEATMAP[r.seat]=r;if(r.game==='rl')RSEATMAP[r.seat]=r});renderSeats();renderRSeats();if(window.RLST&&window.cloud&&cloud.rl)cloud.rl.redraw()};renderSeats();renderRSeats();
 {const d=document.createElement('div');d.className='stool dc';d.style.left=(9+RACK.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">KRUPİYE</b>';$('stools').appendChild(d)}
@@ -1714,9 +1733,10 @@ function pkFit(){const w=$('pkwrap').clientWidth;if(w)$('pkwrap').style.setPrope
 new ResizeObserver(pkFit).observe($('pkwrap'));pkFit();
 PKPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='pkseat';d.style.transform='translate('+p[0]+'px,'+p[1]+'px)';d.innerHTML='<div class="pkcards"></div><div class="pkname"></div><div class="pktimer"><i></i></div><div class="pkhand"></div>';d.onclick=()=>{if(PKO()&&!PK.seated){ac();S.click();cloud.pk.sit(i)}};$('pkseats').appendChild(d)});
 const pkScale=()=>parseFloat(getComputedStyle($('pkwrap')).getPropertyValue('--s'))||1;
-[[220,377],[28,54],[412,54]].forEach((p,i)=>{const a=$('pkavs').children[i];a.style.left=p[0]+'px';a.style.top=p[1]+'px'}); /* avatar madalyonları sandalyelerin üstünde */
+const PKFIG=[$('pkavs').children[0],$('pkfigs').children[0],$('pkfigs').children[1]];
+[[220,466],[74,108],[366,108]].forEach((p,i)=>{const w=PKFIG[i];w.style.left=p[0]+'px';w.style.top=p[1]+'px';w.firstChild.style.setProperty('--bd',[4.6,4.1,5][i]+'s');w.firstChild.style.setProperty('--dl',[0,-1.3,-2.6][i]+'s')}); /* figürlerin alt-orta noktası (sarmal koordinatı) */
 /* koltuklar (sarmal koordinatı): sen altta sırtı sana dönük, botlar üst köşelerde masaya dönük, krupiye üst ortada */
-[[220,366,180,''],[46,80,-42,''],[394,80,42,''],[220,30,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
+[[220,386,180,''],[46,100,-42,''],[394,100,42,''],[220,50,0,'dealer']].forEach(([x,y,a,cls])=>{const d=document.createElement('div');d.className='pkchair '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--a',a+'deg');d.innerHTML='<i class="bk"></i><i class="st"></i><i class="al"></i><i class="ar"></i>';$('pkchairs').appendChild(d)});
 /* kart listesini DOM ile eşle: yeni kart eklenir (uçar), kapalı kart yerinde çevrilir, fazlalık silinir */
 function syncCards(box,want,pre){let els=[...box.children];let k=0;while(k<els.length&&k<want.length&&(els[k].dataset.c===want[k].c||els[k].classList.contains('h')))k++;
 for(let q=els.length-1;q>=k;q--)els[q].remove();
@@ -1732,7 +1752,8 @@ function pkRender(){const st=PK.st,seats=$('pkseats').children;
 for(let i=0;i<3;i++){const el=seats[i];let p=st?st.players[i]:null;if(p&&p.empty)p=null;const mine=i===0&&PK.seated;el.classList.toggle('on',!!st&&st.cur===i);el.classList.toggle('fold',!!p&&p.folded&&p.cards.length>0);el.classList.toggle('winner',!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
 syncCards(el.querySelector('.pkcards'),p?p.cards.map(c=>({c,hid:c==='??'||(!mine&&!PK.shown.has(i))})):[],'p'+i+'-');
 el.querySelector('.pkname').innerHTML=p?p.name+'<b>'+fmt(p.stack)+'</b>'+(p.allin&&!p.folded?'<small>REST</small>':''):'<span style="color:#8fb8e0">Boş</span>';
-const au=p&&avatarOf(p.name),ae=$('pkavs').children[i];ae.classList.toggle('on',!!au);if(au)ae.style.backgroundImage='url('+au+')';
+const fk=p&&avatarKey(p.name),fe=PKFIG[i];fe.classList.toggle('on',!!fk);if(fk){const src=figSrc(fk,i===0?'back':'front'),im=fe.firstChild;if(im.getAttribute('src')!==src)im.src=src}
+fe.classList.toggle('turn',!!fk&&!!st&&st.cur===i);fe.classList.toggle('fold',!!fk&&p.folded&&p.cards.length>0);fe.classList.toggle('win',!!fk&&!!st&&st.phase==='done'&&PK.settled&&st.winners.includes(i));
 let hn='';if(p&&p.cards.length&&!p.folded&&!p.cards.includes('??')){if(mine||PK.shown.has(i)){const e=HE.evaluate(p.cards.concat(st.board));hn=e.name}}el.querySelector('.pkhand').textContent=hn;
 let bet=$('pkt').querySelector('.pkbet[data-i="'+i+'"]');if(p&&p.bet>0){if(!bet){bet=document.createElement('div');bet.className='pkbet';bet.dataset.i=i;$('pkt').appendChild(bet)}const bp=pkBetPos(i);bet.style.left=bp.x+'px';bet.style.top=bp.y+'px';bet.innerHTML='<div class="bchip"></div><em>'+fmtA(p.bet)+'</em>'}else if(bet)bet.remove()}
 syncCards($('pkboard'),st?st.board.map(c=>({c,hid:false})):[],'b');
