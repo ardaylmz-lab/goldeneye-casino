@@ -43,7 +43,9 @@ button.on{border-color:var(--gold);color:var(--gold);box-shadow:0 3px 0 #5a4005,
 button.go{background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid var(--gold);color:#fff;font-weight:800;letter-spacing:2px;text-shadow:0 2px 0 #0008;box-shadow:0 4px 0 #5a0010,0 0 18px #ff2b2b77,inset 0 2px 2px #fff5}
 button:disabled{opacity:.45}
 .panel{background:var(--card);border:2px solid var(--gd);border-radius:18px;padding:16px;text-align:center;box-shadow:0 0 0 3px #2a1a00,0 12px 30px #000c}
-#rulet.panel{background:radial-gradient(ellipse at 50% 30%,#157a46,var(--felt) 50%,var(--felt2));box-shadow:0 0 0 3px #2a1a00,0 12px 30px #000c,inset 0 0 60px #0007}
+/* rulet paneli: blackjack ve poker ile aynı koyu sıcak salon zemini (maun çark ve yeşil bahis tahtası öne çıkar) */
+#rulet.panel{border-color:#3a2416;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 4px),radial-gradient(ellipse at 50% 16%,#22170f,#100b08 48%,#070504 100%);box-shadow:0 0 0 3px #1a1108,0 12px 30px #000c,inset 0 0 70px #000a}
+#rrebet,#rdbl,#rclear,#rlight{background:linear-gradient(180deg,#3a2416,#1e120a);border-color:#8a6a2a;color:#ffe9a8;box-shadow:0 3px 0 #0e0804,0 6px 12px #0008,inset 0 1px 0 #ffffff14} /* espresso deri + altın (şimşek açıkken #rlight.on mavi kalır) */
 /* blackjack: koyu sıcak salon zemini (masa çuhası öne çıkar), espresso kenar */
 #bj.panel{border-color:#3a2416;background:repeating-linear-gradient(45deg,#ffffff03 0 1px,#0000 1px 4px),radial-gradient(ellipse at 50% 16%,#22170f,#100b08 48%,#070504 100%);box-shadow:0 0 0 3px #1a1108,0 12px 30px #000c,inset 0 0 70px #000a}
 #rulet .lbl,#bj .lbl{color:#cfe8d8}
@@ -961,7 +963,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="rboard" id="rhist"></div>
 <div class="tbl" id="tbl"></div>
 <div class="res" id="rres"></div>
-<div class="row"><button class="go" id="rspin">🎡 ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button><button id="rlight">ŞİMŞEK</button></div>
+<div class="row"><button class="go" id="rspin">ÇEVİR</button></div><div class="row"><button id="rrebet">Tekrarla</button><button id="rdbl">x2</button><button id="rclear">Temizle</button><button id="rlight">ŞİMŞEK</button></div>
 <div class="lbl">Bir sandalyeye dokunup otur; seçili çipi kutulara, iki sayının arasına (ikili 17:1) ya da dört sayının köşesine (dörtlü 8:1) koy. İlk bahisle 15 sn geri sayım başlar, ÇEVİR hemen çevirir. <span id="rlbl"></span></div>
 </div>
 
