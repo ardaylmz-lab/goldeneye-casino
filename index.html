@@ -2580,7 +2580,7 @@ function labels(){const L=[];
    L.push({id:'h'+k+'-'+j,cls:'hsum'+(v.t>21?' bust':h.bj?' bj':act?' on':''),html:(h.bj?'BJ':v.t)+(h.dbl?'·2x':''),at:new THREE.Vector3(G.xc+(-CW/2+.1)*G.sc,.03,G.zNear-.07*G.sc)})});
   if(s.badge)L.push({id:'b'+k,z:4,cls:'badge '+s.badge.c,html:s.badge.t,at:o.clone().add(new THREE.Vector3(0,.02,SPOTR+.2))});
   else if(s.ins>0)L.push({id:'b'+k,z:4,cls:'badge ins',html:'SİGORTA '+fmtA(s.ins),at:o.clone().add(new THREE.Vector3(0,.02,SPOTR+.2))})});
- loadDealer();L.push({id:'dl',z:1,cls:'b3name',html:'KRUPİYE',at:dlr?DEALERTOP:DEALERLBL});
+ L.push({id:'dl',z:1,cls:'b3name',html:'KRUPİYE',at:dlr?DEALERTOP:DEALERLBL});
  chairs.forEach((c,k)=>{const o=SEATMAP[k],mine=mySeat===k,f3=o?fig3d(o.name):null;setChairFig(k,f3);
   const txt=o?((!c.fig&&typeof avHtml==='function'?avHtml(o.name):'')+o.name+(mine?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');if(txt)L.push({id:'s'+k,z:3,cls:'b3plate'+(mine?' mine':''),html:txt,at:o?PLATEP[k]:SEATLBL[k]})});
  labelList=L;const seen=new Set();L.forEach(l=>{seen.add(l.id);let e=els.get(l.id);if(!e){e=document.createElement('div');e.className='b3p';e.innerHTML='<div class="b3c"><div></div></div>';ui.appendChild(e);els.set(l.id,e);e._c='';e._h=''}
@@ -2597,7 +2597,7 @@ cv.addEventListener('click',ev=>{const h=pick(ev);if(!h)return;if(h.spot!=null)p
 
 /* ---------- döngü ---------- */
 let on=false,glowT=0,frameN=0,shadowN=0;
-function frame(t){requestAnimationFrame(frame);if(!on||document.getElementById('bj').classList.contains('hide'))return;resize();
+function frame(t){requestAnimationFrame(frame);if(!on||document.getElementById('bj').classList.contains('hide'))return;resize();loadDealer(); /* krupiye modeli blackjack sayfası ilk kez 3D açıldığında indirilir */
  for(let i=tws.length-1;i>=0;i--){const o=tws[i];if(t<o.t0)continue;const p=Math.min(1,(t-o.t0)/o.dur);if(o.step(p)===false||p>=1){tws.splice(i,1);if(p>=1&&o.done)o.done()}}
  if((glowOn||glow.material.opacity>0)&&t-glowT>90){glowT=t;glow.material.opacity=glowOn?.22+.14*Math.sin(t/260):Math.max(0,glow.material.opacity-.12);need=true}
  if(figs.size){let fast=false;figs.forEach(f=>{if(f.g||f.turn>.02&&f.turn<.98)fast=true});if(fast||t-figT>100){figT=t;figs.forEach(f=>figFrame(f,t));need=true;if(fast)sdirty=true}}
