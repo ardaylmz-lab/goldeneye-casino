@@ -1019,9 +1019,9 @@ function fmtA(n){n=Math.round(n*100)/100;return Number.isInteger(n)?n.toLocaleSt
 function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}if(window.onChips)onChips(n);
 $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
-/* ===== AVATARLAR: profil adına göre avatars/<dosya>.png. Yeni kişi eklemek için AVATARS'a "ad":"dosya" satırı yeter (ad küçük harf, ilk kelime de eşleşir). ===== */
-const AVATARS={'görkem':'gorkem'};
-function avatarOf(name){if(!name)return null;const k=String(name).trim().toLocaleLowerCase('tr');const f=AVATARS[k]||AVATARS[k.split(/\s+/)[0]];return f?'avatars/'+f+'.png':null}
+/* ===== AVATARLAR: profil adına göre avatars/<dosya>.png. Yalnız tam ad eşleşir (küçük/büyük harf ve fazla boşluk önemsiz): "Arda" ile "Arda Yılmaz" farklı kişilerdir. Yeni kişi için AVATARS'a "ad":"dosya" satırı yeter. ===== */
+const AVATARS={'görkem':'gorkem','arda':'arda'};
+function avatarOf(name){if(!name)return null;const k=String(name).trim().toLocaleLowerCase('tr').replace(/\s+/g,' ');const f=AVATARS[k];return f?'avatars/'+f+'.png':null}
 function avHtml(name){const u=avatarOf(name);return u?'<span class="av" style="background-image:url('+u+')"></span>':''}
 function setAv(el,name){let av=el.querySelector(':scope > .av');const u=avatarOf(name);if(u){if(!av){av=document.createElement('span');av.className='av';el.insertBefore(av,el.querySelector('.plate'))}av.style.backgroundImage='url('+u+')'}else if(av)av.remove()}
 const rnd=n=>Math.floor(Math.random()*n);
