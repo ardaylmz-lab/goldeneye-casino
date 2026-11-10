@@ -219,9 +219,15 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .pkavs{position:absolute;left:0;top:0;width:440px;height:404px;transform-origin:0 0;transform:scale(var(--s,1));pointer-events:none;z-index:4}
 .pkavs .av{position:absolute;width:46px;height:46px;margin:-23px;display:none}.pkavs .av.on{display:block}
 #online .av{width:20px;height:20px;vertical-align:-5px;margin:0 3px 0 6px;box-shadow:0 0 0 1px #dcb765}
+/* krupiye madalyonu (avatars/krupiye.png): 2D blackjack'te krupiye koltuğunun üstünde, rulette çarkın sol üst köşesinde, pokerde krupiye koltuğunda; 3D blackjack'te modelin kendisi oturur */
+.dlrav{background-image:url(avatars/krupiye.png)}
+.dlrname{display:block;padding:2px 6px;border-radius:8px;background:#000b;text-align:center;font-family:"Cinzel",Georgia,serif;font-size:.44rem;font-weight:400;letter-spacing:2px;color:#ffe9a8;text-shadow:0 1px 2px #000;line-height:1.1;white-space:nowrap}
+.stool.dc .av{left:50%;top:-17px;margin:0 0 0 -20px;transform:none}.stool.dc .dname{top:-21px}
+.rdealer{position:absolute;left:-18px;top:-4px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}.rdealer .av{display:block;width:46px;height:46px}
+.pkavs .pkdlr{position:absolute;left:220px;top:13px;width:0;height:0}.pkavs .pkdlr .av{display:block;left:0;top:0;width:40px;height:40px;margin:-20px}.pkavs .pkdlr .dlrname{position:absolute;left:0;top:24px;transform:translateX(-50%);font-size:.4rem;padding:1px 6px}
 /* ===== 3D BLACKJACK: three.js tuvali ve üstüne yansıtılan yazılar. .g3 yokken (WebGL yok ya da 2D seçili) klasik masa görünür ===== */
 #bj3d,#bj3ui{position:absolute;inset:0;width:100%;height:100%;display:none}
-.bjwrap.g3{aspect-ratio:440/450}
+.bjwrap.g3{aspect-ratio:440/486}
 .bjwrap.g3 #bj3d{display:block;touch-action:manipulation;cursor:pointer}
 .bjwrap.g3 #bj3ui{display:block;pointer-events:none;overflow:hidden}
 .bjwrap.g3 .stools,.bjwrap.g3 .bjrail{display:none}
@@ -235,7 +241,7 @@ background:repeating-conic-gradient(from -11.25deg,#fff6c0 0 22.5deg,#e2a81c 22.
 .b3plate{padding:3px 9px 2px;border-radius:6px;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;box-shadow:0 3px 6px #000a;color:#ffe9a8;font-size:.5rem;font-weight:800;letter-spacing:.6px;text-align:center;line-height:1.15}
 .b3plate small{display:block;font-family:"Cinzel",Georgia,serif;font-size:.4rem;letter-spacing:2px;color:#dcb765}.b3plate.mine{border-color:#ffd23f;box-shadow:0 0 10px #ffd23f88}.b3plate .av{display:block;width:30px;height:30px;margin:1px auto 3px}
 /* ===== BLACKJACK MASASI (6 koltuk, 340x318 tasarım alanı ölçeklenir) ===== */
-.bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/458;--top:38px}
+.bjwrap{position:relative;width:100%;max-width:440px;margin:4px auto 8px;aspect-ratio:440/480;--top:60px}
 .stools{position:absolute;left:0;top:0;width:440px;height:330px;transform-origin:0 0;transform:scale(var(--s,1)) translateY(var(--top));pointer-events:none}
 /* krupiye koltuğu: siyah deri, altın şerit, sırtlığı masaya ters */
 .stool.dc{width:62px;height:62px;margin:-31px;background:radial-gradient(circle at 50% 50%,#ffe9a8 0 .8px,#0000 1.6px) 7px 7px/14px 14px,repeating-linear-gradient(45deg,#0000 0 13px,#ffffff12 13px 14px),repeating-linear-gradient(-45deg,#0000 0 13px,#ffffff12 13px 14px),radial-gradient(circle at 42% 36%,#3d3d48,#17171c 55%,#050506);box-shadow:0 0 0 2px #dcb765,0 0 0 4px #1a1108,0 0 0 6px #5a4018,0 12px 18px #000c,inset 0 3px 6px #ffffff30,inset 0 -5px 9px #0009}
@@ -987,7 +993,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <div class="panel hide" id="slot2"></div>
 <div class="panel hide" id="slot3"></div>
 <div class="panel hide" id="rulet">
-<div class="wheelbox"><canvas id="rw3d" width="300" height="240"></canvas><div class="rres3d green" id="rwres">0</div><div class="w3d"><div class="ly" style="--z:24"></div><div class="ly" style="--z:18"></div><div class="ly" style="--z:12"></div><div class="ly" style="--z:6"></div><div class="bowl"></div><div class="track"></div><div class="wheel" id="wheel"></div><div class="gloss"></div><div class="mark"></div><div class="orb" id="orb"><div class="orbr"><i></i></div></div><div class="hub"><div class="ball green" id="ball">0</div></div></div></div>
+<div class="wheelbox"><div class="rdealer"><span class="av dlrav"></span><b class="dlrname">KRUPİYE</b></div><canvas id="rw3d" width="300" height="240"></canvas><div class="rres3d green" id="rwres">0</div><div class="w3d"><div class="ly" style="--z:24"></div><div class="ly" style="--z:18"></div><div class="ly" style="--z:12"></div><div class="ly" style="--z:6"></div><div class="bowl"></div><div class="track"></div><div class="wheel" id="wheel"></div><div class="gloss"></div><div class="mark"></div><div class="orb" id="orb"><div class="orbr"><i></i></div></div><div class="hub"><div class="ball green" id="ball">0</div></div></div></div>
 <div class="rchairs" id="rchairs"></div>
 <div class="rboard" id="rhist"></div>
 <div class="tbl" id="tbl"></div>
@@ -1005,7 +1011,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 </div>
 
 <div class="panel hide" id="holdem">
-<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="av"></span><span class="av"></span><span class="av"></span></div></div>
+<div class="pkwrap" id="pkwrap"><div class="pkchairs" id="pkchairs"></div><div class="pkrail"><div class="pktable" id="pkt"><div class="pklogo">TEXAS HOLD'EM</div><div class="pkdealer"><div class="pkrack"><b style="--c:#e0202c"></b><b style="--c:#1e63d6"></b><b style="--c:#2e9e4f"></b><b style="--c:#1b1b1f"></b><b style="--c:#c9971a"></b></div><div class="pkdeck"></div></div><div class="pkpot" id="pkpot"></div><div class="pkboard" id="pkboard"></div><div id="pkseats"></div><div class="pkd hide" id="pkd">D</div></div></div><div class="pkavs" id="pkavs"><span class="av"></span><span class="av"></span><span class="av"></span><div class="pkdlr"><span class="av dlrav"></span><b class="dlrname">KRUPİYE</b></div></div></div>
 <div class="res" id="pkres"></div>
 <div class="pkact hide" id="pkact"><div class="pkrow1"><button id="pkfold">PAS</button><button id="pkcheck" class="go">ÇEK</button></div><div class="pkrow2"><button class="pkpre" data-f="min">Min</button><button class="pkpre" data-f=".5">½ Pot</button><button class="pkpre" data-f="1">Pot</button><button class="pkpre" data-f="all">Rest</button></div><div class="pkrow3"><button class="bb minus" id="pkminus" aria-label="Azalt">−</button><button id="pkraise" class="go">YÜKSELT <b>20</b></button><button class="bb plus" id="pkplus" aria-label="Artır">+</button></div></div>
 <div class="row"><button class="go" id="pksit">MASAYA OTUR · 500 €</button><button id="pkleave" class="hide">Masadan kalk</button></div>
@@ -1516,7 +1522,7 @@ function renderRSeats(){const me=window.cloud&&cloud.me();mySeatR=-1;Object.entr
 document.querySelectorAll('#rchairs .stool').forEach(d=>{const k=+d.dataset.k,o=RSEATMAP[k];d.classList.toggle('taken',!!o);d.classList.toggle('mine',mySeatR===k);d.querySelector('.plate').innerHTML=o?(o.name+(mySeatR===k?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');setAv(d,o&&o.name)})}
 const rSeatOf=uid=>{for(const [k,o] of Object.entries(RSEATMAP))if(o.user_id===uid)return +k;return -1};
 window.applySeats=rows=>{SEATMAP={};RSEATMAP={};rows.forEach(r=>{if(r.game==='bj')SEATMAP[r.seat]=r;if(r.game==='rl')RSEATMAP[r.seat]=r});renderSeats();renderRSeats();if(window.RLST&&window.cloud&&cloud.rl)cloud.rl.redraw()};renderSeats();renderRSeats();
-{const d=document.createElement('div');d.className='stool dc';d.style.left=(9+RACK.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><b class="dname">KRUPİYE</b>';$('stools').appendChild(d)}
+{const d=document.createElement('div');d.className='stool dc';d.style.left=(9+RACK.x)+'px';d.style.top='6px';d.innerHTML='<i style="--a:180deg"></i><span class="av dlrav"></span><b class="dname">KRUPİYE</b>';$('stools').appendChild(d)}
 new ResizeObserver(bjFit).observe($('bjwrap'));bjFit();
 SPOTS.forEach((sp,k)=>{const d=document.createElement('div');d.className='seat';d.style.transform='translate('+sp.x+'px,'+sp.y+'px)';
 d.innerHTML='<div class="hands" style="transform:translateY(-47px)"></div><div class="spot"><small>'+(k+1)+'</small></div><div class="bd"></div>';
@@ -2404,7 +2410,7 @@ CHAIRPOS.forEach(([x,z,yaw])=>{const c=makeChair();c.g.position.set(x,FLOOR,z);c
 const dealerChair=makeChair();dealerChair.g.position.set(.01,FLOOR,-2.26);dealerChair.g.rotation.y=Math.PI;scene.add(dealerChair.g);scene.updateMatrixWorld(true);
 const L2W=(c,x,y,z)=>c.g.localToWorld(new THREE.Vector3(x,y,z));
 const SEATC=chairs.map(c=>L2W(c,0,1.0,.05)),SEATLBL=chairs.map(c=>L2W(c,0,.98,-.05)),PLATEP=chairs.map(c=>c.back.localToWorld(new THREE.Vector3(0,.02,.09)));
-const DEALERLBL=dealerChair.back.localToWorld(new THREE.Vector3(0,.12,-.14));
+const DEALERLBL=dealerChair.back.localToWorld(new THREE.Vector3(0,.12,-.14)),DEALERTOP=L2W(dealerChair,0,2.62,-.06); /* yazı: koltuk sırtında; krupiye yüklenince başının üstünde */
 /* ===== 3D KARAKTER: iskeletli GLB (models/<ad>.glb, rig.py üretir). Bağlama pozunda tüm kemik dönüşleri birimdir; bu yüzden
    'model uzayında bağlama pozuna göre dönüş' (Qw) zincir boyunca yerel dönüşlerin çarpımıdır ve yerel = ebeveyn Qw tersi x kendi Qw.
    Model: y yukarı, yüz +z, karakterin solu +x. Kollar iki kemikli analitik ters kinematikle hedefe uzanır. ===== */
@@ -2478,6 +2484,36 @@ function figFrame(fg,t){const c=chairs[fg.k],F=fg.F,k=fg.k,sec=t/1000;c.g.update
  /* bardak: bardaklıkta durur; yudum sırasında sağ eldedir ve içerken oyuncuya doğru eğilir */
  const gl=fg.glass;if(held){fg.holder.updateMatrixWorld(true);const wr=F.B.RightHand.getWorldPosition(V3(0,0,0)),tp=F.B.RightHandTip.getWorldPosition(V3(0,0,0));gl.position.copy(wr).add(tp.sub(wr).normalize().multiplyScalar(.14)).add(V3(0,-.03,0));gl.quaternion.setFromAxisAngle(right,-tilt)}
  else{gl.position.copy(fg.cup);gl.quaternion.identity()}}
+/* ---------- krupiye: models/krupiye.glb, krupiye koltuğunda oturur. Sol eli kart kutusu tarafındadır: her kartta kutuya doğru uzanıp kartın gideceği yere doğru savurur;
+   kapalı kartı açarken ve çip öderken/toplarken sağ eli uzanır. Dağıtılan kartı, sonra sırası gelen oyuncuyu izler; konuşurken başını hafifçe sallar.
+   Masa karakterlere göre büyüktür (kartlar okunaklı olsun diye): eller hedefe değmez, hedefe doğru uzanır. ---------- */
+const DEALERFIG={url:'models/krupiye.glb',h:2.6};let dlr=null,dlrBusy=false,dlrT=0;
+function loadDealer(){if(dlr||dlrBusy)return;dlrBusy=true;
+ loadGLB(DEALERFIG.url).then(g=>{const F=figBuild(g.scene),s=DEALERFIG.h/F.H,b=F.bind,holder=new THREE.Group();holder.add(g.scene);holder.scale.setScalar(s);holder.rotation.y=Math.PI;
+  holder.position.set(s*b.Hips.x,SEATY+.062*F.H*s-s*b.LeftUpLeg.y,-.05+s*b.Hips.z);dealerChair.g.add(holder); /* koltuğun ön kenarına yakın oturur: masaya uzanabilsin */g.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false}});
+  dlr={F,s,holder,yaw:0,pitch:.1,act:0,ev:[],talk:0,last:performance.now(),fix:null};dealerFrame(performance.now());need=true;sdirty=true;labels()}).catch(e=>{console.warn('krupiye modeli yüklenemedi',e)})}
+const dlrEv=(hand,to,delay,dur)=>{if(dlr&&on){dlr.ev.push({hand,to:to.clone(),t:performance.now()+(delay||0),dur});need=true}};
+function dealerFrame(t){const D=dlr,F=D.F,c=dealerChair,sec=t/1000,dt=Math.max(0,Math.min(200,t-D.last)),kq=1-Math.exp(-dt/90),ks=1-Math.exp(-dt/260);D.last=t;c.g.updateMatrixWorld(true);
+ const inv=new THREE.Matrix4().copy(F.scene.matrixWorld).invert(),toM=v=>v.clone().applyMatrix4(inv),dM=v=>v.clone().transformDirection(inv),W=(x,y,z)=>L2W(c,x,y,z);
+ const wp=n=>(F.pos[n]||F.bind[n]).clone().applyMatrix4(F.scene.matrixWorld),reach=(F.arm.Left.l1+F.arm.Left.l2)*D.s,SL=wp('LeftArm'),SR=wp('RightArm');
+ /* omuzdan hedefe doğru, kol boyunun f katı kadar uzakta; el masanın altına inmez */
+ const toward=(S,p,f)=>{const v=p.clone().sub(S),d=v.length()||1;v.multiplyScalar(Math.min(d,reach*f)/d).add(S);v.y=Math.max(v.y,.2);return v};
+ /* aynı anda süren olaylar ağırlıklı ortalamayla karışır (hedef değişirken el sıçramaz); genlik en güçlü olayınkidir */
+ D.ev=D.ev.filter(e=>t<e.t+e.dur+300);let pend=false,bL=0,bR=0,sL=0,sR=0;const aL=V3(0,0,0),aR=V3(0,0,0);
+ for(const e of D.ev){const u=(t-e.t)/e.dur;if(e.hand==='L'&&u>-.9&&u<1.6)pend=true;if(u<=0||u>=1)continue;const b=sstep(u/.42)*(1-sstep((u-.55)/.45));
+  if(e.hand==='L'){bL=Math.max(bL,b);sL+=b;aL.addScaledVector(e.to,b)}else{bR=Math.max(bR,b);sR+=b;aR.addScaledVector(e.to,b)}}
+ let tL=sL>1e-4?aL.multiplyScalar(1/sL):null,tR=sR>1e-4?aR.multiplyScalar(1/sR):null;
+ if(D.fix){pend=!!D.fix.act;D.act=D.fix.act||0;bL=D.fix.bL||0;bR=D.fix.bR||0;tL=tR=D.fix.to||T2(SPOTS[2].x,SPOTS[2].y)}else D.act+=((pend?1:0)-D.act)*kq;
+ const lookB=Math.max(bL,bR),lookAt=bL>=bR?tL:tR;
+ const fwd=W(0,0,-1).sub(W(0,0,0)).normalize(),right=W(1,0,0).sub(W(0,0,0)).normalize(),flat=(a,b)=>{const v=a.clone().sub(b);v.y=0;return v.normalize().add(V3(0,-.12,0))};
+ const restL=W(-.27,RAILL+.05,-.6),restR=W(.27,RAILL+.05,-.6),a=sstep(D.act),draw=toward(SL,MOUTH.clone().add(V3(0,.18,0)),.84);
+ const hL=restL.clone().lerp(draw,a),hR=restR.clone();if(tL)hL.lerp(draw.clone().lerp(toward(SL,tL.clone().add(V3(0,.22,0)),.99),.55),bL); /* kart savurma: el kutunun yanından hedefe doğru yarım yol gider (tam yol fazla hızlı ve geniş kalıyordu) */if(tR)hR.lerp(toward(SR,tR.clone().add(V3(0,.22,0)),.99),bR);
+ const fL=fwd.clone().add(right.clone().multiplyScalar(.25)).add(V3(0,-.15,0)).lerp(flat(hL,SL),Math.max(a,bL)),fR=fwd.clone().add(right.clone().multiplyScalar(-.25)).add(V3(0,-.15,0)).lerp(flat(hR,SR),bR);
+ /* bakış: dağıtılan kart > sırası gelen oyuncunun yeri > oyuncular arasında yavaş gezinme */
+ const turn=phase==='play'&&cur?cur.s:-1,look=lookAt&&lookB>.12?lookAt:D.act>.4?draw:turn>=0?T2(SPOTS[turn].x,SPOTS[turn].y,.05):V3(Math.sin(sec*.19)*1.5,.5,2.1),hd=F.pos.Head||F.bind.Head,lm=toM(look).sub(hd);
+ const wy=Math.max(-.8,Math.min(.8,Math.atan2(lm.x,lm.z))),wq=Math.max(-.1,Math.min(.3,Math.atan2(-lm.y,Math.hypot(lm.x,lm.z))-.12)); /* baş fazla eğilmez: kamera yukarıdan baktığı için yüz saçın altında kalıyordu */D.yaw+=(wy-D.yaw)*ks;D.pitch+=(wq-D.pitch)*ks;
+ const talk=t<D.talk?1:0;
+ figPose(F,{lean:Math.min(.5,.17+.012*Math.sin(sec*1.4)+.12*a+.1*bL+.22*bR),thigh:1.5,shin:.1,splay:.02,headYaw:D.yaw,headPitch:D.pitch+talk*.045*Math.sin(sec*9.5),handL:toM(hL),handR:toM(hR),fingL:dM(fL),fingR:dM(fR)})}
 /* sıradaki bahis yerinin parlayan halkası */
 const glow=new THREE.Mesh(new THREE.RingGeometry(SPOTR-.005,SPOTR+.05,48),new THREE.MeshBasicMaterial({color:0xffd23f,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));glow.rotation.x=-Math.PI/2;glow.position.y=.004;scene.add(glow);
 
@@ -2490,6 +2526,7 @@ const ease=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
 const cam=new THREE.PerspectiveCamera(40,1,.1,40),EL=56*Math.PI/180,TGT=new THREE.Vector3(0,0,.3);let camX=0,camD=7,CWp=0,CHp=0;
 const fitPts=[...outline(-13,10).map(([x,y])=>W2(x,y,.1)),new THREE.Vector3(1.9,.45,-1.5),new THREE.Vector3(-1.9,.3,-1.5)];
 [...chairs,dealerChair].forEach(c=>{[[-.54,1.62,.56],[.54,1.62,.56],[-.54,.45,.6],[.54,.45,.6],[-.54,1.1,-.43],[.54,1.1,-.43]].forEach(([x,y,z])=>fitPts.push(L2W(c,x,y,z)))});
+[[-.4,2.74,-.06],[.4,2.74,-.06]].forEach(([x,y,z])=>fitPts.push(L2W(dealerChair,x,y,z))); /* krupiyenin başı ve üstündeki yazı da kadraja girer */
 function placeCam(d){cam.position.set(TGT.x+camX*1.6,TGT.y+Math.sin(EL)*d,TGT.z+Math.cos(EL)*d);cam.lookAt(TGT.x+camX*.55,TGT.y,TGT.z);cam.updateMatrixWorld(true)}
 function fitCam(){const v=new THREE.Vector3();for(let it=0;it<6;it++){let lo=3,hi=18;for(let i=0;i<22;i++){const d=(lo+hi)/2;placeCam(d);let ok=true;for(const p of fitPts){v.copy(p).project(cam);if(Math.abs(v.x)>.97||v.y>.95||v.y<-.97){ok=false;break}}if(ok)hi=d;else lo=d}camD=hi;placeCam(camD);
   let y0=1,y1=-1;for(const p of fitPts){v.copy(p).project(cam);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y)}const mid=(y0+y1)/2+.01;if(Math.abs(mid)<.012)break;TGT.z-=mid*1.7}placeCam(camD)}
@@ -2517,18 +2554,18 @@ function sync(){if(!on)return;const want=wantCards(),gone=[];cards.forEach((o,ke
   else{if(o.card!==w.card){o.card=w.card;setFace(o)}if(w.up&&!o.up){o.up=true;flip(o,w)}else move(o,w)}o.want=w});
  for(let k=0;k<6;k++){const s=seats[k];setStack(k,s.hands.length?s.hands.reduce((a,h)=>a+h.bet,0):s.bet)}
  setTray();sdirty=true;const a=typeof cur==='object'&&cur&&phase==='play'?cur.s:-1;if(a>=0){glow.position.x=stacks[a].grp.position.x;glow.position.z=stacks[a].grp.position.z}glowOn=a>=0;labels();need=true}
-function deal(o,w,i){lg('deal',o,'up='+w.up);const tok=++o.tok,a=MOUTH.clone(),m=o.mesh;m.position.copy(a);m.rotation.set(0,SHOEYAW,Math.PI);
+function deal(o,w,i){lg('deal',o,'up='+w.up);dlrEv('L',w.pos,i*70,280);const tok=++o.tok,a=MOUTH.clone(),m=o.mesh;m.position.copy(a);m.rotation.set(0,SHOEYAW,Math.PI);
  /* hedef uçuş sırasında değişebilir (sonraki kart gelince sütun kayar): her karede güncel hedefe gidilir */
  tween({card:o,kind:'deal',dur:430,delay:i*70,step:p=>{if(o.tok!==tok)return false;const e=ease(p),W=o.want||w,b=W.pos;m.scale.set(W.sc,1,W.sc);m.position.lerpVectors(a,b,e);m.position.y+=Math.sin(Math.PI*p)*.38;m.rotation.y=SHOEYAW+(w.yaw-SHOEYAW)*e;m.rotation.z=w.up?Math.PI*(1-ease(Math.min(1,Math.max(0,(p-.2)/.65)))):Math.PI}})}
 function move(o,w){const m=o.mesh;if(o.want&&o.want.pos.distanceToSquared(w.pos)<1e-8&&o.want.sc===w.sc)return; /* hedef değişmedi (uçuyorsa uçuş sürer) */
  if(m.position.distanceToSquared(w.pos)<1e-8&&Math.abs(m.scale.x-w.sc)<1e-4)return;
  if(tws.some(t=>t.card===o&&t.kind==='deal'))return;                                                     /* dağıtım uçuşu güncel hedefi zaten izliyor */
  lg('move',o,'d2='+m.position.distanceToSquared(w.pos).toExponential(1));const tok=++o.tok,a=m.position.clone(),rz=m.rotation.z,ry=m.rotation.y,tz=w.up?0:Math.PI,s0=m.scale.x;tween({dur:260,step:p=>{if(o.tok!==tok)return false;const e=ease(p);m.position.lerpVectors(a,w.pos,e);m.rotation.z=rz+(tz-rz)*e;m.rotation.y=ry+(w.yaw-ry)*e;const q=s0+(w.sc-s0)*e;m.scale.set(q,1,q)}})}
-function flip(o,w){lg('flip',o);const tok=++o.tok,m=o.mesh,a=m.position.clone();tween({dur:520,step:p=>{if(o.tok!==tok)return false;const e=ease(p);m.position.lerpVectors(a,w.pos,e);m.position.y+=Math.sin(Math.PI*p)*.26;m.rotation.z=Math.PI*(1-e);m.rotation.y=w.yaw*e}})}
+function flip(o,w){lg('flip',o);dlrEv('R',w.pos,0,640);const tok=++o.tok,m=o.mesh,a=m.position.clone();tween({dur:520,step:p=>{if(o.tok!==tok)return false;const e=ease(p);m.position.lerpVectors(a,w.pos,e);m.position.y+=Math.sin(Math.PI*p)*.26;m.rotation.z=Math.PI*(1-e);m.rotation.y=w.yaw*e}})}
 function discard(o,i){lg('discard',o);const tok=++o.tok,m=o.mesh,a=m.position.clone(),b=TRAYP.clone().add(new THREE.Vector3(0,.06+trayStack.scale.y,0)),rz=m.rotation.z,ry=m.rotation.y;
  tween({dur:420,delay:i*28,step:p=>{if(o.tok!==tok)return false;const e=ease(p);m.position.lerpVectors(a,b,e);m.position.y+=Math.sin(Math.PI*p)*.22;m.rotation.z=rz+(Math.PI-rz)*e;m.rotation.y=ry+(.12-ry)*e},done:()=>{scene.remove(m)}})}
 /* kazanç/kayıp çipleri: çip yuvası ile bahis yeri arasında yay çizerek uçar (2D flyChips ile aynı çağrı) */
-function fly(from,to,n,delay){const A=(from===RACK?RACKP.clone().setY(.12):T2(from.x,from.y,.08)),B=(to===RACK?RACKP.clone().setY(.12):T2(to.x,to.y,.08));
+function fly(from,to,n,delay){const A=(from===RACK?RACKP.clone().setY(.12):T2(from.x,from.y,.08)),B=(to===RACK?RACKP.clone().setY(.12):T2(to.x,to.y,.08));dlrEv('R',from===RACK?B:A,delay||0,760);
  for(let i=0;i<n;i++){const m=new THREE.Mesh(chipGeo,chipMat(100,0xc9971a));m.castShadow=true;m.visible=false;scene.add(m);const b=B.clone().add(new THREE.Vector3((to===RACK?0:.34)+(i%2?.05:-.05)*(i>1?1:0),i*CTH,(to===RACK?0:.06)));
   tween({dur:560,delay:(delay||0)+i*110,step:p=>{m.visible=true;const e=ease(p);m.position.lerpVectors(A,b,e);m.position.y+=Math.sin(Math.PI*p)*.55;m.rotation.x=p*Math.PI*2},done:()=>{m.rotation.x=0;tween({dur:500,delay:650,step:p=>{m.scale.setScalar(1-p)},done:()=>scene.remove(m)})}})}}
 
@@ -2543,7 +2580,7 @@ function labels(){const L=[];
    L.push({id:'h'+k+'-'+j,cls:'hsum'+(v.t>21?' bust':h.bj?' bj':act?' on':''),html:(h.bj?'BJ':v.t)+(h.dbl?'·2x':''),at:new THREE.Vector3(G.xc+(-CW/2+.1)*G.sc,.03,G.zNear-.07*G.sc)})});
   if(s.badge)L.push({id:'b'+k,z:4,cls:'badge '+s.badge.c,html:s.badge.t,at:o.clone().add(new THREE.Vector3(0,.02,SPOTR+.2))});
   else if(s.ins>0)L.push({id:'b'+k,z:4,cls:'badge ins',html:'SİGORTA '+fmtA(s.ins),at:o.clone().add(new THREE.Vector3(0,.02,SPOTR+.2))})});
- L.push({id:'dl',z:1,cls:'b3name',html:'KRUPİYE',at:DEALERLBL});
+ loadDealer();L.push({id:'dl',z:1,cls:'b3name',html:'KRUPİYE',at:dlr?DEALERTOP:DEALERLBL});
  chairs.forEach((c,k)=>{const o=SEATMAP[k],mine=mySeat===k,f3=o?fig3d(o.name):null;setChairFig(k,f3);
   const txt=o?((!c.fig&&typeof avHtml==='function'?avHtml(o.name):'')+o.name+(mine?'<small>SEN</small>':'')):(CLOUD?'<small>OTUR</small>':'');if(txt)L.push({id:'s'+k,z:3,cls:'b3plate'+(mine?' mine':''),html:txt,at:o?PLATEP[k]:SEATLBL[k]})});
  labelList=L;const seen=new Set();L.forEach(l=>{seen.add(l.id);let e=els.get(l.id);if(!e){e=document.createElement('div');e.className='b3p';e.innerHTML='<div class="b3c"><div></div></div>';ui.appendChild(e);els.set(l.id,e);e._c='';e._h=''}
@@ -2564,6 +2601,7 @@ function frame(t){requestAnimationFrame(frame);if(!on||document.getElementById('
  for(let i=tws.length-1;i>=0;i--){const o=tws[i];if(t<o.t0)continue;const p=Math.min(1,(t-o.t0)/o.dur);if(o.step(p)===false||p>=1){tws.splice(i,1);if(p>=1&&o.done)o.done()}}
  if((glowOn||glow.material.opacity>0)&&t-glowT>90){glowT=t;glow.material.opacity=glowOn?.22+.14*Math.sin(t/260):Math.max(0,glow.material.opacity-.12);need=true}
  if(figs.size){let fast=false;figs.forEach(f=>{if(f.g||f.turn>.02&&f.turn<.98)fast=true});if(fast||t-figT>100){figT=t;figs.forEach(f=>figFrame(f,t));need=true;if(fast)sdirty=true}}
+ if(dlr){const fast=dlr.ev.length>0||dlr.act>.02||t<dlr.talk;if(fast||t-dlrT>100){dlrT=t;dealerFrame(t);need=true;if(fast)sdirty=true}}
  if(tws.length){need=true;sdirty=true}if(!need)return;need=false;if(sdirty){renderer.shadowMap.needsUpdate=true;sdirty=false;shadowN++}renderer.render(scene,cam);frameN++;project()}
 function setOn(v){on=!!v;wrap.classList.toggle('g3',on);tog.textContent=on?'2D':'3D';try{localStorage.setItem('ge_bj3d',on?'1':'0')}catch(e){}
  if(on){CWp=CHp=0;sdirty=true;cards.forEach(o=>scene.remove(o.mesh));cards.clear();stacks.forEach(s=>{s.amt=-1});resize();sync();seatView()}else{if(typeof bjFit==='function')bjFit()}need=true}
@@ -2581,8 +2619,14 @@ window.BJ3={get on(){return on},sync,seats(){if(on){labels();seatView();need=tru
  _cupGeo:()=>{const line=outline(2.5,200).map(([x,y])=>[(x-220)/100,(y-165)/100]);return CUPS.map(([x,z],k)=>{const [cx,cz,yaw]=CHAIRPOS[k],dx=x-cx,dz=z-cz;return{sağa:+(dx*Math.cos(yaw)-dz*Math.sin(yaw)).toFixed(3),öne:+(-dx*Math.sin(yaw)-dz*Math.cos(yaw)).toFixed(3),ortaÇizgiyeUzaklık:+Math.min(...line.map(([lx,lz])=>Math.hypot(lx-x,lz-z))).toFixed(3),dünya:[+x.toFixed(3),+z.toFixed(3)]}})},
  _cups:()=>CUPS.map(([x,z])=>{const p=scr(new THREE.Vector3(x,.1,z)),e=scr(new THREE.Vector3(x+CUPR,.1,z));return{x:Math.round(p[0]),y:Math.round(p[1]),rPx:+(e[0]-p[0]).toFixed(1)}}),
  _figs:()=>[...figs.values()].map(f=>{const wp=n=>f.F.B[n].getWorldPosition(new THREE.Vector3()),r=v=>v.toArray().map(x=>+x.toFixed(3));f.holder.updateMatrixWorld(true);return{k:f.k,key:f.key,g:f.g&&f.g.type,turn:+f.turn.toFixed(2),headTop:r(wp('HeadTop')),wristR:r(wp('RightHand')),wristL:r(wp('LeftHand')),glass:r(f.glass.position),cup:r(f.cup),sipIn:Math.round((f.sipAt-performance.now())/1000)}}),_figDo:(k,type,fix)=>{const f=figs.get(k);if(f){f.g=type?{type,t0:performance.now(),fix:fix==null?null:fix}:null;if(!type)f.sipAt=performance.now()+60000;need=true}},
+ talk(ms){if(dlr&&on){dlr.talk=performance.now()+ms;need=true}},_dealer:()=>{if(!dlr)return null;const D=dlr,wp=n=>D.F.B[n].getWorldPosition(new THREE.Vector3()).toArray().map(x=>+x.toFixed(3));D.holder.updateMatrixWorld(true);return{act:+D.act.toFixed(2),ev:D.ev.length,yaw:+D.yaw.toFixed(2),pitch:+D.pitch.toFixed(2),headTop:wp('HeadTop'),wristL:wp('LeftHand'),wristR:wp('RightHand'),shoulderL:wp('LeftArm'),mouth:MOUTH.toArray().map(x=>+x.toFixed(3))}},_dealerFix:f=>{if(dlr){dlr.fix=f||null;dealerFrame(performance.now());need=true;sdirty=true}},
+ _spot:k=>T2(SPOTS[k].x,SPOTS[k].y,.02),
+ _dealerSim:(evs,until,step)=>{if(!dlr)return null;const D=dlr,t0=1e6,keep={ev:D.ev,last:D.last,act:D.act,yaw:D.yaw,pitch:D.pitch,talk:D.talk},out=[];D.ev=evs.map(e=>({hand:e.hand,to:e.spot==null?T2(211,44,.02):T2(SPOTS[e.spot].x,SPOTS[e.spot].y,.02),t:t0+e.t,dur:e.dur}));D.last=t0;D.act=0;D.talk=0;
+  const wp=n=>D.F.B[n].getWorldPosition(new THREE.Vector3());for(let u=0;u<=until;u+=step){dealerFrame(t0+u);D.holder.updateMatrixWorld(true);const l=wp('LeftHand'),r=wp('RightHand');out.push([u,+D.act.toFixed(3),+l.x.toFixed(3),+l.y.toFixed(3),+l.z.toFixed(3),+r.x.toFixed(3),+r.y.toFixed(3),+r.z.toFixed(3),+D.yaw.toFixed(3),D.ev.length])}
+  Object.assign(D,keep);dealerFrame(performance.now());need=true;return out},
  _log:k=>LOG.filter(e=>!k||e[1]===k),_card:k=>{const o=cards.get(k);return o?{rz:+o.mesh.rotation.z.toFixed(2),y:+o.mesh.position.y.toFixed(3),up:o.up,card:o.card}:null},
  _proj:(x,y,h)=>scr(T2(x,y,h||0)),_stool:k=>scr(SEATC[k].clone()),_w:(x,y,z)=>scr(new THREE.Vector3(x,y,z))};
+if(window.DLR)DLR.talk=ms=>BJ3.talk(ms); /* krupiye konuşurken başını sallar */
 let pref='1';try{pref=localStorage.getItem('ge_bj3d')||'1'}catch(e){}
 setOn(pref!=='0');requestAnimationFrame(frame);
 })();

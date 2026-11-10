@@ -1,11 +1,12 @@
 # Otomatik iskelet: dört görünümlü GLB'den görseldeki ÖN görünümden üretilen figürü ayırır (satırın ucundaki geniş figür; arkaya dönükse çevrilir), yatay kesitlerle bacak/gövde/kol dallarını bulur, eklemleri hesaplar,
 # köşe ağırlıklarını üretir ve iskeletli GLB yazar. Model: y yukarı, yüz +z, karakterin solu +x, ayaklar y=0.
-# Kullanım: python3 -I rig.py <kaynak.glb> <çıktı.glb> [doku_boyutu]
+# Kullanım: python3 -I rig.py <kaynak.glb> <çıktı.glb> [doku_boyutu] [kalca=<boya oran>]   (kalca: etekli figürde kalça çizgisini elle vermek için, örn. kalca=0.44)
 import sys, json, struct, io, numpy as np
 from PIL import Image
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
-src,dst=sys.argv[1],sys.argv[2]; TEXSZ=int(sys.argv[3]) if len(sys.argv)>3 else 1024
+args=[a for a in sys.argv[1:] if not a.startswith('kalca=')]; KALCA=next((float(a[6:]) for a in sys.argv[1:] if a.startswith('kalca=')),None)
+src,dst=args[0],args[1]; TEXSZ=int(args[2]) if len(args)>2 else 1024
 d=open(src,'rb').read(); L=struct.unpack('<I',d[12:16])[0]; J=json.loads(d[20:20+L]); BIN=d[20+L+8:]
 acc,bv=J['accessors'],J['bufferViews']; prim=J['meshes'][0]['primitives'][0]
 def arr(ai,dt,n):
@@ -89,7 +90,14 @@ for s_,name in ((1,'L'),(-1,'R')):
     if active is not None: tracks.append(active)
     assert tracks,'kol bulunamadı '+name
     arms[name]=max(tracks,key=lambda t:t['i_a']-t['i_f']); print(' kol',name,'dal sayısı',len(tracks),'seçilen: parmak ucu',round(ys[arms[name]['i_f']]/H,3),'birleşme',round(ys[arms[name]['i_a']]/H,3),'gövdeyle birleşti:',arms[name]['merged'])
-yc=ys[ic]; print(f'kasık y={yc/H:.3f}H | gövde tepesi {ys[itop]/H:.3f}H')
+yc=ys[ic]
+# etek/elbise: bacak halkaları etek ucunda birleşir, gerçek kasık daha yukarıdadır. Belirti: birleşmenin üstünde gövde belirgin biçimde genişlemeyi sürdürür (kalça) ya da etek ucu iki bacağın toplamından çok geniştir.
+# Bu durumda kalça çizgisi (yk) en geniş yerin biraz altına alınır; eteğin o çizginin altında kalan bölümü üst bacak kemikleriyle hareket eder. Komut satırında kalca=<oran> ile elle verilebilir.
+ya_min=min(ys[arms['L']['i_a']],ys[arms['R']['i_a']]); wb=[(ys[i],body[i]['x1']-body[i]['x0']) for i in range(ic,NS) if body[i] is not None and ys[i]<min(ya_min,yc+0.2*H)]
+w0=wb[0][1]; ywd,wmax=max(wb,key=lambda t:t[1]); legw=(legL[ic-1]['x1']-legL[ic-1]['x0'])+(legR[ic-1]['x1']-legR[ic-1]['x0'])
+skirt=bool(wmax>1.25*w0 or w0>1.3*legw); yk=yc if not skirt else max(yc,(ywd-0.06*H) if wmax>1.25*w0 else 0.45*H)
+if KALCA is not None: yk=max(yc,KALCA*H); skirt=yk>yc+0.02*H
+print(f'kasık y={yc/H:.3f}H | gövde tepesi {ys[itop]/H:.3f}H'+(f' | ETEK: kalça çizgisi {yk/H:.3f}H (en geniş {ywd/H:.3f}H, genişleme {wmax/w0:.2f})' if skirt else ''))
 # ---- bölge etiketleri (0 gövde, 1 sol bacak, 2 sağ bacak, 3 sol kol, 4 sağ kol) ----
 i_nk_guess=idx(.78); votes=np.zeros((len(Tw),5),np.int32)
 for i in range(NS):
@@ -110,7 +118,9 @@ for _ in range(60):
     un=vlab<0
     if not un.any(): break
     m=un[ee[:,0]]&(vlab[ee[:,1]]>=0); nv2=vlab.copy(); nv2[ee[m,0]]=vlab[ee[m,1]]; vlab=nv2
-vlab[vlab<0]=0; print('bölge köşe sayıları [gövde, sol bacak, sağ bacak, sol kol, sağ kol]:',np.bincount(vlab,minlength=5).tolist())
+vlab[vlab<0]=0
+if skirt: m_=(vlab==0)&(V[:,1]<yk); vlab[m_&(V[:,0]>=0)]=1; vlab[m_&(V[:,0]<0)]=2
+print('bölge köşe sayıları [gövde, sol bacak, sağ bacak, sol kol, sağ kol]:',np.bincount(vlab,minlength=5).tolist())
 # ---- eklemler ----
 def cen(tr,y):
     i=idx(y/H); 
@@ -118,7 +128,7 @@ def cen(tr,y):
         for j in (i-dlt,i+dlt):
             if 0<=j<NS and tr[j] is not None: l=tr[j]; return np.array([l['cx'],y,l['cz']]),l
     raise SystemExit('halka yok')
-yhip=yc+0.035*H; yank=0.065*H; yknee=(yhip+yank)/2; jt={}
+yhip=yk+0.035*H; yank=0.065*H; yknee=(yhip+yank)/2; jt={}
 for nm,tr in (('Left',legL),('Right',legR)):
     c1,_=cen(tr,yc-0.05*H); jt[nm+'UpLeg']=np.array([c1[0],yhip,c1[2]]); jt[nm+'Leg'],_=cen(tr,yknee); jt[nm+'Foot'],lf=cen(tr,yank); jt[nm+'Toe']=np.array([lf['cx'],0.012*H,lf['z1']])
 # boyun: eksen çevresindeki en küçük halkanın en dar olduğu yükseklik (kapüşon ve yaka dış kabuk olarak kalır)
@@ -139,6 +149,10 @@ for nm,k,sg in (('Left','L',1),('Right','R',-1)):
         if g[j]<0.8 and hs[j+2]>hs.max()*0.6: st=j; break
     yst=float(gy[st]) if st is not None else float(hw[np.argmax(hs>=0.86*hs.max()),0]); shtop[nm]=yst
     print('  yarı genişlik profili',nm,[(round(float(a)/H,2),round(float(b)/H,3)) for a,b in zip(hw[::6,0],hs[::6])])
+# saç ya da kapüşon bir omzu olduğundan yüksek gösterebilir: iki omuz tepesi arasındaki fark büyükse alçak olan doğrudur
+if abs(shtop['Left']-shtop['Right'])>0.03*H: shtop['Left']=shtop['Right']=min(shtop.values()); print('  omuz tepeleri eşitlendi:',round(shtop['Left']/H,3))
+for nm,k,sg in (('Left','L',1),('Right','R',-1)):
+    A=arms[k]; tr=A['tr']; ya=ys[A['i_a']]; top=[tr[i] for i in range(max(A['i_f'],A['i_a']-14),A['i_a']) if tr[i]]; rad=arad[nm]; yst=shtop[nm]
     ysh=yst-1.5*rad; hwy=(body[idx(ysh/H)]['x1'] if sg>0 else -body[idx(ysh/H)]['x0']); xs=sg*(hwy-1.5*rad); mc,_=cen(tr,ya-0.01*H); zs=0.5*(mc[2]+inner(yn)[2])
     jt[nm+'Arm']=np.array([xs,ysh,zs])
     # kol yolu: omuz -> birleşme noktasındaki kol merkezi -> ... -> parmak ucu; dirsek ve bilek yol uzunluğuna göre
@@ -147,7 +161,7 @@ for nm,k,sg in (('Left','L',1),('Right','R',-1)):
     jt[nm+'ForeArm']=at(.44); jt[nm+'Hand']=at(.78); jt[nm+'HandTip']=path[-1]; A['ya']=ya; A['xin']=float(np.mean([(l['x0'] if sg>0 else l['x1']) for l in top[-4:]]))
     print(f' {nm}: omuz tepesi {yst/H:.3f}H, omuz eklemi [{xs/H:+.3f} {ysh/H:.3f}]H, kol yarıçapı {rad/H:.3f}H, kol yolu {cum[-1]/H:.3f}H, birleşme {ya/H:.3f}H')
 ysh=(jt['LeftArm'][1]+jt['RightArm'][1])/2; bc=lambda y:cen(body,y)[0]
-jt['Hips']=bc(yc+0.05*H); jt['Spine']=bc(jt['Hips'][1]+0.34*(ysh-jt['Hips'][1])); jt['Chest']=bc(jt['Hips'][1]+0.68*(ysh-jt['Hips'][1]))
+jt['Hips']=bc(yk+0.05*H); jt['Spine']=bc(jt['Hips'][1]+0.34*(ysh-jt['Hips'][1])); jt['Chest']=bc(jt['Hips'][1]+0.68*(ysh-jt['Hips'][1]))
 jt['Neck']=inner(max(ysh+0.02*H,yn-0.04*H)); jt['Head']=inner(yn+0.01*H); jt['HeadTop']=np.array([jt['Head'][0],H,jt['Head'][2]])
 for k in ('Hips','Spine','Chest','Neck','Head','HeadTop'): jt[k][0]=0.5*jt[k][0]   # merkez çizgisi: asimetriyi yumuşat
 print(f'boyun en dar y={yn/H:.3f}H genişlik {(ln_["x1"]-ln_["x0"])/H:.3f}H | omuz y={ysh/H:.3f}H')
@@ -174,8 +188,9 @@ for nm,k,sg in (('Left','L',1),('Right','R',-1)):
     axx=np.interp(y,[E_[1],S_[1]],[E_[0],S_[0]])                       # kol ekseninin o yükseklikteki x'i (omuzun üstünde omuz x'i)
     side=(sg*(x-axx)>-0.9*r_)&(y>A['ya']-0.02*H)&(y<shtop[nm]+0.03*H)
     al(Bm&side,[nm+'Arm',nm+'ForeArm']); allow[np.ix_(Bm&side&(sg*(x-axx)>0.2*r_),[bi['Hips'],bi['Head']])]=False
-al(Bm&(y<yc+0.07*H)&(x>0),['LeftUpLeg']); al(Bm&(y<yc+0.07*H)&(x<0),['RightUpLeg'])
+al(Bm&(y<yk+0.07*H)&(x>0),['LeftUpLeg']); al(Bm&(y<yk+0.07*H)&(x<0),['RightUpLeg'])
 Wt=np.where(allow,1.0/np.maximum(D,0.25)**4,0.0)
+if skirt: m_=(vlab==1)|(vlab==2); Wt[m_,bi['Hips']]*=np.clip((y[m_]-(yk-0.10*H))/(0.10*H),0,1)**2      # etek: kalça kemiğinin etkisi çizginin altında hızla söner, etek bacakla birlikte katlanır
 Wt[(y>jt['Head'][1]+0.035*H)[:,None]&(np.arange(len(BONES))!=bi['Head'])[None,:]]=0; Wt[y>jt['Head'][1]+0.035*H,bi['Head']]=1     # kafa ve saç tek kemik
 Wt/=Wt.sum(1,keepdims=True)
 dom=Wt.argmax(1); LOW={bi[n] for n in ('LeftForeArm','LeftHand','RightForeArm','RightHand')}; CORE={bi[n] for n in ('Hips','Spine','LeftUpLeg','LeftLeg','LeftFoot','RightUpLeg','RightLeg','RightFoot')}
@@ -207,7 +222,7 @@ for b in BONES:
 for tipn,par in (('HeadTop','Head'),('LeftHandTip','LeftHand'),('RightHandTip','RightHand'),('LeftToe','LeftFoot'),('RightToe','RightFoot')):
     nodes[ni[par]].setdefault('children',[]).append(len(nodes)); nodes.append({'name':tipn,'translation':[float(v) for v in jt[tipn]-jt[par]]})
 tgt=[34963,34962,34962,34962,34962,34962,None,None]; raw=[len(T)*12,len(P)*12,len(P)*12,len(P)*8,len(P)*4,len(P)*16,len(BONES)*64,len(tex)]
-out={'asset':{'version':'2.0','generator':'goldeneye rig.py'},'scene':0,'scenes':[{'nodes':[0,ni['Hips']],'extras':{'height':H,'crotch':float(yc),'shoulder':float(ysh)}}],'nodes':nodes,
+out={'asset':{'version':'2.0','generator':'goldeneye rig.py'},'scene':0,'scenes':[{'nodes':[0,ni['Hips']],'extras':{'height':H,'crotch':float(yk),'shoulder':float(ysh)}}],'nodes':nodes,
  'meshes':[{'primitives':[{'attributes':{'POSITION':1,'NORMAL':2,'TEXCOORD_0':3,'JOINTS_0':4,'WEIGHTS_0':5},'indices':0,'material':0}]}],'skins':[{'joints':[ni[b[0]] for b in BONES],'inverseBindMatrices':6,'skeleton':ni['Hips']}],
  'materials':[{'pbrMetallicRoughness':{'baseColorTexture':{'index':0},'metallicFactor':0.0,'roughnessFactor':0.8},'doubleSided':True}],'textures':[{'source':0,'sampler':0}],'samplers':[{'magFilter':9729,'minFilter':9987}],'images':[{'bufferView':7,'mimeType':'image/jpeg'}],
  'buffers':[{'byteLength':int(offs[-1])}],'bufferViews':[dict({'buffer':0,'byteOffset':int(offs[i]),'byteLength':raw[i]},**({'target':tgt[i]} if tgt[i] else {})) for i in range(8)],
