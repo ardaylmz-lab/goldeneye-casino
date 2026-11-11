@@ -117,3 +117,44 @@ do $$ begin
     alter publication supabase_realtime add table public.seats;
   end if;
 end $$;
+
+-- ===== Haftalık lider tablosu =====
+-- Her profilin hafta başındaki bakiyesi saklanır; hafta pazartesi 00:00'da (İstanbul saati) başlar.
+-- Sıfırlama için zamanlanmış iş gerekmez: bakiye değiştiğinde satır bu haftaya ait değilse o anki (değişmeden önceki)
+-- bakiye hafta başı sayılır; bu hafta hiç oynamamış oyuncunun haftalık kazancı 0'dır.
+alter table public.profiles add column if not exists week_start date;
+alter table public.profiles add column if not exists week_base numeric(12,2);
+
+create or replace function public.ge_week() returns date language sql stable as $$
+  select date_trunc('week', now() at time zone 'Europe/Istanbul')::date
+$$;
+
+create or replace function public.profiles_week() returns trigger language plpgsql as $$
+begin
+  if new.week_start is distinct from public.ge_week() then
+    new.week_base := old.balance;
+    new.week_start := public.ge_week();
+  end if;
+  return new;
+end $$;
+drop trigger if exists profiles_week on public.profiles;
+create trigger profiles_week before update of balance on public.profiles
+  for each row execute function public.profiles_week();
+
+-- kurulum anında: herkes bu haftaya 0 kazançla başlar
+update public.profiles set week_base = balance, week_start = public.ge_week() where week_start is null;
+
+-- sıralama: bu haftanın net kazancı (bakiye - hafta başı bakiyesi), çoktan aza; ends = haftanın bittiği an
+drop function if exists public.weekly_board();
+create function public.weekly_board()
+returns table(id uuid, name text, net numeric, balance numeric, ends timestamptz)
+language sql stable security definer set search_path = public as $$
+  select p.id, p.name,
+         case when p.week_start = public.ge_week() then p.balance - p.week_base else 0 end,
+         p.balance,
+         ((public.ge_week() + 7)::timestamp at time zone 'Europe/Istanbul')
+    from public.profiles p
+   order by 3 desc, p.name
+   limit 20
+$$;
+grant execute on function public.weekly_board() to authenticated;

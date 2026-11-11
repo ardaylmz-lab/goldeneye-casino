@@ -573,6 +573,20 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 @keyframes s3on{from{opacity:0}to{opacity:1}}
 #sl3tog,#sl3cam{position:absolute;top:6px;z-index:6;padding:4px 9px;font-size:.6rem;font-weight:800;letter-spacing:1px;border-radius:8px;background:linear-gradient(180deg,#3a2416,#1e120a);border:1px solid #8a6a2a;color:#ffe9a8;box-shadow:0 2px 0 #0e0804}
 #sl3tog{right:6px}#sl3cam{left:6px;display:none}.panel.s3 #sl3cam{display:block}
+/* ===== HAFTALIK LİDER TABLOSU (3D ana sayfada salonun altında): bu haftanın net kazancına göre sıralama; pazartesi 00:00'da (İstanbul) sıfırlanır ===== */
+.lbox{display:none;margin:0 0 10px;padding:9px 12px 8px;border-radius:14px;text-align:left;background:linear-gradient(180deg,#0a0806,#000 60%,#050403);border:1.5px solid var(--gd);box-shadow:inset 0 2px 10px #000,0 0 14px #ff9a0022}
+#home.h3 .lbox{display:block}#home.h3 .lbox.hide{display:none}
+.lbox .jt{text-align:center;font-size:.62rem;letter-spacing:3px;color:#ffd23f;font-weight:700;text-shadow:0 0 6px #ffd23f88}
+.lbox .lbs{text-align:center;font-size:.6rem;color:var(--mut);letter-spacing:.5px;margin:2px 0 7px}
+.lbr{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:10px;border:1px solid #2a2010;background:linear-gradient(180deg,#141008,#0a0805);margin-top:5px}
+.lbr.me{border-color:var(--gd);box-shadow:0 0 10px #ffd23f33}
+.lbr .rk{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:900;color:#1a1206;background:#6a6258}
+.lbr.r1 .rk{background:linear-gradient(180deg,#ffe58a,#d9a520)}.lbr.r2 .rk{background:linear-gradient(180deg,#f1f3f6,#9aa3ad)}.lbr.r3 .rk{background:linear-gradient(180deg,#f0b27a,#a8642a)}
+.lbr .av{flex:none;width:26px;height:26px;border-radius:50%;background-size:cover;background-position:50% 20%;border:1px solid var(--gd)}
+.lbr .nm{flex:1;min-width:0;font-weight:800;font-size:.86rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbr .vl{flex:none;font-weight:900;font-size:.9rem;font-variant-numeric:tabular-nums;color:#b9b2a6;white-space:nowrap}
+.lbr .vl.up{color:#4de08a;text-shadow:0 0 8px #4de08a55}.lbr .vl.dn{color:#ff6a6a}
+.lbox .lbe{text-align:center;font-size:.72rem;color:var(--mut);padding:8px 0 4px}
 /* ===== 3D ANA SAYFA (CASINO SALONU): oyun kartlarının yerine salonun 3D görünümü; bölgelerin üstünde görünmez düğmeler (.h3hit) ===== */
 #home{position:relative}
 #hm3box{display:none;position:relative;margin:0 -16px 12px;aspect-ratio:390/620;max-height:max(480px,calc(100vh - 170px));overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#3a0b14,#16050a 60%,#0a0306)}
@@ -1034,6 +1048,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 <button class="mini deck" id="deck" data-go="bj"><div class="mt">BLACKJACK</div><div class="dfelt"><div class="dstack"><i></i><i></i><i></i></div><div class="dh"><div class="dc d1"></div><div class="dc d2"></div></div><div class="dtot"></div><div class="dbj">BLACKJACK</div></div><div class="mb">Dokun, oyna</div></button>
 <button class="mini rmini" id="rmini" data-go="rulet"><div class="mt">RULET</div><div class="rwrap"><div class="rw" id="rwmini"></div><div class="rball"></div><div class="rhub"></div></div><div class="mb">Dokun, oyna</div></button>
 <button class="mini poker" id="poker" data-go="holdem"><div class="mt">POKER</div><div class="pfelt"><div class="ppot"><i></i><i></i><i></i></div><div class="pboard" id="pboard"></div><div class="phole" id="phole"></div><div class="prank" id="prank"></div></div><div class="mb">Dokun, oyna</div></button></div>
+<div class="lbox hide" id="lbox"><div class="jt">LİDER TABLOSU</div><div class="lbs" id="lbsub"></div><div id="lbrows"></div></div>
 </div>
 </div>
 <div class="gcol">
@@ -1128,10 +1143,21 @@ if(h==='rulet')setTimeout(()=>voPrefetch(['nomore','place']),0);if(h==='bj'){con
 document.querySelectorAll('#bets [data-b="2.5"],#bets [data-b="5"]').forEach(b=>b.classList.toggle('hide',h==='bj'));
 if(h==='bj'&&bet<10){bet=10;document.querySelectorAll('#bets button').forEach(x=>x.classList.toggle('on',+x.dataset.b===10))}
 /* geri tuşu: slot oyunundan Slotlar sayfasına, oradan ve diğer oyunlardan ana sayfaya */
+if(h==='home'&&typeof lbLoad==='function')setTimeout(lbLoad,300);
 const inSlot=h==='slot'||h==='slot2'||h==='slot3';$('back').textContent=inSlot?'← Slotlar':'← Ana sayfa';$('back').classList.toggle('hide',h==='home');msg('');window.scrollTo(0,0)}
 window.addEventListener('hashchange',()=>{if(busy||live)return;route()});
 function go(h){if(busy||live)return;if(location.protocol!=='file:'){try{location.hash=h}catch(e){}}route(h)}
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+/* ===== HAFTALIK LİDER TABLOSU: sıralama Supabase'deki weekly_board() fonksiyonundan gelir (bu haftanın net kazancı; hafta pazartesi 00:00 İstanbul'da başlar).
+   Fonksiyon kurulu değilse (supabase/schema.sql'in son bölümü çalıştırılmamışsa) bakiye sıralaması gösterilir. Giriş yapılmamışsa (PIN modu) tablo gizlidir ===== */
+const LB={t:0,busy:false,data:null};
+function lbLeft(ends){let e=ends?new Date(ends).getTime():NaN;if(!(e>0)){const n=new Date(Date.now()+3*3600e3),d=(n.getUTCDay()+6)%7;e=Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()-d+7)-3*3600e3}
+ const m=Math.max(0,Math.floor((e-Date.now())/6e4)),g=Math.floor(m/1440),h=Math.floor(m%1440/60);return g>0?g+' gün '+h+' sa':h>0?h+' sa '+(m%60)+' dk':(m%60)+' dk'}
+function lbRender(d){const b=$('lbox');LB.data=d;if(!d||!d.rows){b.classList.add('hide');return}b.classList.remove('hide');const wk=d.mode==='week',mine=window.cloud&&cloud.me&&cloud.me()?cloud.me().id:null,esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ $('lbsub').textContent=wk?'Bu haftanın kazancı · sıfırlanmaya '+lbLeft(d.ends):'Bakiye sıralaması';
+ $('lbrows').innerHTML=d.rows.length?d.rows.slice(0,5).map((r,i)=>{const v=wk?r.net:r.balance,cls=wk?(v>0?' up':v<0?' dn':''):'';return'<div class="lbr r'+(i+1)+(mine&&r.id===mine?' me':'')+'"><span class="rk">'+(i+1)+'</span>'+avHtml(r.name)+'<span class="nm">'+esc(r.name)+'</span><span class="vl'+cls+'">'+(wk?(v>0?'+':v<0?'−':'')+fmtE(Math.abs(v)):fmtE(v))+'</span></div>'}).join(''):'<div class="lbe">Henüz oyuncu yok</div>'}
+async function lbLoad(force){if(LB.busy||!window.cloud||!cloud.board||!cloud.me||!cloud.me())return;if(!force&&Date.now()-LB.t<8000)return;LB.busy=true;LB.t=Date.now();try{const d=await cloud.board();if(d)lbRender(d)}catch(e){}LB.busy=false}
+setInterval(()=>{if(window.PAGE==='home'&&!document.hidden){if(LB.data&&LB.data.mode==='week')$('lbsub').textContent='Bu haftanın kazancı · sıfırlanmaya '+lbLeft(LB.data.ends);if(Date.now()-LB.t>30000)lbLoad()}},5000);
 $('back').onclick=()=>go(window.PAGE==='slot'||window.PAGE==='slot2'||window.PAGE==='slot3'?'slots':'home');
 route();
 /* çip renkleri (kumarhane geleneği): değer -> [ana, koyu, kenar dilimi, yazı] */
@@ -1940,7 +1966,7 @@ let {data,error}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingl
 if(error&&/schema cache|profiles/.test(error.message)){setTimeout(()=>msg('Supabase şeması kurulmamış: supabase/schema.sql dosyasını SQL Editor\'da çalıştırın. Bakiye şimdilik bu cihazda tutuluyor.'),300)}
 if(!data&&!error){await sb.from('profiles').insert({id:me.id,name:(me.user_metadata&&me.user_metadata.name)||me.email.split('@')[0]});({data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle())}
 prof=data||{name:me.email.split('@')[0],balance:chips};applyBalance(prof.balance);
-$('whoname').textContent=prof.name;$('who').classList.remove('hide');const g=$('gate');if(g)g.remove();
+$('whoname').textContent=prof.name;$('who').classList.remove('hide');const g=$('gate');if(g)g.remove();if(typeof lbLoad==='function')setTimeout(()=>lbLoad(true),300);
 /* kendi profil satırındaki değişiklikler (başka cihazdan) */
 sb.channel('profile:'+me.id).on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+me.id},p=>{const b=+p.new.balance;if(b!==chips&&b!==lastPushed&&!busy&&!live)applyBalance(b);if(p.new.name){prof.name=p.new.name;$('whoname').textContent=p.new.name}}).subscribe();
 /* lobi: kim çevrimiçi */
@@ -1953,7 +1979,10 @@ sb.channel('seats').on('postgres_changes',{event:'*',schema:'public',table:'seat
 const takeSeat=async(game,k)=>{const {data,error}=await sb.rpc('take_seat',{p_game:game,p_seat:k});if(error){msg(/schema cache|seats|take_seat/.test(error.message)?'Koltuk tablosu kurulmamış: schema.sql çalıştırın':error.message);return}if(data===false)msg('Koltuk az önce alındı');else S.click();loadSeats()};
 const leaveSeat=async game=>{await sb.rpc('leave_seat',{p_game:game});S.click();loadSeats()};
 addEventListener('pagehide',()=>{try{sb.auth.getSession().then(({data})=>{const tk=data.session&&data.session.access_token;if(!tk)return;['bj','rl'].forEach(g=>fetch(SUPA.url+'/rest/v1/rpc/leave_seat',{method:'POST',keepalive:true,headers:{'apikey':SUPA.key,'Authorization':'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({p_game:g})}))})}catch(e){}});
-window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat};
+/* haftalık lider tablosu: weekly_board() yoksa bakiye sıralamasına düşer */
+async function board(){try{const r=await sb.rpc('weekly_board');if(!r.error&&Array.isArray(r.data))return{mode:'week',rows:r.data.map(x=>({id:x.id,name:x.name,net:+x.net,balance:+x.balance})),ends:r.data[0]?r.data[0].ends:null}}catch(e){}
+ try{const r=await sb.from('profiles').select('id,name,balance');if(!r.error&&Array.isArray(r.data))return{mode:'bal',rows:r.data.map(x=>({id:x.id,name:x.name,net:null,balance:+x.balance})).sort((a,b)=>b.balance-a.balance)}}catch(e){}return null}
+window.cloud={sb,me:()=>me,profile:()=>prof,takeSeat,leaveSeat,board};if(typeof lbLoad==='function')setTimeout(()=>lbLoad(true),400);
 /* ===== ORTAK RULET (sunucu motoru: supabase/rl_engine.sql) ===== */
 {const rpc=async(fn,args)=>{const {data,error}=await sb.rpc(fn,args||{});if(error){if(/schema cache|rl_/.test(error.message)&&/find|exist/.test(error.message))msg('Rulet motoru kurulmamış: supabase/rl_engine.sql çalıştırın');else msg(error.message.replace(/^.*?: /,''));throw error}return data};
 let RST=null,spunRound=-1,shownRound=-1,myLastRL=null,tickT=null,cdT=null;
