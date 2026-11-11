@@ -3697,14 +3697,16 @@ if(document.fonts&&document.fonts.load)Promise.all([document.fonts.load('800 20p
  drawFloor(floorTex.image.getContext('2d'));floorTex.needsUpdate=true;signTexs.forEach(([tex,s])=>{const n=signTex(s.t,s.c,s.sub);tex.image=n.image;tex.needsUpdate=true});if(K)K.redraw()}).catch(()=>{});
 
 /* ---------- döngü: ana sayfa açıkken ~30 kare/sn; başka sayfadayken çizim belleği bırakılır ---------- */
-let frameN=0,lastR=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false;
+let frameN=0,lastR=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false,ready=false;
+/* gölgelendiriciler arka planda derlenir (ilk karede takılma olmasın); bitince çizim başlar, o ana kadar koyu zemin görünür */
+{cam.aspect=390/620;cam.updateProjectionMatrix();camAt(VW.over);const done=()=>{ready=true};try{if(renderer.extensions.has('KHR_parallel_shader_compile'))renderer.compileAsync(scene,cam).then(done,done);else done()}catch(e){done()}setTimeout(done,8000)}
 function lowerQ(){const n=GFX.lower('hm',PR);if(n>=PR)return;PR=n;renderer.setPixelRatio(PR);CWp=CHp=0}
 cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lowerQ()});cv.addEventListener('webglcontextrestored',()=>{CWp=CHp=0});
 function setOn(v){on=!!v;try{localStorage.setItem('ge_hm3d',on?'1':'0')}catch(e){}dock();CWp=CHp=0}
 tog.onclick=()=>{setOn(!on);try{S.click()}catch(e){}};dock();
 function frame(t){requestAnimationFrame(frame);
  const vis=on&&window.PAGE==='home'&&!document.hidden&&!E('gate');if(!vis){animPrev=false;if(CWp){CWp=CHp=0;renderer.setSize(1,1,false)}return}
- resize();if(!CWp||t-lastR<30)return;
+ resize();if(!CWp||!ready||t-lastR<30)return;
  {const d=t-lastF;lastF=t;if(animPrev&&d<4000){accT+=d;accN++;if(d>58)accS++;if(accT>2500&&accN>=6){if(accS>accN*.6)lowerQ();accT=0;accN=0;accS=0}}}
  const dt=Math.min(.1,(t-lastR)/1000);lastR=t;
  if(glide){const p=Math.min(1,(t-glide.t0)/glide.dur),e=ease(p),a=glide.a,b=glide.b;cu.el=a.el+(b.el-a.el)*e;cu.yaw=a.yaw+(b.yaw-a.yaw)*e;cu.d=a.d+(b.d-a.d)*e;cu.fov=a.fov+(b.fov-a.fov)*e;cu.T.lerpVectors(a.T,b.T,e);camAt(cu);if(p>=1){glide=null;hitKey=''}}
