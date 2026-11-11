@@ -3386,7 +3386,7 @@ function homog(p,w,h){const[x0,y0]=p[0],[x1,y1]=p[1],[x2,y2]=p[2],[x3,y3]=p[3],d
  const a=x1-x0+gg*x1,b=x3-x0+hh*x3,d=y1-y0+gg*y1,e=y3-y0+hh*y3,f=n=>+n.toFixed(7);return'matrix3d('+[a/w,d/w,0,gg/w,b/h,e/h,0,hh/h,0,0,1,0,x0,y0,0,1].map(f).join(',')+')'}
 const pv=new THREE.Vector3();let placeKey='',bonusEl=null;
 /* bonus ekranı (Kasa Odası, Soygun Çarkı) makara alanından uzunsa ekrana sığacak kadar küçültülür */
-function fitBonus(){const b=bonusEl;if(!b)return;const h=b.classList.contains('hide')?0:b.offsetHeight,k=h>282?282/h:1;if(k!==b._k){b._k=k;b.style.transformOrigin='50% 0';b.style.transform=k<1?'scale('+k.toFixed(4)+')':''}}
+function fitBonus(){const b=bonusEl;if(!b)return;const h=b.classList.contains('hide')?0:b.offsetHeight,k=h>282?282/h:1;if(k!==b._k||h!==b._h){b._k=k;b._h=h;b.style.transformOrigin='50% 0';b.style.transform=k<1?'scale('+k.toFixed(4)+')':'';b.style.marginBottom=k<1?(282-h)+'px':''}} /* alt şerit yerinde kalsın diye yerleşim yüksekliği makara alanına eşitlenir */
 /* raftaki tuşların üstündeki görünmez HTML düğmeleri */
 const hits=BTNS.map(b=>{const e=document.createElement('button'),z=b.big?BZ+.01:BZ;e.type='button';e.className='s3hit';e.setAttribute('aria-label',b.al);hitL.appendChild(e);e.onclick=()=>pressBtn(b);return{b,e,c:M0.DK.localToWorld(V3(b.x,.03,z)),rx:M0.DK.localToWorld(V3(b.x+(b.big?.1:.075),.03,z)),rz:M0.DK.localToWorld(V3(b.x,.03,z+(b.big?.1:.058)))}});
 const scr2=v=>{pv.copy(v).project(cam);return[(pv.x*.5+.5)*CWp,(-pv.y*.5+.5)*CHp]};
@@ -3446,10 +3446,12 @@ function lights(t){const T=TH3[IDS[cur]],since=t-winT,flash=since<(winX>=15?3600
 
 /* ---------- sayfaya bağlanma: tuval, hangi slot sayfası açıksa onun içine taşınır; oyunun HTML'i ekran pencerelerine oturur ---------- */
 let on=false,cur=-1,need=true,sdirty=true,frameN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false;
-function clearPortals(){portals.forEach(P=>{P.el.style.transform=''});portals=[];placeKey='';if(bonusEl){bonusEl.style.transform='';bonusEl._k=1;bonusEl=null}}
+function clearPortals(){portals.forEach(P=>{P.el.style.transform=''});portals=[];placeKey='';if(bonusEl){bonusEl.style.transform='';bonusEl.style.marginBottom='';bonusEl._k=1;bonusEl._h=0;bonusEl=null}}
 function attach(i){if(cur>=0)panels[cur].classList.remove('s3');clearPortals();cur=i;const p=panels[i];p.insertBefore(box,p.firstChild);p.appendChild(tog);p.appendChild(camBtn);p.classList.toggle('s3',on);
  const id=IDS[i],n=IDS.length;M0.set(id);ML.set(IDS[(i+n-1)%n]);MR.set(IDS[(i+1)%n]);ledIdle=false;spinning=false;autoOn=false;M0.caps.auto.lab.color.set(0xffffff);
- if(on){portals=[{el:p.querySelector('.jpbox'),w:DW,h:DHJ,q:QJ},{el:p.querySelector('.s3scr'),w:DW,h:DHM,q:QM}].filter(P=>P.el);bonusEl=p.querySelector('.hbonus');CWp=CHp=0;resize();setView('wide',true);introT=performance.now()+1100}need=true;sdirty=true}
+ if(on){portals=[{el:p.querySelector('.jpbox'),w:DW,h:DHJ,q:QJ},{el:p.querySelector('.s3scr'),w:DW,h:DHM,q:QM}].filter(P=>P.el);bonusEl=p.querySelector('.hbonus');CWp=CHp=0;resize();setView('wide',true);introT=performance.now()+1100;
+  /* makine tuşlarıyla birlikte ekrana sığsın: tuvalin altı görünmüyorsa sayfa gerektiği kadar (tuvalin üstünü kaçırmadan) kayar */
+  setTimeout(()=>{try{if(cur!==i||!on)return;const r=box.getBoundingClientRect(),H=window.innerHeight,dy=Math.min(r.top-4,r.bottom-H+6);if(dy>8)window.scrollBy({top:dy,behavior:'smooth'})}catch(e){}},60)}need=true;sdirty=true}
 function detach(){if(cur<0)return;panels[cur].classList.remove('s3');clearPortals();cur=-1;introT=0;glide=null}
 function setOn(v){on=!!v;tog.textContent=on?'2D':'3D';try{localStorage.setItem('ge_sl3d',on?'1':'0')}catch(e){}const i=cur;if(i>=0){cur=-1;panels[i].classList.remove('s3');clearPortals();attach(i)}}
 tog.onclick=()=>{setOn(!on);try{S.click()}catch(e){}};camBtn.onclick=()=>{introT=0;setView(viewName==='close'?'wide':'close');try{S.click()}catch(e){}};
