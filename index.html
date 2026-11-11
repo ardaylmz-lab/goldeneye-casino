@@ -30,10 +30,11 @@ h1{margin:0;text-align:center;font-family:"Cinzel",Georgia,serif;font-weight:800
 text-shadow:0 1px 0 #d9a92a,0 2px 0 #b8860b,0 3px 0 #8a6208,0 4px 0 #5a4005,0 6px 10px #000c,0 0 24px #ffd23f88}
 h1 span{color:#fff2c0}
 
-.bar{display:flex;justify-content:space-between;align-items:center;margin:14px 0;padding:10px 14px;border-radius:14px;
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0;padding:8px 14px;border-radius:14px;
 background:linear-gradient(180deg,#3a2a08,#1a1206 50%,#0a0803);border:2px solid var(--gd);box-shadow:0 4px 0 #3a2200,0 8px 20px #000c,inset 0 1px 0 #ffd23f66}
-.bar span{font-weight:700;color:var(--gold);letter-spacing:1px}
-.bar b{color:#fff;font-size:1.45rem;font-weight:900;text-shadow:0 0 12px #ffd23f99;font-variant-numeric:tabular-nums;display:inline-block}
+.bar span{font-weight:700;color:var(--gold);letter-spacing:1px;white-space:nowrap}
+.bar b{color:#fff;font-size:clamp(1rem,4.6vw,1.45rem);font-weight:900;text-shadow:0 0 12px #ffd23f99;font-variant-numeric:tabular-nums;display:inline-block;white-space:nowrap}
+.bar b.lg{font-size:clamp(.82rem,3.7vw,1.2rem)} /* çok haneli bakiye: sığsın diye biraz daha küçük */
 .bar b.bump{animation:bump .5s cubic-bezier(.2,1.6,.4,1)}
 .hbtns{display:flex;gap:6px}.hbtns button{padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,#333,#000);border-color:var(--gd)}.hbtns button.off{opacity:.4;filter:grayscale(1)}
 @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.25) rotateX(25deg)}100%{transform:scale(1)}}
@@ -575,7 +576,7 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 /* ===== 3D ANA SAYFA (CASINO SALONU): oyun kartlarının yerine salonun 3D görünümü; bölgelerin üstünde görünmez düğmeler (.h3hit) ===== */
 #home{position:relative}
 #hm3box{display:none;position:relative;margin:0 -16px 12px;aspect-ratio:390/620;max-height:max(480px,calc(100vh - 170px));overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#3a0b14,#16050a 60%,#0a0306)}
-#home.h3{display:flex;flex-direction:column}#home.h3.hide{display:none}#home.h3 #hm3box{display:block}#home.h3 .vitrin,#home.h3 .hero{display:none}#home.h3 .jpbox{order:1}
+#home.h3{display:flex;flex-direction:column}#home.h3.hide{display:none}#home.h3 #hm3box{display:block}#home.h3 .vitrin,#home.h3 .hero,#home.h3 .jpbox{display:none}
 #hm3d{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .5s}#hm3box.rdy #hm3d{opacity:1}
 #hm3hit{position:absolute;inset:0}
 .h3hit{position:absolute;left:0;top:0;margin:0;padding:0;border:0;background:none;box-shadow:none;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:none;min-width:0;min-height:0;touch-action:manipulation}
@@ -1101,7 +1102,7 @@ if(!CLOUD)try{if(!localStorage.getItem('ge_bonus1')){chips+=10000;localStorage.s
 function fmt(n){return (Math.round(n*100)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fmtE(n){return fmt(n)+' €'}
 function fmtA(n){n=Math.round(n*100)/100;return Number.isInteger(n)?n.toLocaleString('tr-TR'):n.toLocaleString('tr-TR',{minimumFractionDigits:1,maximumFractionDigits:2})}
-function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}if(window.onChips)onChips(n);
+function setChips(n){n=Math.round(n*100)/100;const ch=n!==chips;chips=n;const e=$('chips');e.textContent=fmtE(n);e.classList.toggle('lg',e.textContent.length>12);if(ch){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}try{localStorage.setItem('ge_chips',n)}catch(e){}if(window.onChips)onChips(n);
 $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
 /* ===== 3D GÖRÜNTÜ KALİTESİ: tuvaller cihazın gerçek piksel oranında (en çok 3) çizilir. Cihaz yetişemezse (kareler seyrekleşirse ya da WebGL bağlamı düşerse) o oyunun oranı yarım kademe iner ve bir hafta hatırlanır; sonra yeniden en yüksekten denenir. fit: tuval çok büyükse toplam piksel bütçesine sığdırır. ===== */
