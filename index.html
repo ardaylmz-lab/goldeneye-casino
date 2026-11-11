@@ -1122,8 +1122,8 @@ $('reset').classList.toggle('hide',n>=.5||busy||live)}
 function msg(t){$('msg').textContent=t}
 /* ===== 3D GÖRÜNTÜ KALİTESİ: tuvaller cihazın gerçek piksel oranında (en çok 3) çizilir. Cihaz yetişemezse (kareler seyrekleşirse ya da WebGL bağlamı düşerse) o oyunun oranı yarım kademe iner ve bir hafta hatırlanır; sonra yeniden en yüksekten denenir. fit: tuval çok büyükse toplam piksel bütçesine sığdırır. ===== */
 const GFX={max:Math.min(3,window.devicePixelRatio||1),lock:false,
- start(id){let v=this.max;try{const q=JSON.parse(localStorage.getItem('ge_gfx_'+id)||'null');if(q&&q.v>=1&&q.v<v&&Date.now()-q.t<6048e5)v=q.v}catch(e){}return v},
- lower(id,cur){if(this.lock)return cur;const n=Math.max(1,Math.round((cur-.5)*2)/2);if(n<cur){try{localStorage.setItem('ge_gfx_'+id,JSON.stringify({v:n,t:Date.now()}))}catch(e){}}return n},
+ start(id){let v=this.max;try{const q=JSON.parse(localStorage.getItem('ge_gfx2_'+id)||'null');if(q&&q.v>=1&&q.v<v&&Date.now()-q.t<6048e5)v=q.v}catch(e){}return v},
+ lower(id,cur){if(this.lock)return cur;const n=Math.max(1,Math.round((cur-.5)*2)/2);if(n<cur){try{localStorage.setItem('ge_gfx2_'+id,JSON.stringify({v:n,t:Date.now()}))}catch(e){}}return n},
  fit(pr,w,h){return Math.max(1,Math.min(pr,Math.sqrt(3.6e6/Math.max(1,w*h))))}};
 /* ===== AVATARLAR: profil adına göre avatars/<dosya>.png. Yalnız tam ad eşleşir (küçük/büyük harf ve fazla boşluk önemsiz): "Arda" ile "Arda Yılmaz" farklı kişilerdir. Yeni kişi için AVATARS'a "ad":"dosya" satırı yeter. ===== */
 const AVATARS={'görkem':'gorkem','arda':'arda','arda yılmaz':'arda_yilmaz'};
@@ -1153,7 +1153,8 @@ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go)
 const LB={t:0,busy:false,data:null};
 function lbLeft(ends){let e=ends?new Date(ends).getTime():NaN;if(!(e>0)){const n=new Date(Date.now()+3*3600e3),d=(n.getUTCDay()+6)%7;e=Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()-d+7)-3*3600e3}
  const m=Math.max(0,Math.floor((e-Date.now())/6e4)),g=Math.floor(m/1440),h=Math.floor(m%1440/60);return g>0?g+' gün '+h+' sa':h>0?h+' sa '+(m%60)+' dk':(m%60)+' dk'}
-function lbRender(d){const b=$('lbox');LB.data=d;if(!d||!d.rows){b.classList.add('hide');return}b.classList.remove('hide');const wk=d.mode==='week',mine=window.cloud&&cloud.me&&cloud.me()?cloud.me().id:null,esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function lbRender(d){const b=$('lbox');if(d&&d.rows)d={mode:d.mode,ends:d.ends,rows:d.rows.filter(r=>avatarKey(r.name))}; /* tabloda yalnız Görkem, Arda ve Arda Yılmaz yer alır (AVATARS'taki adlar) */
+ LB.data=d;if(!d||!d.rows){b.classList.add('hide');return}b.classList.remove('hide');const wk=d.mode==='week',mine=window.cloud&&cloud.me&&cloud.me()?cloud.me().id:null,esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  $('lbsub').textContent=wk?'Bu haftanın kazancı · sıfırlanmaya '+lbLeft(d.ends):'Bakiye sıralaması';
  $('lbrows').innerHTML=d.rows.length?d.rows.slice(0,5).map((r,i)=>{const v=wk?r.net:r.balance,cls=wk?(v>0?' up':v<0?' dn':''):'';return'<div class="lbr r'+(i+1)+(mine&&r.id===mine?' me':'')+'"><span class="rk">'+(i+1)+'</span>'+avHtml(r.name)+'<span class="nm">'+esc(r.name)+'</span><span class="vl'+cls+'">'+(wk?(v>0?'+':v<0?'−':'')+fmtE(Math.abs(v)):fmtE(v))+'</span></div>'}).join(''):'<div class="lbe">Henüz oyuncu yok</div>'}
 async function lbLoad(force){if(LB.busy||!window.cloud||!cloud.board||!cloud.me||!cloud.me())return;if(!force&&Date.now()-LB.t<8000)return;LB.busy=true;LB.t=Date.now();try{const d=await cloud.board();if(d)lbRender(d)}catch(e){}LB.busy=false}
@@ -2192,7 +2193,8 @@ import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 const box=document.querySelector('.wheelbox'),cv=document.getElementById('rw3d');if(!box||!cv)return;
 let renderer;try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'})}catch(e){return}
 renderer.setPixelRatio(GFX.start('rl'));const MAXA=renderer.capabilities.getMaxAnisotropy();
-renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false; /* gölge haritası her karede değil, aşağıda belirli aralıkla yenilenir */
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();
 const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose();
 const cam=new THREE.PerspectiveCamera(34,5/4,.1,12);cam.position.set(0,2.249,2.061);cam.lookAt(0,-.28,0);
@@ -2280,7 +2282,9 @@ const need=(((phi-ang(i)-D0-ryAt(T2))%TWO)+TWO)%TWO,E2=E(T2/DUR),base=TWO*8.5,k=
 /* elmas çarpması: top yamaçta elmas halkasını (r≈.80–.85) geçerken bir elmasın açısına denk gelirse sekme anı */
 function planDefl(s){const hits=[];for(let u=T1+.25;u<T2-.12;u+=.005){const k=smooth((u-T1)/(T2-T1)),r=TRK-(TRK-.76)*k;if(r>.85||r<.80)continue;const ph=s.phi0-s.Phi*E(u/DUR);
 for(let q=0;q<8;q++){const th=q*Math.PI/4+Math.PI/8;if(Math.abs(wrapA(ph-th))<.05){if(!hits.length||u-hits[hits.length-1]>.3)hits.push(u);break}}if(hits.length>=2)break}return hits}
-let last=performance.now()/1000,frame=0,sway=0,VIEW=null,ONFRAME=null,vmix=0,closeUp=false,SKIP=2;const YAX=new THREE.Vector3(0,1,0),FOV0=34;
+let last=performance.now()/1000,frame=0,sway=0,VIEW=null,ONFRAME=null,vmix=0,closeUp=false,SKIP=2,shT=0,onScr=true;
+/* tuval ekranda değilken (sayfa aşağı kaydırılmışken) çizilmez; dönüşün kendisi zamana bağlıdır, sonuç yine gelir */
+try{new IntersectionObserver(es=>{onScr=es[es.length-1].isIntersecting}).observe(box)}catch(e){}const YAX=new THREE.Vector3(0,1,0),FOV0=34;
 function loop(){requestAnimationFrame(loop);fit();const now=performance.now()/1000,dt=Math.min(.05,now-last),dtc=VIEW?Math.min(.4,now-last):dt;last=now; /* dtc: masa görünümünde kamera geçişleri gerçek süreyle ilerler (yavaş cihazda da aynı sürede tamamlanır) */
 /* dönüş sırasında rotor açısı zamana bağlı analitik: kare takılması hizalamayı bozmaz */
 if(st&&now-st.t0<=DUR){const u=now-st.t0;wr=W0-(W0-W1)*u/DUR;ry=ryAt(u)}else{if(st)wr+=(.25-wr)*Math.min(1,dt*1.1);ry+=wr*dt}rotor.rotation.y=ry;
@@ -2320,8 +2324,10 @@ const ka=1-Math.exp(-dtc*3);camT.lerp(wantT,ka);camD+=(wantD-camD)*(1-Math.exp(-
 /* boşta kamera çarkın çevresinde ağır ağır salınır; çevirince sabitlenir */
 const swayT=st||V?0:.06*Math.sin(now*.21);sway+=(swayT-sway)*(1-Math.exp(-dt*.9));cam.position.copy(camT).addScaledVector(V?DIR.clone().lerp(V.dir,vmix).normalize():DIR.clone().applyAxisAngle(YAX,sway),camD);cam.lookAt(camT);
 {const f=V?FOV0+(V.fov-FOV0)*vmix:FOV0;if(Math.abs(f-cam.fov)>.005){cam.fov=f;cam.updateProjectionMatrix()}}
-const vis=!document.hidden&&!document.getElementById('rulet').classList.contains('hide');if(!vis){if(CW&&document.getElementById('rulet').classList.contains('hide')){CW=CH=0;renderer.setSize(1,1,false)}return} /* sayfa kapalıyken çizim belleği bırakılır; açılınca fit() yeniden kurar */
-frame++;if(!st&&(frame%SKIP))return;if(ONFRAME)ONFRAME(now,closeUp);renderer.render(scene,cam)}
+const vis=!document.hidden&&onScr&&!document.getElementById('rulet').classList.contains('hide');if(!vis){if(CW&&document.getElementById('rulet').classList.contains('hide')){CW=CH=0;renderer.setSize(1,1,false)}return} /* sayfa kapalıyken çizim belleği bırakılır; açılınca fit() yeniden kurar */
+frame++;if(!st&&(frame%SKIP))return;if(ONFRAME)ONFRAME(now,closeUp);
+/* gölge: dönüş sırasında ~30, boştayken ~10 kez/sn yenilenir (sahneyi her karede iki kez çizmemek için); görüntü aynı kalır */
+if(now-shT>=(st?.03:.1)){renderer.shadowMap.needsUpdate=true;shT=now}renderer.render(scene,cam)}
 fit();loop();box.classList.add('gl');
 window.RW={ok:true,dur:DUR,spin,debug:()=>({phi:wrapA(phi),target:wrapA(ang(pocket)+ry),ry,wr,spinning:!!st,hops:st&&st.hops?st.hops.map(h=>+h.d.toFixed(3)):null,settle:st?+(st.settleT).toFixed(2):null,camD:+camD.toFixed(3),view:!!VIEW,vmix:+vmix.toFixed(3),closeUp,fov:+cam.fov.toFixed(2)}),_cam:cam,_ball:ball,_camSet:(d,t)=>{camD=d;camT.copy(t)},
 /* 3D masa (RL3) için: sahne ve malzemeler paylaşılır; setView masa görünümünü açar/kapatır (snap: kamera uçmadan yerine geçer), onFrame her çizimden önce çağrılır */
@@ -2706,7 +2712,7 @@ function pick(ev){const r=cv.getBoundingClientRect();ndc.set((ev.clientX-r.left)
 cv.addEventListener('click',ev=>{const h=pick(ev);if(!h)return;if(h.spot!=null)placeBet(h.spot);else seatTap(h.stool)});
 
 /* ---------- döngü ---------- */
-let on=false,glowT=0,frameN=0,shadowN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false;
+let on=false,glowT=0,frameN=0,shadowN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false,shT=0;
 /* cihaz yetişemezse: çözünürlük yarım kademe düşer, gölge haritası küçülür */
 function lowerQ(){const n=GFX.lower('bj',PR);if(n>=PR)return;PR=n;renderer.setPixelRatio(PR);if(PR<2&&SPOT.shadow.mapSize.x>1024){SPOT.shadow.mapSize.setScalar(1024);if(SPOT.shadow.map){SPOT.shadow.map.dispose();SPOT.shadow.map=null}}CWp=CHp=0;need=true;sdirty=true}
 cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lowerQ()});cv.addEventListener('webglcontextrestored',()=>{CWp=CHp=0;need=true;sdirty=true});
@@ -2719,7 +2725,10 @@ function frame(t){requestAnimationFrame(frame);
  if((glowOn||glow.material.opacity>0)&&t-glowT>90){glowT=t;glow.material.opacity=glowOn?.22+.14*Math.sin(t/260):Math.max(0,glow.material.opacity-.12);need=true}
  if(figs.size){let fast=false;figs.forEach(f=>{if(f.g||f.turn>.02&&f.turn<.98)fast=true});if(fast||t-figT>100){figT=t;figs.forEach(f=>figFrame(f,t));need=true;if(fast)sdirty=true}}
  if(dlr){const fast=dlr.ev.length>0||dlr.act>.02||t<dlr.talk;if(fast||t-dlrT>100){dlrT=t;dealerFrame(t);need=true;if(fast)sdirty=true}}
- const anim=tws.length>0;if(anim){need=true;sdirty=true}if(!need)return;need=false;const mov=sdirty;if(sdirty){renderer.shadowMap.needsUpdate=true;sdirty=false;shadowN++}renderer.render(scene,cam);frameN++;project();animPrev=mov}
+ const anim=tws.length>0;if(anim){need=true;sdirty=true}if(!need)return;need=false;const mov=sdirty;
+ /* gölge haritası hareket sürerken en çok ~22 kez/sn yenilenir (her karede değil: sahnenin tamamını ikinci kez çizmek en pahalı adım); hareket bitince son durum bir kez daha çizilir, görüntü aynı kalır */
+ if(sdirty){if(t-shT>=45){renderer.shadowMap.needsUpdate=true;sdirty=false;shT=t;shadowN++}else need=true}
+ renderer.render(scene,cam);frameN++;project();animPrev=mov}
 function setOn(v){on=!!v;wrap.classList.toggle('g3',on);tog.textContent=on?'2D':'3D';try{localStorage.setItem('ge_bj3d',on?'1':'0')}catch(e){}
  if(on){CWp=CHp=0;sdirty=true;cards.forEach(o=>scene.remove(o.mesh));cards.clear();stacks.forEach(s=>{s.amt=-1});resize();sync();seatView()}else{if(typeof bjFit==='function')bjFit()}need=true}
 tog.style.display='block';tog.onclick=()=>{setOn(!on);try{S.click()}catch(e){}};
@@ -3255,7 +3264,7 @@ cv.addEventListener('click',ev=>{if(!on||PK.seated)return;const r=cv.getBounding
  if(best>=0){try{ac();S.click()}catch(e){}PK.pick=false;pkSit(best)}});
 
 /* ---------- döngü ---------- */
-let on=false,pollT=0,frameN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false;
+let on=false,pollT=0,frameN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false,shT=0;
 function lowerQ(){const n=GFX.lower('pk',PR);if(n>=PR)return;PR=n;renderer.setPixelRatio(PR);if(PR<2&&SPOT.shadow.mapSize.x>1024){SPOT.shadow.mapSize.setScalar(1024);if(SPOT.shadow.map){SPOT.shadow.map.dispose();SPOT.shadow.map=null}}CWp=CHp=0;need=true;sdirty=true}
 cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lowerQ()});cv.addEventListener('webglcontextrestored',()=>{CWp=CHp=0;need=true;sdirty=true});
 function frame(t){requestAnimationFrame(frame);
@@ -3266,7 +3275,10 @@ function frame(t){requestAnimationFrame(frame);
  for(let i=tws.length-1;i>=0;i--){const o=tws[i];if(t<o.t0)continue;const p=Math.min(1,(t-o.t0)/o.dur);if(o.step(p)===false||p>=1){tws.splice(i,1);if(p>=1&&o.done)o.done()}}
  if(t-pollT>250){pollT=t;timers();if(PK.st&&PK.st.phase==='done'){const b=readBest();if(b.size!==BEST.size)sync()}}
  {let fast=false;figs.forEach(f=>{if(f.g||f.turn>.02&&f.turn<.98)fast=true});if(dlr&&(dlr.ev.length>0||dlr.act>.02))fast=true;if((figs.size||dlr)&&(fast||t-figT>100)){figT=t;figs.forEach(f=>figFrame(f,t));if(dlr)dealerFrame(t);need=true;if(fast)sdirty=true}}
- const anim=tws.length>0;if(anim){need=true;sdirty=true}if(!need)return;need=false;const mov=sdirty;if(sdirty){renderer.shadowMap.needsUpdate=true;sdirty=false}renderer.render(scene,cam);frameN++;project();animPrev=mov}
+ const anim=tws.length>0;if(anim){need=true;sdirty=true}if(!need)return;need=false;const mov=sdirty;
+ /* gölge haritası hareket sürerken en çok ~22 kez/sn yenilenir (her karede değil: sahnenin tamamını ikinci kez çizmek en pahalı adım); hareket bitince son durum bir kez daha çizilir, görüntü aynı kalır */
+ if(sdirty){if(t-shT>=45){renderer.shadowMap.needsUpdate=true;sdirty=false;shT=t}else need=true}
+ renderer.render(scene,cam);frameN++;project();animPrev=mov}
 function setOn(v){on=!!v;wrap.classList.toggle('g3',on);tog.textContent=on?'2D':'3D';try{localStorage.setItem('ge_pk3d',on?'1':'0')}catch(e){}
  if(on){CWp=CHp=0;sdirty=true;cards.forEach(o=>scene.remove(o.mesh));cards.clear();stacks.forEach(s=>{s.amt=-1});potReset(0);pot.sum=-1;btnAt=-1;resize();sync()}else if(typeof pkFit==='function')pkFit();need=true}
 tog.style.display='block';tog.onclick=()=>{setOn(!on);try{S.click()}catch(e){}};
@@ -3503,7 +3515,7 @@ function lights(t){const T=TH3[IDS[cur]],since=t-winT,flash=since<(winX>=15?3600
  else if(!ledIdle){ledIdle=true;[M0.neonM,M0.underM,M0.dotM,M0.dotS].forEach(m=>m.color.set(T.c));M0.haloM.opacity=.6;M0.glow.intensity=1.7;need=true}}
 
 /* ---------- sayfaya bağlanma: tuval, hangi slot sayfası açıksa onun içine taşınır; oyunun HTML'i ekran pencerelerine oturur ---------- */
-let on=false,cur=-1,need=true,sdirty=true,frameN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false;
+let on=false,cur=-1,need=true,sdirty=true,frameN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false,shT=0,lastR=0;
 function clearPortals(){portals.forEach(P=>{P.el.style.transform=''});portals=[];placeKey='';if(bonusEl){bonusEl.style.transform='';bonusEl.style.marginBottom='';bonusEl._k=1;bonusEl._h=0;bonusEl=null}}
 function attach(i){if(cur>=0)panels[cur].classList.remove('s3');clearPortals();cur=i;const p=panels[i];p.insertBefore(box,p.firstChild);p.appendChild(tog);p.appendChild(camBtn);p.classList.toggle('s3',on);
  const id=IDS[i],n=IDS.length;M0.set(id);ML.set(IDS[(i+n-1)%n]);MR.set(IDS[(i+1)%n]);ledIdle=false;spinning=false;autoOn=false;M0.caps.auto.lab.color.set(0xffffff);
@@ -3523,7 +3535,12 @@ function frame(t){requestAnimationFrame(frame);
  if(introT&&t>introT){introT=0;setView('close')}
  let moving=false;if(glide){const p=Math.min(1,(t-glide.t0)/glide.dur),e=ease(p),a=glide.a,b=glide.b;cu.el=a.el+(b.el-a.el)*e;cu.yaw=a.yaw+(b.yaw-a.yaw)*e;cu.d=a.d+(b.d-a.d)*e;cu.fov=a.fov+(b.fov-a.fov)*e;cu.T.lerpVectors(a.T,b.T,e);camAt(cu);if(p>=1)glide=null;need=true;moving=true}
  lights(t);if(fig){const fast=!!fig.g||moving;if(fast||t-figT>100){figT=t;figFrame(fig,t);need=true;if(fast)sdirty=true}}
- if(!need){place();return}need=false;const mov=sdirty||moving;if(sdirty){renderer.shadowMap.needsUpdate=true;sdirty=false}renderer.render(scene,cam);frameN++;place();animPrev=mov}
+ if(!need){place();return}
+ /* yalnız ışıklar oynuyorsa (çevirme sırasında akan ışıklar) ~30 kare/sn yeter: makaraların kendisi HTML'dir, tuvalden bağımsız akar */
+ const quick=moving||(fig&&!!fig.g)||BTNS.some(b=>pressT[b.k]!=null);if(!quick&&t-lastR<31)return;lastR=t;need=false;const mov=sdirty||moving;
+ /* gölge haritası hareket sürerken en çok ~22 kez/sn yenilenir (her karede değil: sahnenin tamamını ikinci kez çizmek en pahalı adım); hareket bitince son durum bir kez daha çizilir, görüntü aynı kalır */
+ if(sdirty){if(t-shT>=45){renderer.shadowMap.needsUpdate=true;sdirty=false;shT=t}else need=true}
+ renderer.render(scene,cam);frameN++;place();animPrev=mov}
 new ResizeObserver(()=>{CWp=CHp=0;need=true}).observe(box);
 const scr=v=>{const p=v.clone().project(cam);return[+((p.x*.5+.5)*CWp).toFixed(1),+((-p.y*.5+.5)*CHp).toFixed(1)]};
 window.SL3={get on(){return on},ev,
@@ -3572,7 +3589,7 @@ function start(){
 let renderer;try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'})}catch(e){on=false;dock();return}
 let PR=GFX.start('hm');renderer.setPixelRatio(PR);const MAXA=renderer.capabilities.getMaxAnisotropy();
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.02;
-const scene=new THREE.Scene();{const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose();scene.environmentIntensity=.42}
+const scene=new THREE.Scene();let envRT=null;const mkEnv=()=>{const pm=new THREE.PMREMGenerator(renderer);envRT=pm.fromScene(new RoomEnvironment(),.04);scene.environment=envRT.texture;pm.dispose()};mkEnv(); /* bağlam geri gelince yeniden üretilir (eskisi bağlamla birlikte gitmiştir) */scene.environmentIntensity=.42;
 const canvasTex=G.canvasTex,goldM=G.goldM,rr=(g,x,y,w,h,r)=>{g.beginPath();g.roundRect(x,y,w,h,r)};
 const ad=(geo,mat,x,y,z,par)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);(par||scene).add(m);return m},B=o=>new THREE.MeshBasicMaterial(Object.assign({toneMapped:false},o));
 
@@ -3653,6 +3670,8 @@ function signTex(t,c,sub){return canvasTex(768,sub?300:232,(g,w,h)=>{g.clearRect
 const SIGNS=[{t:'SLOT',c:'#ff3d7f',x:SLX,y:4.95,z:SLZ[0]-1.0,w:3.0},{t:'BLACKJACK',c:'#3ee58a',x:BJP[0],y:3.5,z:BJP[1]-2.5,w:3.7},{t:'RULET',c:'#ff5a3a',x:RLP[0],y:2.6,z:RLP[1]-1.9,w:2.7},{t:'POKER',c:'#55b0ff',x:PKP[0],y:3.2,z:PKP[1]-2.7,w:2.7},{t:'GOLDEN EYE',c:'#ffc23a',x:0,y:6.25,z:WALLZ+.55,w:6.0,sub:'B A R  ·  L O U N G E',wall:true}];
 const signTexs=[];SIGNS.forEach(s=>{const tex=signTex(s.t,s.c,s.sub),h=s.w*tex.image.height/tex.image.width;signTexs.push([tex,s]);ad(new THREE.PlaneGeometry(s.w,h),B({map:tex,transparent:true}),s.x,s.y,s.z);});
 
+/* buraya kadar eklenen her şey sabittir: matrisleri bir kez hesaplanır, her karede yeniden değil */
+scene.updateMatrixWorld(true);scene.traverse(o=>{if(o!==scene)o.matrixAutoUpdate=false});
 /* ---------- ışık: yalnız karakterler gölge düşürür ---------- */
 let SUN;{scene.add(new THREE.HemisphereLight(0xfff0dc,0x24100a,.62));const d=SUN=new THREE.DirectionalLight(0xffe6c4,1.55);d.position.set(5,15,9);d.target.position.set(0,0,CY);scene.add(d,d.target);d.castShadow=true;d.shadow.mapSize.setScalar(1024);
  const c=d.shadow.camera;c.left=-3.4;c.right=3.4;c.top=3.4;c.bottom=-3.4;c.near=2;c.far=40;d.shadow.bias=-.0006;d.shadow.radius=4;const bar=new THREE.PointLight(0xffb86b,46,20,2);bar.position.set(0,5.2,CZ+.7);scene.add(bar)}
@@ -3727,24 +3746,32 @@ if(document.fonts&&document.fonts.load)Promise.all([document.fonts.load('800 20p
  drawFloor(floorTex.image.getContext('2d'));floorTex.needsUpdate=true;signTexs.forEach(([tex,s])=>{const n=signTex(s.t,s.c,s.sub);tex.image=n.image;tex.needsUpdate=true});if(K)K.redraw()}).catch(()=>{});
 
 /* ---------- döngü: ana sayfa açıkken ~30 kare/sn; başka sayfadayken çizim belleği bırakılır ---------- */
-let frameN=0,lastR=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false,ready=false;
+let frameN=0,frameN0=-1,lastR=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false,ready=false,onScr=true,shK=0;
+try{new IntersectionObserver(es=>{onScr=es[es.length-1].isIntersecting}).observe(box)}catch(e){}
 /* gölgelendiriciler arka planda derlenir (ilk karede takılma olmasın); bitince çizim başlar, o ana kadar koyu zemin görünür */
-{cam.aspect=390/620;cam.updateProjectionMatrix();camAt(VW.over);const done=()=>{ready=true};try{if(renderer.extensions.has('KHR_parallel_shader_compile'))renderer.compileAsync(scene,cam).then(done,done);else done()}catch(e){done()}setTimeout(done,8000)}
+function warm(){ready=false;const done=()=>{ready=true};try{if(renderer.extensions.has('KHR_parallel_shader_compile'))renderer.compileAsync(scene,cam).then(done,done);else done()}catch(e){done()}setTimeout(done,8000)}
+cam.aspect=390/620;cam.updateProjectionMatrix();camAt(VW.over);warm();
 function lowerQ(){const n=GFX.lower('hm',PR);if(n>=PR)return;PR=n;renderer.setPixelRatio(PR);CWp=CHp=0}
-cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lowerQ()});cv.addEventListener('webglcontextrestored',()=>{CWp=CHp=0});
+/* GPU belleği: ana sayfadan çıkılınca salonun WebGL bağlamı uyutulur (bilerek kaybettirilir: dokular, ağlar ve çizim belleği bırakılır), böylece oyun oynarken salon bellek tutmaz.
+   Ana sayfaya dönünce bağlam geri yüklenir, ortam haritası yeniden üretilir; her şey ilk kullanımda yeniden yüklenir (o ana kadar koyu zemin görünür) */
+let asleep=false,waking=false,awayT=0,napN=0;const LOSE=(()=>{try{return renderer.extensions.get('WEBGL_lose_context')}catch(e){return null}})();
+function sleep(){if(asleep||!LOSE)return;asleep=true;napN++;box.classList.remove('rdy');frameN0=frameN;try{renderer.forceContextLoss()}catch(e){asleep=false}}
+function wake(){if(!asleep||waking)return;waking=true;try{renderer.forceContextRestore()}catch(e){waking=false;asleep=false}}
+cv.addEventListener('webglcontextlost',e=>{e.preventDefault();if(!asleep)lowerQ()});cv.addEventListener('webglcontextrestored',()=>{if(asleep){waking=false;asleep=false;try{mkEnv()}catch(e){}warm()}CWp=CHp=0});
 function setOn(v){on=!!v;try{localStorage.setItem('ge_hm3d',on?'1':'0')}catch(e){}dock();CWp=CHp=0}
 tog.onclick=()=>{setOn(!on);try{S.click()}catch(e){}};dock();
 function frame(t){requestAnimationFrame(frame);
- const vis=on&&window.PAGE==='home'&&!document.hidden&&!E('gate');if(!vis){animPrev=false;if(CWp){CWp=CHp=0;renderer.setSize(1,1,false)}return}
+ const vis=on&&window.PAGE==='home'&&!document.hidden&&!E('gate');if(!vis){animPrev=false;if(!asleep&&CWp){CWp=CHp=0;renderer.setSize(1,1,false)}if(!awayT)awayT=t;if(!document.hidden&&t-awayT>2500)sleep();return}
+ awayT=0;if(asleep){wake();return}if(!onScr){animPrev=false;return} /* tuval ekranda değilken (lider tablosuna kaydırılmışken) çizilmez */
  resize();if(!CWp||!ready||t-lastR<30)return;
  {const d=t-lastF;lastF=t;if(animPrev&&d<4000){accT+=d;accN++;if(d>58)accS++;if(accT>2500&&accN>=6){if(accS>accN*.6)lowerQ();accT=0;accN=0;accS=0}}}
  const dt=Math.min(.1,(t-lastR)/1000);lastR=t;
  if(glide){const p=Math.min(1,(t-glide.t0)/glide.dur),e=ease(p),a=glide.a,b=glide.b;cu.el=a.el+(b.el-a.el)*e;cu.yaw=a.yaw+(b.yaw-a.yaw)*e;cu.d=a.d+(b.d-a.d)*e;cu.fov=a.fov+(b.fov-a.fov)*e;cu.T.lerpVectors(a.T,b.T,e);camAt(cu);if(p>=1){glide=null;hitKey=''}}
- chat(t);for(const f of figs)figFrame(f,t);puffsFrame(t,dt);renderer.shadowMap.needsUpdate=true;renderer.render(scene,cam);if(!frameN)box.classList.add('rdy');frameN++;placeHits();animPrev=true}
+ chat(t);for(const f of figs)figFrame(f,t);puffsFrame(t,dt);if(!(shK++&1))renderer.shadowMap.needsUpdate=true;renderer.render(scene,cam);if(frameN===0||frameN===frameN0)box.classList.add('rdy');frameN++;placeHits();animPrev=true}
 new ResizeObserver(()=>{CWp=CHp=0}).observe(box);
 window.HM3={get on(){return on},
  _dbg:()=>({on,pr:PR,buf:[cv.width,cv.height],size:[CWp,CHp],view:viewName,glide:!!glide,frames:frameN,figs:figs.map(f=>f.key+(f.g?':'+f.g.type:'')),speaker,cam:{el:+(cu.el*180/Math.PI).toFixed(1),d:+cu.d.toFixed(1),fov:cu.fov},zones:ZONES.map(z=>({k:z.k,rect:z.rect?z.rect.map(Math.round):null,box:[z.box.min,z.box.max].map(v=>v.toArray().map(n=>+n.toFixed(1)))})),src:Object.keys(SNAP).map(k=>k+':'+SNAP[k].list.length)}),
- _view:(n,snap)=>setView(n,snap),_fit:(el,fov)=>{VW.over.el=el*Math.PI/180;VW.over.fov=fov;fitViews();setView(viewName,true)},_do:(i,type,fix)=>{const f=figs.find(f=>f.i===i);if(f)f.g=type?{type,t0:performance.now(),fix:fix==null?null:fix}:null},_talk:i=>{speaker=i;spkUntil=performance.now()+1e7},
+ _view:(n,snap)=>setView(n,snap),_nap:v=>{if(v)sleep();else wake()},_napInfo:()=>({asleep,waking,napN,lose:!!LOSE}),_fit:(el,fov)=>{VW.over.el=el*Math.PI/180;VW.over.fov=fov;fitViews();setView(viewName,true)},_do:(i,type,fix)=>{const f=figs.find(f=>f.i===i);if(f)f.g=type?{type,t0:performance.now(),fix:fix==null?null:fix}:null},_talk:i=>{speaker=i;spkUntil=performance.now()+1e7},
  _info:()=>{renderer.info.autoReset=false;renderer.info.reset();renderer.render(scene,cam);const r=renderer.info.render,m=renderer.info.memory;renderer.info.autoReset=true;return{calls:r.calls,triangles:r.triangles,geometries:m.geometries,textures:m.textures}}};
 requestAnimationFrame(frame);
 }
