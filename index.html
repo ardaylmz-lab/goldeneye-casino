@@ -546,6 +546,19 @@ background:linear-gradient(180deg,#ff5a5a,#c40018 50%,#8a0010);border:2px solid 
 .pkwrap.g3{aspect-ratio:440/500}.pkwrap.g3 #pk3d{display:block;touch-action:manipulation;cursor:pointer}.pkwrap.g3 #pk3ui{display:block;pointer-events:none;overflow:hidden}
 .pkwrap.g3 .pkchairs,.pkwrap.g3 .pkrail,.pkwrap.g3 .pkavs{display:none}
 #pk3tog{display:none;position:absolute;right:4px;top:4px;z-index:6;padding:4px 9px;font-size:.6rem;font-weight:800;letter-spacing:1px;border-radius:8px;background:linear-gradient(180deg,#3a2416,#1e120a);border:1px solid #8a6a2a;color:#ffe9a8;box-shadow:0 2px 0 #0e0804}
+/* ===== 3D SLOT MAKİNESİ: oyunun kendi HTML'i (jackpot şeridi; başlık + makaralar) makinenin ekran camına matrix3d ile oturur; tuval üstte durur ve ekran yerinde saydamdır ===== */
+#slot,#slot2,#slot3{position:relative}
+.s3scr{display:contents}
+#sl3box{display:none;position:relative;z-index:3;margin:-8px -8px 8px;aspect-ratio:390/520;pointer-events:none;border-radius:16px 16px 0 0;overflow:hidden}
+#sl3d{position:absolute;inset:0;width:100%;height:100%;display:block}
+.panel.s3 #sl3box{display:block}
+.panel.s3 .jpbox,.panel.s3 .s3scr{position:absolute;left:0;top:0;z-index:1;box-sizing:border-box;width:380px;margin:0;transform-origin:0 0;animation:s3on .5s ease-out both}
+.panel.s3 .jpbox{height:71px}
+.panel.s3 .s3scr{display:block;height:338px;padding:8px;overflow:hidden;border-radius:10px;background:radial-gradient(ellipse at 50% 0%,var(--r3),var(--r2) 58%,#050203)}
+.panel.s3 .s3scr .fsbar{position:absolute;left:8px;right:8px;top:6px;margin:0;z-index:4}
+@keyframes s3on{from{opacity:0}to{opacity:1}}
+#sl3tog,#sl3cam{position:absolute;top:6px;z-index:6;padding:4px 9px;font-size:.6rem;font-weight:800;letter-spacing:1px;border-radius:8px;background:linear-gradient(180deg,#3a2416,#1e120a);border:1px solid #8a6a2a;color:#ffe9a8;box-shadow:0 2px 0 #0e0804}
+#sl3tog{right:6px}#sl3cam{left:6px;display:none}.panel.s3 #sl3cam{display:block}
 #pk3ui .p3p{position:absolute;left:0;top:0;width:0;height:0}#pk3ui .p3c{position:absolute;left:0;top:0;transform:translate(-50%,-50%)}#pk3ui .p3c>*{position:static;transform:none;margin:0;white-space:nowrap}
 .p3plate{min-width:64px;padding:3px 8px 2px;border-radius:7px;background:linear-gradient(180deg,#2b1d0b,#130c04);border:1px solid #c9971a99;box-shadow:0 3px 6px #000a;color:#ffe9a8;font-size:.52rem;font-weight:800;letter-spacing:.4px;text-align:center;line-height:1.15}
 .p3plate b{display:block;font-family:"Orbitron",Montserrat,monospace;font-size:.56rem;color:#ffd23f}.p3plate small{display:block;font-family:"Cinzel",Georgia,serif;font-size:.42rem;letter-spacing:1.5px;color:#dcb765}.p3plate b+small{font-family:inherit;letter-spacing:1px;color:#ff9a9a}
@@ -1326,7 +1339,7 @@ autoBtn.onclick=()=>{S.click();auto=!auto;autoBtn.classList.toggle('on',auto);if
 async function spin(){
 if(busy&&!fsLeft)return;const free=fsLeft>0;
 if(!free){if(chips<sbet()){msg('Yetersiz bakiye, bahsi düşür!');auto=false;autoBtn.classList.remove('on');return}setChips(chips-sbet())}
-busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');
+busy=true;btnsLock();msg('');clearFx();wb.textContent='';if(!free&&Math.random()<.12)say('luck');if(window.SL3)SL3.ev('spin');
 g=slotSpin(T,Math.random);if(T.heist)cv=heistCoinGrid(T,g,Math.random);
 cols.forEach(c=>{c.classList.remove('land');c.classList.add('spin')});S.spinStart();
 let t=0,stopped=0,scSoFar=0,coinSoFar=0,extra=0;const base=[700,950,1200,1450,1700];
@@ -1345,13 +1358,13 @@ if(r.wins.length||r.scatWin){
 const all=new Set();r.wins.forEach(w=>w.cells.forEach(([c,rr])=>all.add(c+'-'+rr)));r.scells.forEach(([c,rr])=>all.add(c+'-'+rr));
 cells.forEach((col,c)=>col.forEach((e,rr)=>{if(all.has(c+'-'+rr)){e.classList.add(g[c][rr]===T.S?'scat':'win')}else e.classList.add('dim')}));
 drawLines(r.wins.map(w=>({cells:w.cells,line:w.line})).concat(r.scatWin?[{cells:r.scells,scat:true}]:[]));
-const x=r.total/sbet();if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));
+const x=r.total/sbet();if(x>=15)S.big();else S.win(Math.min(6,2+Math.floor(x)));if(window.SL3)SL3.ev('win',x);
 if(x>=100)say('epicwin',300);else if(x>=40)say('megawin',300);else if(x>=15)say('bigwin',300);else if(x>=5)say('great',200);else if(x>=2&&Math.random()<.6)say('nice',200);
 await countUp(r.total,x>=15?1800:700);
 /* 10 € ve altı kazanç yalnız KAZANÇ kutusunda; üstü ekranda */
 const showFx=r.total>10;if(showFx&&(!free||x>=5))slotWinFx(x,r.total,p);
 if(showFx&&x>=15)await overlay('<h2 class="wt'+(x>=100?' t5':x>=40?' t4':'')+'">'+(x>=100?'EPİK KAZANÇ':x>=40?'MEGA KAZANÇ':'BÜYÜK KAZANÇ')+'</h2><div class="n">+'+fmtE(r.total)+'</div><p>'+x.toFixed(1)+'x bahis</p>',x>=100?3600:x>=40?3000:2600,true);
-startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose()}
+startCycle(r)}else{wb.innerHTML='<em>İyi şanslar!</em>';if(!free)S.lose();if(window.SL3)SL3.ev('lose')}
 setChips(chips+r.total);
 if(T.heist){const nc=cv.flat().filter(Boolean).length;if(nc>=HEIST.hwNeed)await holdWin();if(r.fs)await vaultPick(r.sc)}
 else if(r.fs){S.fs();say(free?'bonus':'freespins',400);if(free){fsLeft+=T.retrig;await overlay('<div class="ic">'+ico(T.sym[T.S],'big')+'</div><h2>+'+T.retrig+' FREE SPIN</h2><p>'+fsLeft+' spin kaldı</p>',2000)}
@@ -3216,5 +3229,213 @@ let pref='1';try{pref=localStorage.getItem('ge_pk3d')||'1'}catch(e){}
 setOn(pref!=='0');requestAnimationFrame(frame);
 })();
 </script><!--/PK3-->
+<!--SL3--><script type="module">
+/* ===== 3D SLOT MAKİNESİ (three.js, WebGL) =====
+   Slot oyunları 2D kalır: 3D olan makinenin kendisidir. Oyunun kendi HTML'i (jackpot şeridi, başlık, makaralar, bonus ekranları) makinenin
+   ekran camına CSS matrix3d ile oturtulur (düzlem > ekran dönüşümü tam bir izdüşümdür, kamera hangi açıda olursa olsun oyun camın içinde kalır).
+   Tuval HTML'in ÜSTÜNDEDİR ve ekranın olduğu yerde saydam bir pencere bırakır; böylece öndeki karakter ve tabure ekranı gerçekten örter.
+   Düğmeler (bahis, ÇEVİR, otomatik) tuvalin altında HTML olarak kalır. Oyun kodu yalnız SL3.ev('spin'|'win'|'lose') çağırır.
+   Koordinat: zemin y=0, makinenin ön yüzü z=0, oyuncu +z'de oturur ve -z'ye bakar. Ölçek diğer masalarla aynı (karakter boyu ~2,6 birim). */
+import * as THREE from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+(()=>{
+const G=window.GE3,E=id=>document.getElementById(id),IDS=['slot','slot2','slot3'].filter(id=>E(id)&&E(id).querySelector('.cab'));if(!G||!IDS.length)return;
+const panels=IDS.map(E),box=document.createElement('div'),cv=document.createElement('canvas'),tog=document.createElement('button'),camBtn=document.createElement('button');
+box.id='sl3box';cv.id='sl3d';box.appendChild(cv);tog.id='sl3tog';tog.type='button';camBtn.id='sl3cam';camBtn.type='button';
+let renderer;try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'})}catch(e){return}
+let PR=GFX.start('sl');renderer.setPixelRatio(PR);const MAXA=renderer.capabilities.getMaxAnisotropy();
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
+const scene=new THREE.Scene();{const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;pm.dispose();scene.environmentIntensity=.34}
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z),sstep=G.sstep,canvasTex=G.canvasTex,goldM=G.goldM,ease=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+/* oyun ekranı HTML'i tek kapta toplanır (2D'de display:contents: yerleşim değişmez) */
+panels.forEach(p=>{const cab=p.querySelector('.cab'),w=document.createElement('div');w.className='s3scr';cab.insertBefore(w,cab.querySelector('.ctitle'));['.ctitle','.fsbar','.stage','.hbonus'].forEach(q=>{const e=cab.querySelector(':scope > '+q);if(e)w.appendChild(e)})});
+
+/* ---------- ölçüler: kabin yan kesiti (z,y), eğik ekran camı, tuş paneli ---------- */
+const TH=24*Math.PI/180,W=1.3,SY=1.4,SZ=-.02,UL=1.33,GLW=1.2,TOPY=2.68,DKA=Math.atan2(.1,.48),DW=380,DHM=338,DHJ=71;
+const PW=1.1,HM=PW*DHM/DW,HJ=PW*DHJ/DW,U0=.05,UM=U0+HM/2,UJ=U0+HM+.04+HJ/2,UC=(U0+UJ+HJ/2)/2,HC=UJ+HJ/2-U0;
+const TH3={slot:{c:0xff5a1e,hex:'#ff6a00',lite:'#ffd23f',bg:['#7a1010','#2a0404','#120202'],name:'BURNING FRUITS',pal:['#ff3b30','#ff9f0a','#ffd60a','#bf5af2','#34c759','#5ac8fa']},
+ slot2:{c:0x19f0a0,hex:'#19f0a0',lite:'#8affd0',bg:['#0e5a3a','#041a10','#020a06'],name:'JADE DRAGON',pal:['#ff453a','#ffd60a','#30d158','#ff9f0a','#64d2ff','#ff6ab0']},
+ slot3:{c:0x4fa8ff,hex:'#4fa8ff',lite:'#dff4ff',bg:['#17305a','#060b16','#02050a'],name:'DIAMOND HEIST',pal:['#ff6ab0','#ffd60a','#5ac8fa','#ff453a','#d0d6e0','#30d158']}};
+
+/* ---------- malzemeler ---------- */
+const bodyM=new THREE.MeshPhysicalMaterial({color:0x0b0b10,roughness:.3,metalness:.25,clearcoat:1,clearcoatRoughness:.14}),
+ darkM=new THREE.MeshStandardMaterial({color:0x050506,roughness:.62,metalness:.3}),steelM=new THREE.MeshStandardMaterial({color:0x23252c,roughness:.36,metalness:.85}),
+ chromeM=new THREE.MeshStandardMaterial({color:0xd9dde6,roughness:.2,metalness:1}),glassM=new THREE.MeshPhysicalMaterial({color:0x020203,roughness:.1,metalness:.4,clearcoat:1,clearcoatRoughness:.06}),
+ /* ekran penceresi: renk ve alfa 0 yazar (karıştırma kapalı), derinlik yazar; altındaki HTML buradan görünür, öndeki nesneler üstünü örter */
+ holeM=new THREE.MeshBasicMaterial({color:0,opacity:0,transparent:false,blending:THREE.NoBlending,toneMapped:false}),
+ leatherM=new THREE.MeshPhysicalMaterial({color:0x15100d,roughness:.5,metalness:0,clearcoat:.28,clearcoatRoughness:.5,bumpMap:G.leather.bumpMap,bumpScale:.45}),
+ tuftM=new THREE.MeshPhysicalMaterial({color:0x1b1410,roughness:.5,metalness:0,clearcoat:.26,clearcoatRoughness:.5,bumpMap:G.quilt.bumpMap,bumpScale:1.5});
+const rr=(g,x,y,w,h,r)=>{g.beginPath();g.roundRect(x,y,w,h,r)};
+const ledTex=canvasTex(8,64,(g,w,h)=>{g.fillStyle='#3a3a3a';g.fillRect(0,0,w,h);const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#555');gr.addColorStop(.5,'#fff');gr.addColorStop(1,'#555');g.fillStyle=gr;g.fillRect(0,h*.2,w,h*.6)});ledTex.wrapT=THREE.RepeatWrapping;ledTex.repeat.set(1,12);
+const glossTex=canvasTex(256,256,(g,w,h)=>{g.clearRect(0,0,w,h);let gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,'rgba(255,255,255,.1)');gr.addColorStop(.22,'rgba(255,255,255,.035)');gr.addColorStop(.36,'rgba(255,255,255,0)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,w,h);
+ gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'rgba(0,0,0,.2)');gr.addColorStop(.08,'rgba(0,0,0,0)');gr.addColorStop(.94,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,.24)');g.fillStyle=gr;g.fillRect(0,0,w,h)});
+/* tabela: ampullü çerçeve içinde GOLDEN EYE */
+function drawSign(g,w,h){g.fillStyle='#070505';g.fillRect(0,0,w,h);rr(g,8,8,w-16,h-16,26);const bg=g.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#2a1206');bg.addColorStop(1,'#0c0503');g.fillStyle=bg;g.fill();g.lineWidth=5;g.strokeStyle='#d9a520';g.stroke();
+ const n=30,per=2*(w-52)+2*(h-52);for(let i=0;i<n;i++){let d=per*i/n,x,y;if(d<w-52){x=26+d;y=26}else if(d<w-52+h-52){x=w-26;y=26+d-(w-52)}else if(d<2*(w-52)+h-52){x=w-26-(d-(w-52)-(h-52));y=h-26}else{x=26;y=h-26-(d-2*(w-52)-(h-52))}
+  const r=g.createRadialGradient(x,y,0,x,y,9);r.addColorStop(0,'#fffbe0');r.addColorStop(.45,'#ffd23f');r.addColorStop(1,'rgba(255,170,0,0)');g.fillStyle=r;g.beginPath();g.arc(x,y,9,0,7);g.fill()}
+ g.textAlign='center';g.textBaseline='middle';g.font='800 '+Math.round(h*.36)+'px Cinzel, Georgia, serif';const tg=g.createLinearGradient(0,h*.3,0,h*.7);tg.addColorStop(0,'#fff6c8');tg.addColorStop(.5,'#ffd23f');tg.addColorStop(1,'#b8860b');g.shadowColor='#ffb300';g.shadowBlur=22;g.fillStyle=tg;g.fillText('GOLDEN EYE',w/2,h/2+4);g.shadowBlur=0}
+const signTex=canvasTex(696,252,drawSign);
+/* gövde ön kapağındaki ışıklı tema resmi */
+function drawBelly(id){return(g,w,h)=>{const T=TH3[id],gr=g.createRadialGradient(w/2,h*.45,10,w/2,h*.45,w*.62);gr.addColorStop(0,T.bg[0]);gr.addColorStop(.6,T.bg[1]);gr.addColorStop(1,T.bg[2]);g.fillStyle=gr;g.fillRect(0,0,w,h);
+ g.save();g.globalAlpha=.16;g.strokeStyle=T.hex;g.lineWidth=2;for(let i=-12;i<=24;i++){g.beginPath();g.moveTo(i*40,0);g.lineTo(i*40+h,h);g.stroke();g.beginPath();g.moveTo(i*40+h,0);g.lineTo(i*40,h);g.stroke()}g.restore();
+ rr(g,10,10,w-20,h-20,18);g.lineWidth=4;g.strokeStyle='#c9971a';g.stroke();g.textAlign='center';g.textBaseline='middle';g.font='400 '+Math.round(h*.2)+'px "Lilita One", Cinzel, Georgia, serif';const tg=g.createLinearGradient(0,h*.3,0,h*.62);tg.addColorStop(0,'#ffffff');tg.addColorStop(.5,T.lite);tg.addColorStop(1,T.hex);
+ g.shadowColor=T.hex;g.shadowBlur=26;g.fillStyle=tg;const p=T.name.split(' ');g.fillText(p[0],w/2,h*.36);g.fillText(p[1]||'',w/2,h*.62);g.shadowBlur=0}}
+/* komşu makinelerin ekranı: oyunun tanıtım görüntüsü (jackpot şeridi, başlık, makaralar) */
+function sym(g,k,x,y,s,P){g.save();g.translate(x,y);const c=P[k%P.length];g.fillStyle=c;g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=1.5;
+ if(k%5===0){g.beginPath();g.moveTo(0,-s);g.lineTo(s*.8,0);g.lineTo(0,s);g.lineTo(-s*.8,0);g.closePath();g.fill();g.stroke()}
+ else if(k%5===1){g.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?s*.45:s;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.closePath();g.fill();g.stroke()}
+ else if(k%5===2){g.beginPath();g.arc(0,0,s*.82,0,7);g.fill();g.stroke();g.fillStyle='rgba(255,255,255,.35)';g.beginPath();g.arc(-s*.28,-s*.3,s*.22,0,7);g.fill()}
+ else if(k%5===3){g.font='400 '+Math.round(s*2.3)+'px "Lilita One", Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillText('7',0,s*.1);g.strokeText('7',0,s*.1)}
+ else{rr(g,-s*.85,-s*.6,s*1.7,s*1.2,s*.25);g.fill();g.stroke();g.fillStyle='rgba(0,0,0,.45)';g.font='900 '+Math.round(s*.7)+'px Montserrat, Arial, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('BAR',0,1)}g.restore()}
+function drawAttract(id){return(g,w,h)=>{const T=TH3[id],k=w/DW;g.setTransform(k,0,0,k,0,0);const H=h/k;g.fillStyle='#000';g.fillRect(0,0,DW,H);
+ rr(g,1,1,DW-2,DHJ-2,13);const jb=g.createLinearGradient(0,0,0,DHJ);jb.addColorStop(0,'#0a0806');jb.addColorStop(1,'#050403');g.fillStyle=jb;g.fill();g.lineWidth=1.5;g.strokeStyle='#b8860b';g.stroke();
+ g.textAlign='center';g.textBaseline='middle';g.fillStyle='#ffd23f';g.font='800 9px Montserrat, Arial, sans-serif';g.fillText('J A C K P O T L A R',DW/2,15);
+ [['MINI','#4af','1.380'],['MINOR','#4de08a','6.920'],['MAJOR','#ff5a6a','44.150'],['GRAND','#ffd23f','801.300']].forEach(([n,c,v],i)=>{const x=DW*(i+.5)/4;g.fillStyle=c;g.font='800 8px Montserrat, Arial, sans-serif';g.fillText(n,x,36);g.font='900 11px Orbitron, Montserrat, Arial, sans-serif';g.fillText(v,x,53)});
+ const y0=H-DHM;rr(g,0,y0,DW,DHM,10);const bg=g.createRadialGradient(DW/2,y0,10,DW/2,y0,DHM);bg.addColorStop(0,T.bg[0]);bg.addColorStop(.55,T.bg[1]);bg.addColorStop(1,T.bg[2]);g.fillStyle=bg;g.fill();
+ g.font='400 30px "Lilita One", Cinzel, Georgia, serif';const tg=g.createLinearGradient(0,y0+8,0,y0+40);tg.addColorStop(0,'#fff');tg.addColorStop(.5,T.lite);tg.addColorStop(1,T.hex);g.fillStyle=tg;g.shadowColor=T.hex;g.shadowBlur=10;g.fillText(T.name,DW/2,y0+26);g.shadowBlur=0;
+ const gx=44,gy=y0+48,gw=292,gh=282,cw=gw/5,ch=gh/5;rr(g,gx-4,gy-4,gw+8,gh+8,10);g.fillStyle='#000';g.fill();g.lineWidth=2;g.strokeStyle='#b8860b';g.stroke();
+ for(let c=0;c<5;c++){const cg=g.createLinearGradient(gx+c*cw,0,gx+(c+1)*cw,0);cg.addColorStop(0,T.bg[1]);cg.addColorStop(.5,T.bg[0]);cg.addColorStop(1,T.bg[1]);g.fillStyle=cg;g.fillRect(gx+c*cw+1,gy,cw-2,gh);for(let r=0;r<5;r++)sym(g,(c*7+r*3+c*r)%11,gx+(c+.5)*cw,gy+(r+.5)*ch,cw*.3,T.pal)}
+ [gx-26,gx+gw+6].forEach(x=>{rr(g,x-8,gy-4,28,gh+8,8);g.fillStyle='#120606';g.fill();g.strokeStyle='#b8860b';g.lineWidth=1.2;g.stroke()})}}
+const texCache={},bellyTex=id=>texCache['b'+id]||(texCache['b'+id]=canvasTex(520,350,drawBelly(id))),attractTex=id=>texCache['a'+id]||(texCache['a'+id]=canvasTex(760,Math.round(760*HC/PW),drawAttract(id)));
+
+/* ---------- paylaşılan geometri ---------- */
+const GEO=(()=>{const s=new THREE.Shape();[[-.92,0],[0,0],[0,1],[.46,1.2],[.46,1.3],[SZ,SY],[SZ-Math.sin(TH)*UL,SY+Math.cos(TH)*UL],[-.62,TOPY],[-.92,TOPY]].forEach(([z,y],i)=>i?s.lineTo(z,y):s.moveTo(z,y));
+ const body=new THREE.ExtrudeGeometry(s,{depth:W-.04,bevelEnabled:true,bevelThickness:.02,bevelSize:.016,bevelOffset:-.016,bevelSegments:3});body.rotateY(-Math.PI/2);body.computeBoundingBox();body.translate(-(body.boundingBox.min.x+body.boundingBox.max.x)/2,0,0);
+ const edge=[[.12,0],[1,0],[1.2,.46],[1.3,.46],[SY,SZ],[SY+Math.cos(TH)*UL,SZ-Math.sin(TH)*UL],[TOPY,-.62]],cp=new THREE.CurvePath();for(let i=0;i<edge.length-1;i++)cp.add(new THREE.LineCurve3(V3(0,edge[i][0],edge[i][1]),V3(0,edge[i+1][0],edge[i+1][1])));
+ return{body,neon:new THREE.TubeGeometry(cp,96,.013,6,false),plinth:new THREE.BoxGeometry(W+.03,.1,.95),pline:new THREE.BoxGeometry(W+.036,.012,.956),belly:new THREE.PlaneGeometry(1.04,.7),bframe:new THREE.BoxGeometry(1.08,.74,.012),
+  glass:new RoundedBoxGeometry(GLW,UL-.02,.02,2,.008),led:new THREE.BoxGeometry(.028,UL-.06,.012),gloss:new THREE.PlaneGeometry(GLW,UL-.02),holeM:new THREE.PlaneGeometry(PW-.008,HM-.008),holeJ:new THREE.PlaneGeometry(PW-.008,HJ-.008),att:new THREE.PlaneGeometry(PW,HC),
+  deck:new THREE.BoxGeometry(W-.1,.012,.42),dline:new THREE.BoxGeometry(W-.1,.005,.012),spin:new THREE.CylinderGeometry(.085,.092,.04,32),ring:new THREE.TorusGeometry(.1,.012,10,36),bet:new RoundedBoxGeometry(.105,.022,.075,2,.008),
+  slot:new THREE.BoxGeometry(.2,.07,.02),slotLed:new THREE.BoxGeometry(.14,.008,.004),neck:new THREE.CylinderGeometry(.05,.065,.16,18),sign:new RoundedBoxGeometry(1.2,.44,.1,3,.03),face:new THREE.PlaneGeometry(1.16,.42),candle:new THREE.CylinderGeometry(.05,.05,.1,18),ccap:new THREE.CylinderGeometry(.058,.058,.022,18)}})();
+
+/* ---------- makine: canlı (ortadaki: ekranında oyun var) ya da komşu (tanıtım ekranı) ---------- */
+function machine(live){const g=new THREE.Group(),ad=(geo,mat,x,y,z,par,sh)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);if(sh!==false){m.castShadow=true;m.receiveShadow=true}(par||g).add(m);return m};
+ const dim=live?1:.72,neonM=new THREE.MeshBasicMaterial({toneMapped:false}),ledM=new THREE.MeshBasicMaterial({map:live?(()=>{const t=ledTex.clone();t.needsUpdate=true;return t})():ledTex,toneMapped:false}),bellyM=new THREE.MeshBasicMaterial({toneMapped:false,color:new THREE.Color(dim,dim,dim)}),
+  spinM=new THREE.MeshStandardMaterial({color:0x2a0606,emissive:0xff2a1a,emissiveIntensity:1.5,roughness:.35}),betM=new THREE.MeshStandardMaterial({color:0x101014,emissive:0xffffff,emissiveIntensity:.5,roughness:.4}),candleM=new THREE.MeshBasicMaterial({toneMapped:false});
+ ad(GEO.body,bodyM);ad(GEO.plinth,darkM,0,.05,-.46);ad(GEO.pline,goldM,0,.106,-.46);ad(GEO.bframe,goldM,0,.54,-.002);ad(GEO.belly,bellyM,0,.54,.006,null,false);
+ [-1,1].forEach(s=>{const n=ad(GEO.neon,neonM,s*(W/2+.004),0,0,null,false)});
+ ad(GEO.slot,darkM,.4,.95,.004);ad(GEO.slotLed,new THREE.MeshBasicMaterial({color:0x35ff7a,toneMapped:false}),.4,.95,.016,null,false);ad(GEO.slot,darkM,-.4,.95,.004);
+ /* ekran camı: yerel eksenler x (sağ), u (cam boyunca yukarı), d (camdan dışarı) */
+ const GL=new THREE.Group();GL.position.set(0,SY,SZ);GL.rotation.x=-TH;g.add(GL);ad(GEO.glass,glassM,0,UL/2,.012,GL);[-1,1].forEach(s=>ad(GEO.led,ledM,s*(GLW/2-.022),UL/2,.024,GL,false));
+ let attM=null,glow=null;if(live){ad(GEO.holeM,holeM,0,UM,.0235,GL,false);ad(GEO.holeJ,holeM,0,UJ,.0235,GL,false);
+   const gl=ad(GEO.gloss,new THREE.MeshBasicMaterial({map:glossTex,transparent:true,depthWrite:false,toneMapped:false}),0,UL/2,.027,GL,false);gl.renderOrder=5;
+   glow=new THREE.PointLight(0xffffff,2.4,3.4,1.8);glow.position.set(0,UM,.62);GL.add(glow)}
+  else{attM=new THREE.MeshBasicMaterial({toneMapped:false,color:0xb8b8b8});ad(GEO.att,attM,0,UC,.0235,GL,false)}
+ /* tuş paneli: yerel z arkadan öne (0..0,49), y panelden dışarı */
+ const DK=new THREE.Group();DK.position.set(0,SY,SZ);DK.rotation.x=DKA;g.add(DK);ad(GEO.deck,steelM,0,.007,.26,DK);ad(GEO.dline,goldM,0,.0135,.058,DK,false);ad(GEO.dline,goldM,0,.0135,.462,DK,false);
+ const spinB=ad(GEO.spin,spinM,.42,.033,.17,DK);const ring=ad(GEO.ring,goldM,.42,.016,.17,DK);ring.rotation.x=Math.PI/2;for(let k=0;k<5;k++)ad(GEO.bet,betM,-.5+k*.132,.024,.16,DK);
+ /* tabela ve tepe lambası */
+ const tp=new THREE.Group();tp.position.set(0,TOPY,-.77);g.add(tp);ad(GEO.neck,chromeM,0,.08,0,tp);const sg=new THREE.Group();sg.position.set(0,.37,0);sg.rotation.x=-.22;tp.add(sg);ad(GEO.sign,bodyM,0,0,0,sg);
+ ad(GEO.face,new THREE.MeshBasicMaterial({map:signTex,toneMapped:false,color:new THREE.Color(dim,dim,dim)}),0,0,.052,sg,false);ad(GEO.candle,candleM,0,.27,0,sg,false);ad(GEO.ccap,chromeM,0,.33,0,sg);
+ return{g,GL,DK,spinB,spinM,ledM,neonM,candleM,glow,live,id:null,set(id){if(this.id===id)return;this.id=id;const T=TH3[id];neonM.color.set(T.c);ledM.color.set(T.c);candleM.color.set(T.c);betM.emissive.set(T.c);bellyM.map=bellyTex(id);bellyM.needsUpdate=true;if(attM){attM.map=attractTex(id);attM.needsUpdate=true}if(glow)glow.color.set(T.c)}}}
+
+/* ---------- slot taburesi: yuvarlak kapitone oturak, saran alçak sırtlık, krom ayak, ayak halkası (oturak üstü y=0,935; -z'ye bakar) ---------- */
+function stool(){const g=new THREE.Group(),ad=(geo,mat,x,y,z,par)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);m.castShadow=true;m.receiveShadow=true;(par||g).add(m);return m},L=(pts,seg,a0,al)=>new THREE.LatheGeometry(pts.map(p=>new THREE.Vector2(p[0],p[1])),seg||40,a0||0,al||Math.PI*2);
+ ad(L([[0,0],[.39,0],[.4,.02],[.37,.045],[.16,.06],[.09,.1],[0,.1]]),bodyM);ad(new THREE.TorusGeometry(.385,.012,8,48),goldM,0,.03,0).rotation.x=Math.PI/2;
+ ad(new THREE.CylinderGeometry(.075,.085,.24,20),chromeM,0,.2,0);ad(new THREE.CylinderGeometry(.045,.045,.52,18),chromeM,0,.53,0);
+ ad(new THREE.TorusGeometry(.3,.017,10,48),chromeM,0,.36,0).rotation.x=Math.PI/2;for(let i=0;i<3;i++){const a=i*2*Math.PI/3+Math.PI/6,sp=ad(new THREE.CylinderGeometry(.012,.012,.3,8),chromeM,Math.sin(a)*.15,.36,Math.cos(a)*.15);sp.rotation.z=Math.PI/2;sp.rotation.y=a-Math.PI/2}
+ ad(new THREE.CylinderGeometry(.2,.16,.035,24),goldM,0,.79,0);ad(L([[0,.805],[.33,.805],[.375,.83],[.385,.875],[.37,.918],[.31,.935],[0,.935]]),tuftM);ad(new THREE.TorusGeometry(.378,.011,8,48),goldM,0,.85,0).rotation.x=Math.PI/2;
+ /* sırtlık: +z'de 150 derecelik yay */
+ const A=75*Math.PI/180,bk=new THREE.Group();bk.position.set(0,0,.02);g.add(bk);ad(L([[.335,.99],[.4,.985],[.425,1.0],[.43,1.42],[.415,1.47],[.375,1.49],[.34,1.47],[.33,1.42],[.335,.99]],36,-A,2*A),leatherM,0,0,0,bk);
+ [-1,1].forEach(s=>{ad(new THREE.CapsuleGeometry(.05,.41,6,14),leatherM,Math.sin(s*A)*.38,1.235,Math.cos(s*A)*.38,bk)});
+ const arc=(r,y)=>new THREE.CatmullRomCurve3(Array.from({length:25},(_,i)=>{const a=-A+2*A*i/24;return V3(Math.sin(a)*r,y,Math.cos(a)*r)}));ad(new THREE.TubeGeometry(arc(.432,1.44),40,.009,6),goldM,0,0,0,bk);ad(new THREE.TubeGeometry(arc(.432,1.0),40,.009,6),goldM,0,0,0,bk);
+ ad(new RoundedBoxGeometry(.11,.34,.03,2,.012),chromeM,0,.93,.415,bk);ad(new THREE.CylinderGeometry(.06,.06,.012,24),goldM,0,1.24,.437,bk).rotation.x=Math.PI/2;
+ return{g}}
+
+/* ---------- sahne: ortada canlı makine, iki yanında komşular; her birinin önünde tabure ---------- */
+const GAP=1.68,M0=machine(true),ML=machine(false),MR=machine(false),ST=[stool(),stool(),stool()];ML.g.position.x=-GAP;MR.g.position.x=GAP;scene.add(M0.g,ML.g,MR.g);
+ST.forEach((s,i)=>{s.g.position.set((i-1)*GAP,0,1.04);scene.add(s.g)});const chair=ST[1];
+{const tex=canvasTex(512,512,(g,w)=>{const r=w/2,gr=g.createRadialGradient(r,r,0,r,r,r);gr.addColorStop(0,'rgba(58,36,24,1)');gr.addColorStop(.4,'rgba(28,18,13,1)');gr.addColorStop(.72,'rgba(12,8,6,.85)');gr.addColorStop(1,'rgba(8,5,3,0)');g.fillStyle=gr;g.fillRect(0,0,w,w);
+  g.globalCompositeOperation='source-atop';g.strokeStyle='rgba(201,151,26,.05)';g.lineWidth=1;for(let i=-26;i<=26;i++){g.beginPath();g.moveTo(i*20,0);g.lineTo(i*20+512,512);g.stroke();g.beginPath();g.moveTo(i*20+512,0);g.lineTo(i*20,512);g.stroke()}});
+ const fl=new THREE.Mesh(new THREE.CircleGeometry(7.5,48),new THREE.MeshStandardMaterial({map:tex,transparent:true,roughness:1,metalness:0,depthWrite:false,dithering:true}));fl.rotation.x=-Math.PI/2;fl.position.set(0,0,.5);fl.receiveShadow=true;fl.renderOrder=-1;scene.add(fl)}
+let SPOT;{const spot=SPOT=new THREE.SpotLight(0xfff0d8,90,20,.62,.75,1.5);spot.position.set(1.4,7.2,4.6);spot.target.position.set(0,1.1,.3);scene.add(spot,spot.target);spot.castShadow=true;spot.shadow.mapSize.setScalar(PR>=2?2048:1024);spot.shadow.camera.near=2;spot.shadow.camera.far=15;spot.shadow.bias=-.0006;spot.shadow.radius=5;
+ scene.add(new THREE.HemisphereLight(0xfff2e0,0x1a0f08,.34));const rim=new THREE.DirectionalLight(0xffd9a0,.5);rim.position.set(-3,3,4);scene.add(rim)}
+scene.updateMatrixWorld(true);
+if(document.fonts&&document.fonts.load)Promise.all([document.fonts.load('800 20px Cinzel'),document.fonts.load('400 20px "Lilita One"'),document.fonts.load('900 20px Montserrat'),document.fonts.load('900 20px Orbitron')]).then(()=>{drawSign(signTex.image.getContext('2d'),696,252);signTex.needsUpdate=true;
+ Object.keys(texCache).forEach(k=>{const t=texCache[k],c=t.image,g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);(k[0]==='b'?drawBelly:drawAttract)(k.slice(1))(g,c.width,c.height);t.needsUpdate=true});need=true}).catch(()=>{});
+
+/* ---------- ekran pencereleri: HTML kabın köşeleri dünya koordinatında ---------- */
+const quad=(uc,h)=>[[-PW/2,uc+h/2],[PW/2,uc+h/2],[PW/2,uc-h/2],[-PW/2,uc-h/2]].map(([x,u])=>M0.GL.localToWorld(V3(x,u,.0235))),QM=quad(UM,HM),QJ=quad(UJ,HJ);
+let portals=[];
+function homog(p,w,h){const[x0,y0]=p[0],[x1,y1]=p[1],[x2,y2]=p[2],[x3,y3]=p[3],dx1=x1-x2,dx2=x3-x2,dx3=x0-x1+x2-x3,dy1=y1-y2,dy2=y3-y2,dy3=y0-y1+y2-y3,den=dx1*dy2-dx2*dy1||1e-9,gg=(dx3*dy2-dx2*dy3)/den,hh=(dx1*dy3-dx3*dy1)/den;
+ const a=x1-x0+gg*x1,b=x3-x0+hh*x3,d=y1-y0+gg*y1,e=y3-y0+hh*y3,f=n=>+n.toFixed(7);return'matrix3d('+[a/w,d/w,0,gg/w,b/h,e/h,0,hh/h,0,0,1,0,x0,y0,0,1].map(f).join(',')+')'}
+const pv=new THREE.Vector3();let placeKey='';
+function place(force){if(!on||cur<0||!CWp)return;const cr=cv.getBoundingClientRect();let key=cam.matrixWorld.elements.map(n=>n.toFixed(4)).join()+cam.fov+'|'+CWp+','+CHp;
+ const org=portals.map(P=>{const op=P.el.offsetParent||document.body,r=op.getBoundingClientRect();return[cr.left-r.left-op.clientLeft,cr.top-r.top-op.clientTop]});key+=org.map(o=>o[0].toFixed(1)+','+o[1].toFixed(1)).join();if(!force&&key===placeKey)return;placeKey=key;
+ portals.forEach((P,i)=>{const pts=P.q.map(v=>{pv.copy(v).project(cam);return[(pv.x*.5+.5)*CWp+org[i][0],(-pv.y*.5+.5)*CHp+org[i][1]]});P.el.style.transform=homog(pts,P.w,P.h)})}
+
+/* ---------- kamera: YAKIN (oyuncunun gözünden: ekran tam karşıda, eller tuş panelinde) ve SALON (makine, tabure ve oyuncu bütün olarak) ---------- */
+const cam=new THREE.PerspectiveCamera(30,1,.1,60);let CWp=0,CHp=0;
+const VW={close:{el:TH+6*Math.PI/180,yaw:0,T:V3(0,1.9,0),d:1.2,fov:75},wide:{el:23*Math.PI/180,yaw:30*Math.PI/180,T:V3(0,1.5,.2),d:9,fov:30}},cu={el:0,yaw:0,T:V3(0,0,0),d:5,fov:30};let viewName='close',glide=null,introT=0;
+const gp=(x,u,d)=>M0.GL.localToWorld(V3(x,u,d)),PTS={close:[gp(-.655,-.02,.03),gp(.655,-.02,.03),gp(-.655,UL+.04,.03),gp(.655,UL+.04,.03),M0.DK.localToWorld(V3(-.5,.03,.31)),M0.DK.localToWorld(V3(.5,.03,.31))],
+ wide:[[-.68,.68],[0,3.3],[-.92,.46]].reduce((a,r,i)=>i?a.flatMap(p=>r.map(v=>p.concat(v))):r.map(v=>[v]),[]).map(p=>V3(p[0],p[1],p[2])).concat([[-.46,.46],[0,1.5],[.6,1.5]].reduce((a,r,i)=>i?a.flatMap(p=>r.map(v=>p.concat(v))):r.map(v=>[v]),[]).map(p=>V3(p[0],p[1],p[2])),[V3(0,2.4,1.05)])};
+function camAt(v){if(cam.fov!==v.fov){cam.fov=v.fov;cam.updateProjectionMatrix()}const ce=Math.cos(v.el);cam.position.set(v.T.x+Math.sin(v.yaw)*ce*v.d,v.T.y+Math.sin(v.el)*v.d,v.T.z+Math.cos(v.yaw)*ce*v.d);cam.lookAt(v.T);cam.updateMatrixWorld(true)}
+function fitV(v,pts,o){const p=new THREE.Vector3(),R=new THREE.Vector3(),Uc=new THREE.Vector3();for(let it=0;it<10;it++){let lo=1.5,hi=40;for(let i=0;i<26;i++){v.d=(lo+hi)/2;camAt(v);let ok=true;for(const q of pts){p.copy(q).project(cam);if(Math.abs(p.x)>o.mx||p.y>o.top||p.y<o.bot){ok=false;break}}if(ok)hi=v.d;else lo=v.d}v.d=hi;camAt(v);
+  let x0=9,x1=-9,y0=9,y1=-9;for(const q of pts){p.copy(q).project(cam);x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}const ex=(x0+x1)/2,ey=o.alignTop?y1-o.top:(y0+y1)/2-(o.top+o.bot)/2;if(Math.abs(ex)<.003&&Math.abs(ey)<.003)break;
+  const hh=Math.tan(cam.fov*Math.PI/360)*v.d,hw=hh*cam.aspect;R.setFromMatrixColumn(cam.matrixWorld,0);Uc.setFromMatrixColumn(cam.matrixWorld,1);v.T.addScaledVector(R,ex*hw).addScaledVector(Uc,ey*hh)}camAt(v)}
+function fitViews(){VW.close.T.copy(gp(0,.58,0));VW.wide.T.set(0,1.5,.2);fitV(VW.close,PTS.close,{mx:.985,top:.965,bot:-.985});fitV(VW.wide,PTS.wide,{mx:.95,top:.95,bot:-.95})}
+const cpy=(a,b)=>{a.el=b.el;a.yaw=b.yaw;a.d=b.d;a.fov=b.fov;a.T.copy(b.T)};
+function setView(name,snap){viewName=name;camBtn.textContent=name==='close'?'SALON':'YAKIN';const b=VW[name];if(snap||!CWp){glide=null;cpy(cu,b);camAt(cu)}else glide={a:{el:cu.el,yaw:cu.yaw,d:cu.d,fov:cu.fov,T:cu.T.clone()},b,t0:performance.now(),dur:1500};need=true}
+function resize(){const w=box.clientWidth,h=box.clientHeight;if(!w||!h||(w===CWp&&h===CHp))return;CWp=w;CHp=h;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();fitViews();if(glide){glide.b=VW[viewName];camAt(cu)}else{cpy(cu,VW[viewName]);camAt(cu)}need=true;placeKey=''}
+
+/* ---------- 3D karakter: giriş yapan oyuncunun modeli varsa taburede oturur; çevirince tuşa basar, kazanınca sevinir ---------- */
+let fig=null,figKey=null,forced,figT=0,nameT=0;
+function placeFigure(M,ready){G.loadGLB(M.url).then(g=>{const F=G.figBuild(g.scene),s=M.h/F.H,b=F.bind,holder=new THREE.Group();holder.add(g.scene);holder.scale.setScalar(s);holder.rotation.y=Math.PI;
+  holder.position.set(s*b.Hips.x,.935+.062*F.H*s-s*b.LeftUpLeg.y,.06+s*b.Hips.z);chair.g.add(holder);g.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;if(o.material.map)o.material.map.anisotropy=MAXA}});ready({F,s,holder,M,yaw:0,pitch:.1,last:performance.now(),g:null})}).catch(e=>{console.warn('3D karakter yüklenemedi',M.url,e)})}
+function setFig(key){key=key||null;if(key===figKey)return;figKey=key;if(fig){chair.g.remove(fig.holder);fig.holder.traverse(o=>{if(o.isMesh){o.geometry.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m.map)m.map.dispose();m.dispose()})}});fig=null;need=true;sdirty=true}
+ if(!key||!G.FIGMODEL[key])return;placeFigure(G.FIGMODEL[key],f=>{if(figKey!==key||fig){f.holder.parent&&f.holder.parent.remove(f.holder);return}fig=f;need=true;sdirty=true})}
+const wantFig=()=>{if(forced!==undefined)return forced;const n=E('whoname'),w=E('who');return n&&w&&!w.classList.contains('hide')&&n.textContent?G.fig3d(n.textContent):null};
+const DKW=(x,y,z)=>M0.DK.localToWorld(V3(x,y,z)),BTN=DKW(.42,.075,.17),RESTR=DKW(.24,.05,.27),RESTL=DKW(-.24,.05,.27),LOOK=gp(0,UM,0),FWD=V3(0,0,-1),RIGHT=V3(1,0,0),UP=V3(0,1,0);
+function figFrame(f,t){const F=f.F,sec=t/1000,dt=Math.max(0,Math.min(200,t-f.last)),ks=1-Math.exp(-dt/260);f.last=t;chair.g.updateMatrixWorld(true);
+ let hR=RESTR,hL=RESTL,fR=FWD.clone().addScaledVector(RIGHT,-.25).add(V3(0,-.2,0)),fL=FWD.clone().addScaledVector(RIGHT,.25).add(V3(0,-.2,0)),pitchAdd=0,lean=.2+.012*Math.sin(sec*1.5);
+ const sh=n=>F.pos[n]?F.pos[n].clone().applyMatrix4(F.scene.matrixWorld):RESTR.clone(),gq=f.g;
+ if(gq){const u=gq.fix!=null?gq.fix:(t-gq.t0)/1000;
+  if(u>=0&&gq.type==='press'){if(u>=.75)f.g=null;else{const e=sstep(u/.24)*(1-sstep((u-.42)/.3));hR=RESTR.clone().lerp(BTN.clone().add(V3(0,.05*(1-sstep((u-.2)/.12))+.05*sstep((u-.36)/.1),0)),e);fR=fR.clone().lerp(V3(0,-1,-.25),e*.7).normalize();lean+=.1*e}}
+  else if(u>=0&&(gq.type==='win'||gq.type==='big')){const D=gq.type==='big'?3:1.9;if(u>=D)f.g=null;else{const e=sstep(u/.3)*(1-sstep((u-D+.4)/.4)),pump=(n,s)=>sh(n).addScaledVector(RIGHT,s*.14).addScaledVector(FWD,.26).add(V3(0,.5+.05*Math.sin(u*15),0));hR=RESTR.clone().lerp(pump('RightArm',1),e);fR=fR.clone().lerp(UP,e).normalize();
+    if(gq.type==='big'){hL=RESTL.clone().lerp(pump('LeftArm',-1),e);fL=fL.clone().lerp(UP,e).normalize()}pitchAdd=-.2*e;lean-=.06*e}}}
+ const inv=new THREE.Matrix4().copy(F.scene.matrixWorld).invert(),toM=v=>v.clone().applyMatrix4(inv),dM=v=>v.clone().transformDirection(inv),hd=F.pos.Head||F.bind.Head,lm=toM(LOOK).sub(hd),wy=Math.max(-.8,Math.min(.8,Math.atan2(lm.x,lm.z))),wq=Math.max(-.3,Math.min(.45,Math.atan2(-lm.y,Math.hypot(lm.x,lm.z))-.14));
+ f.yaw+=(wy-f.yaw)*ks;f.pitch+=(wq-f.pitch)*ks;{const hw=hd.clone().applyMatrix4(F.scene.matrixWorld),hide=cam.position.distanceTo(hw)<1.15;if(F.B.Head&&hide!==!!f.hide){f.hide=hide;F.B.Head.scale.setScalar(hide?.001:1);sdirty=true}}G.figPose(F,{lean,thigh:1.5,shin:.1,splay:.08,headYaw:f.yaw,headPitch:f.pitch+(f.M.pitch||0)+pitchAdd,handL:toM(hL),handR:toM(hR),fingL:dM(fL),fingR:dM(fR)})}
+
+/* ---------- oyun olayları: çevirme (tuş basılır, ışıklar akar), kazanç (ışıklar yanıp söner) ---------- */
+let spinning=false,spinT=-1e9,winT=-1e9,winX=0,pressT=-1e9,ledIdle=true;
+function ev(type,x){if(!on||cur<0)return;const t=performance.now();if(type==='spin'){spinning=true;spinT=t;pressT=t;if(fig&&(!fig.g||fig.g.type==='press'))fig.g={type:'press',t0:t}}else if(type==='win'){spinning=false;winT=t;winX=+x||0;if(fig)fig.g={type:winX>=15?'big':'win',t0:t+120}}else if(type==='lose')spinning=false;need=true}
+function lights(t){const T=TH3[IDS[cur]],since=t-winT,flash=since<(winX>=15?3600:1800),act=spinning&&t-spinT<9000||flash;
+ const pe=sstep((t-pressT)/90)*(1-sstep((t-pressT-160)/220));M0.spinB.position.y=.033-.016*pe;M0.spinM.emissiveIntensity=1.5+2.2*pe+(flash?.8*Math.abs(Math.sin(t/90)):0);if(t-pressT<420)need=true;
+ if(act){const k=flash?.55+.45*Math.abs(Math.sin(t/(winX>=15?60:95))):1;M0.ledM.map.offset.y=-((t/1000)*(flash?3:1.7))%1;M0.ledM.color.set(T.c).multiplyScalar(k);M0.neonM.color.set(T.c).multiplyScalar(flash?k:1);M0.glow.intensity=2.4*(flash?.7+.8*k:1.15);ledIdle=false;need=true}
+ else if(!ledIdle){ledIdle=true;M0.ledM.color.set(T.c);M0.neonM.color.set(T.c);M0.glow.intensity=2.4;need=true}}
+
+/* ---------- sayfaya bağlanma: tuval, hangi slot sayfası açıksa onun içine taşınır; oyunun HTML'i ekran pencerelerine oturur ---------- */
+let on=false,cur=-1,need=true,sdirty=true,frameN=0,lastF=0,accT=0,accN=0,accS=0,animPrev=false;
+function clearPortals(){portals.forEach(P=>{P.el.style.transform=''});portals=[];placeKey=''}
+function attach(i){if(cur>=0)panels[cur].classList.remove('s3');clearPortals();cur=i;const p=panels[i];p.insertBefore(box,p.firstChild);p.appendChild(tog);p.appendChild(camBtn);p.classList.toggle('s3',on);
+ const id=IDS[i],n=IDS.length;M0.set(id);ML.set(IDS[(i+n-1)%n]);MR.set(IDS[(i+1)%n]);ledIdle=false;spinning=false;
+ if(on){portals=[{el:p.querySelector('.jpbox'),w:DW,h:DHJ,q:QJ},{el:p.querySelector('.s3scr'),w:DW,h:DHM,q:QM}].filter(P=>P.el);CWp=CHp=0;resize();setView('wide',true);introT=performance.now()+1100}need=true;sdirty=true}
+function detach(){if(cur<0)return;clearPortals();cur=-1;introT=0;glide=null}
+function setOn(v){on=!!v;tog.textContent=on?'2D':'3D';try{localStorage.setItem('ge_sl3d',on?'1':'0')}catch(e){}const i=cur;if(i>=0){cur=-1;panels[i].classList.remove('s3');clearPortals();attach(i)}}
+tog.onclick=()=>{setOn(!on);try{S.click()}catch(e){}};camBtn.onclick=()=>{introT=0;setView(viewName==='close'?'wide':'close');try{S.click()}catch(e){}};
+function lowerQ(){const n=GFX.lower('sl',PR);if(n>=PR)return;PR=n;renderer.setPixelRatio(PR);if(PR<2&&SPOT.shadow.mapSize.x>1024){SPOT.shadow.mapSize.setScalar(1024);if(SPOT.shadow.map){SPOT.shadow.map.dispose();SPOT.shadow.map=null}}CWp=CHp=0;need=true;sdirty=true}
+cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lowerQ()});cv.addEventListener('webglcontextrestored',()=>{CWp=CHp=0;need=true;sdirty=true});
+function frame(t){requestAnimationFrame(frame);
+ {const d=t-lastF;lastF=t;if(animPrev&&d<4000){accT+=d;accN++;if(d>42)accS++;if(accT>1500&&accN>=4){if(accS>accN*.6)lowerQ();accT=0;accN=0;accS=0}}animPrev=false}
+ const i=IDS.indexOf(window.PAGE);if(i<0){if(cur>=0)detach();if(CWp){CWp=CHp=0;renderer.setSize(1,1,false)}return}
+ if(i!==cur)attach(i);if(!on){if(CWp){CWp=CHp=0;renderer.setSize(1,1,false)}return}
+ resize();if(!CWp)return;if(t-nameT>600){nameT=t;setFig(wantFig())}
+ if(introT&&t>introT){introT=0;setView('close')}
+ let moving=false;if(glide){const p=Math.min(1,(t-glide.t0)/glide.dur),e=ease(p),a=glide.a,b=glide.b;cu.el=a.el+(b.el-a.el)*e;cu.yaw=a.yaw+(b.yaw-a.yaw)*e;cu.d=a.d+(b.d-a.d)*e;cu.fov=a.fov+(b.fov-a.fov)*e;cu.T.lerpVectors(a.T,b.T,e);camAt(cu);if(p>=1)glide=null;need=true;moving=true}
+ lights(t);if(fig){const fast=!!fig.g||moving;if(fast||t-figT>100){figT=t;figFrame(fig,t);need=true;if(fast)sdirty=true}}
+ if(!need){place();return}need=false;const mov=sdirty||moving;if(sdirty){renderer.shadowMap.needsUpdate=true;sdirty=false}renderer.render(scene,cam);frameN++;place();animPrev=mov}
+new ResizeObserver(()=>{CWp=CHp=0;need=true}).observe(box);
+const scr=v=>{const p=v.clone().project(cam);return[+((p.x*.5+.5)*CWp).toFixed(1),+((-p.y*.5+.5)*CHp).toFixed(1)]};
+window.SL3={get on(){return on},ev,
+ _dbg:()=>({on,cur:cur>=0?IDS[cur]:null,pr:PR,buf:[cv.width,cv.height],size:[CWp,CHp],view:viewName,glide:!!glide,intro:!!introT,frames:frameN,fig:figKey,figReady:!!fig,gesture:fig&&fig.g?fig.g.type:null,spinning,themes:[ML.id,M0.id,MR.id],cam:{el:+(cu.el*180/Math.PI).toFixed(1),yaw:+(cu.yaw*180/Math.PI).toFixed(1),d:+cu.d.toFixed(2),fov:+cu.fov.toFixed(1),pos:cam.position.toArray().map(n=>+n.toFixed(2))},
+  portals:portals.map(P=>{const r=P.el.getBoundingClientRect(),c=cv.getBoundingClientRect();return{cls:P.el.className,rect:[r.left-c.left,r.top-c.top,r.width,r.height].map(n=>+n.toFixed(1)),quad:P.q.map(scr)}})}),
+ _fig:k=>{forced=k;nameT=0;need=true},_figDo:(type,fix)=>{if(fig){fig.g=type?{type,t0:performance.now(),fix:fix==null?null:fix}:null;need=true}},_view:(n,snap)=>{introT=0;setView(n,snap)},_w:(x,y,z)=>scr(V3(x,y,z)),
+ _hands:()=>{if(!fig)return null;const F=fig.F,w=n=>F.pos[n]?F.pos[n].clone().applyMatrix4(F.scene.matrixWorld).toArray().map(x=>+x.toFixed(3)):null;return{sağEl:w('RightHand'),solEl:w('LeftHand'),baş:w('Head'),tuş:BTN.toArray().map(x=>+x.toFixed(3)),dinlenme:RESTR.toArray().map(x=>+x.toFixed(3))}},
+ _info:()=>{renderer.info.autoReset=false;renderer.info.reset();renderer.render(scene,cam);const r=renderer.info.render;renderer.info.autoReset=true;return{calls:r.calls,triangles:r.triangles}}};
+let pref=null;try{pref=localStorage.getItem('ge_sl3d')}catch(e){}
+on=pref!=='0';tog.textContent=on?'2D':'3D';requestAnimationFrame(frame);
+})();
+</script><!--/SL3-->
 </body>
 </html>
