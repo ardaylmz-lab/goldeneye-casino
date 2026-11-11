@@ -3255,9 +3255,17 @@ import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 (()=>{
 const G=window.GE3,E=id=>document.getElementById(id),IDS=['slot','slot2','slot3'].filter(id=>E(id)&&E(id).querySelector('.cab'));if(!G||!IDS.length)return;
-const panels=IDS.map(E),box=document.createElement('div'),cv=document.createElement('canvas'),hitL=document.createElement('div'),tog=document.createElement('button'),camBtn=document.createElement('button');
-box.id='sl3box';cv.id='sl3d';hitL.id='sl3hit';box.appendChild(cv);box.appendChild(hitL);tog.id='sl3tog';tog.type='button';camBtn.id='sl3cam';camBtn.type='button';
-let renderer;try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'})}catch(e){return}
+const panels=IDS.map(E),tog=document.createElement('button');tog.id='sl3tog';tog.type='button';tog.textContent='3D';
+/* tembel kurulum: sahne (WebGL bağlamı, makineler, dokular) yalnız bir slot sayfası ilk kez 3D açıldığında kurulur; ana sayfa ve diğer oyunlar bedelini ödemez.
+   Tercih 2D ise slot sayfasında yalnız 3D düğmesi durur, sahne düğmeye basılınca kurulur */
+let pref=null;try{pref=localStorage.getItem('ge_sl3d')}catch(e){}let started=false;
+const boot=()=>{if(started)return;started=true;try{start()}catch(e){console.warn('3D slot kurulamadı',e);tog.remove()}};
+tog.onclick=()=>{pref='1';try{localStorage.setItem('ge_sl3d','1')}catch(e){}try{S.click()}catch(e){}boot()};
+(function poll(){if(started)return;const i=IDS.indexOf(window.PAGE);if(i>=0){if(pref!=='0'){boot();return}if(tog.parentNode!==panels[i])panels[i].appendChild(tog)}requestAnimationFrame(poll)})();
+function start(){
+const box=document.createElement('div'),cv=document.createElement('canvas'),hitL=document.createElement('div'),camBtn=document.createElement('button');
+box.id='sl3box';cv.id='sl3d';hitL.id='sl3hit';box.appendChild(cv);box.appendChild(hitL);camBtn.id='sl3cam';camBtn.type='button';
+let renderer;try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'})}catch(e){tog.remove();return}
 let PR=GFX.start('sl');renderer.setPixelRatio(PR);const MAXA=renderer.capabilities.getMaxAnisotropy();
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
@@ -3390,10 +3398,11 @@ function fitBonus(){const b=bonusEl;if(!b)return;const h=b.classList.contains('h
 /* raftaki tuşların üstündeki görünmez HTML düğmeleri */
 const hits=BTNS.map(b=>{const e=document.createElement('button'),z=b.big?BZ+.01:BZ;e.type='button';e.className='s3hit';e.setAttribute('aria-label',b.al);hitL.appendChild(e);e.onclick=()=>pressBtn(b);return{b,e,c:M0.DK.localToWorld(V3(b.x,.03,z)),rx:M0.DK.localToWorld(V3(b.x+(b.big?.1:.075),.03,z)),rz:M0.DK.localToWorld(V3(b.x,.03,z+(b.big?.1:.058)))}});
 const scr2=v=>{pv.copy(v).project(cam);return[(pv.x*.5+.5)*CWp,(-pv.y*.5+.5)*CHp]};
-function place(force){if(!on||cur<0||!CWp)return;fitBonus();const cr=cv.getBoundingClientRect();let key=cam.matrixWorld.elements.map(n=>n.toFixed(4)).join()+cam.fov+'|'+CWp+','+CHp;
+function place(force){if(!on||cur<0||!CWp)return;fitBonus();const cr=cv.getBoundingClientRect();let key=cam.matrixWorld.elements.map(n=>n.toFixed(4)).join()+cam.fov+'|'+CWp+','+CHp+viewName+(glide?1:0);
  const org=portals.map(P=>{const op=P.el.offsetParent||document.body,r=op.getBoundingClientRect();return[cr.left-r.left-op.clientLeft,cr.top-r.top-op.clientTop]});key+=org.map(o=>o[0].toFixed(1)+','+o[1].toFixed(1)).join();if(!force&&key===placeKey)return;placeKey=key;
  portals.forEach((P,i)=>{const pts=P.q.map(v=>{const s=scr2(v);return[s[0]+org[i][0],s[1]+org[i][1]]});P.el.style.transform=homog(pts,P.w,P.h)});
- hits.forEach(H=>{const c=scr2(H.c),a=scr2(H.rx),b=scr2(H.rz),w=Math.max(40,2*Math.hypot(a[0]-c[0],a[1]-c[1])),h=Math.max(36,2*Math.hypot(b[0]-c[0],b[1]-c[1]));H.e.style.width=w.toFixed(1)+'px';H.e.style.height=h.toFixed(1)+'px';H.e.style.transform='translate('+(c[0]-w/2).toFixed(1)+'px,'+(c[1]-h/2).toFixed(1)+'px)'})}
+ /* salon görünümünde tuşlar küçük ve birbirine yakındır: yanlış dokunmayı önlemek için yalnız ÇEVİR açık kalır */
+ const far=viewName!=='close'||!!glide;hits.forEach(H=>{H.e.style.display=far&&!H.b.big?'none':'';const c=scr2(H.c),a=scr2(H.rx),b=scr2(H.rz),w=Math.max(40,2*Math.hypot(a[0]-c[0],a[1]-c[1])),h=Math.max(36,2*Math.hypot(b[0]-c[0],b[1]-c[1]));H.e.style.width=w.toFixed(1)+'px';H.e.style.height=h.toFixed(1)+'px';H.e.style.transform='translate('+(c[0]-w/2).toFixed(1)+'px,'+(c[1]-h/2).toFixed(1)+'px)'})}
 
 /* ---------- kamera: YAKIN (oyuncunun gözünden: ekran tam karşıda, eller tuş rafında) ve SALON (makine, tabure ve oyuncu bütün olarak) ---------- */
 const cam=new THREE.PerspectiveCamera(30,1,.1,60);let CWp=0,CHp=0;
@@ -3475,8 +3484,8 @@ window.SL3={get on(){return on},ev,
  _fig:k=>{forced=k;nameT=0;need=true},_figDo:(type,fix,to,hand)=>{if(fig){fig.g=type?{type,t0:performance.now(),fix:fix==null?null:fix,to:to?BPOS[to]:null,hand}:null;need=true}},_view:(n,snap)=>{introT=0;setView(n,snap)},_w:(x,y,z)=>scr(V3(x,y,z)),
  _hands:()=>{if(!fig)return null;const F=fig.F,w=n=>F.pos[n]?F.pos[n].clone().applyMatrix4(F.scene.matrixWorld).toArray().map(x=>+x.toFixed(3)):null,o={sağEl:w('RightHand'),solEl:w('LeftHand'),baş:w('Head')};BTNS.forEach(b=>{o[b.k]=BPOS[b.k].toArray().map(x=>+x.toFixed(3))});return o},
  _info:()=>{renderer.info.autoReset=false;renderer.info.reset();renderer.render(scene,cam);const r=renderer.info.render;renderer.info.autoReset=true;return{calls:r.calls,triangles:r.triangles}}};
-let pref=null;try{pref=localStorage.getItem('ge_sl3d')}catch(e){}
 on=pref!=='0';tog.textContent=on?'2D':'3D';requestAnimationFrame(frame);
+}
 })();
 </script><!--/SL3-->
 </body>
